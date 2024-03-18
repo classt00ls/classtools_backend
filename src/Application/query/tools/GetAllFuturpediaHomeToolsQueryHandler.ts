@@ -49,12 +49,21 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
             counter++;
             if(counter > 10) break;
 
+            try {
+                await this.toolRepository.getOneByLinkAndFail(link);
+            } catch (error) {
+                console.log('Ja el tenim ...  continuem.')
+                continue;
+            }
+
             browser = await puppeteer.connect({
                 browserWSEndpoint: this.configService.getOrThrow('SBR_WS_ENDPOINT')
             })
 
             page = await browser.newPage();
             page.setDefaultNavigationTimeout(2 * 60 * 1000);
+
+            
             
             await page.goto(link)
 

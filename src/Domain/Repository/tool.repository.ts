@@ -12,4 +12,5 @@ export abstract class ToolRepository {
   abstract getOneByIdOrFail(id: string): Promise<ToolModel>;
   abstract getOneByNameAndFail(id: string): Promise<void>;
   abstract getOneByNameOrFail(name: string): Promise<ToolModel>;
+  abstract getOneByLinkAndFail(name: string): Promise<void>;
 }

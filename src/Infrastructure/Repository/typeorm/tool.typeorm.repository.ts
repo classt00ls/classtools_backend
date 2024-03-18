@@ -55,6 +55,18 @@ export class ToolTypeormRepository extends ToolRepository {
     throw new Error("La tool " + name + " ya existe");
   }
 
+  async getOneByLinkAndFail(link: string) {
+    try {
+      await this.repository.findOneByOrFail({link});
+      
+    } catch (error) {
+      console.log("El tool " + link + " NO existe")
+      return;
+    }
+    console.log("El tool " + link + " SI existe")
+    throw new Error("La tool " + link + " ya existe");
+  }
+
   async getOneByNameOrFail(name: string) {
     const response = await this.repository.findOneByOrFail({name});
     return response;

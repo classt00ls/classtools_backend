@@ -18,7 +18,15 @@ export const ToolSchema = new EntitySchema<ToolModel>({
       type: String,
       nullable: true
     },
+    link: {
+      type: String,
+      nullable: true
+    },
     deleted: {
+      type: Boolean,
+      default: false
+    },
+    uploaded: {
       type: Boolean,
       default: false
     },

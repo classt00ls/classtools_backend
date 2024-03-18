@@ -21,6 +21,10 @@ export class ToolModel extends BaseModel {
 
   tags: TagModel[];
 
+  uploaded: boolean;
+
+  link: string;
+
   addTags(tags: TagModel[]) {
     for (const tag of tags) {
       if (!(tag instanceof TagModel)) {
