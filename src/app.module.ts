@@ -5,7 +5,8 @@ import { AppService } from './app.service';
 import { UtilsModule } from './Shared/Module/utils/utils.module';
 import { UsersModule } from './Ui/User/users.module';
 import { ConfigModule } from '@nestjs/config';
-import { FuturpediaModule } from './Shared/Module/scrapping/futurpedia/futurpedia.module';
+import { FuturpediaModule } from './Ui/Tools/futurpedia/futurpedia.module';
+import { QueryBus } from '@nestjs/cqrs';
 
 let databaseConfig: Partial<TypeOrmModuleOptions>;
 
@@ -48,6 +49,9 @@ switch (process.env.NODE_ENV) {
   UtilsModule
 ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    QueryBus
+  ],
 })
 export class AppModule {}

@@ -1,3 +1,0 @@
-
-### Get futurpedia items
-GET http://localhost:3000/futurpedia/items
