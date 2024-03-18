@@ -10,7 +10,6 @@ export class UserModel extends BaseModel {
 
   password: string;
   
-  
   // Será la reference asignada para el metadata de nuestro token
   name: string;
 

@@ -1,5 +1,4 @@
 import { BaseModel } from "../Shared/base.model";
-import { CompanyModel } from "./company.model";
 import { TagModel } from "./tag.model";
 
 export type ToolStatus = 'pending' | 'published' //  TODO: add more status
@@ -21,4 +20,19 @@ export class ToolModel extends BaseModel {
   deleted: boolean;
 
   tags: TagModel[];
+
+  addTags(tags: TagModel[]) {
+    for (const tag of tags) {
+      if (!(tag instanceof TagModel)) {
+        throw new Error('Invalid tag provided. Only Tag instances allowed.');
+      }
+    }
+
+    // Añadir tags a la lista
+    for (const tag of tags) {
+      if (!this.tags.includes(tag)) {
+        this.tags.push(tag);
+      }
+    }
+  }
 }

@@ -12,11 +12,11 @@ export const TagSchema = new EntitySchema<TagModel>({
     },
     description: {
       type: String,
-      nullable: false
+      nullable: true
     }, 
     excerpt: {
       type: String,
-      nullable: false
+      nullable: true
     },
     deleted: {
       type: Boolean,
@@ -27,10 +27,17 @@ export const TagSchema = new EntitySchema<TagModel>({
     tools: {
       type: "many-to-many",
       target: "Tool",
-      joinColumn: {
-        name: 'tool_id',
+      joinTable: {
+        name: 'tool_tags',
+        joinColumns: [{
+          name: 'tool_id',
+          referencedColumnName: 'id',
+        }],
+        inverseJoinColumns: [{
+          name: 'tag_id',
+          referencedColumnName: 'id',
+        }],
       },
-      inverseSide: 'tags' // Note that this is the relation name in project entity, no the entity name Order
     }
   }
 });

@@ -3,13 +3,17 @@ import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import puppeteer from 'puppeteer-core';
 import { GetAllFuturpediaHomeToolsQuery } from "./GetAllFuturpediaHomeToolsQuery";
 import { ConfigService } from "@nestjs/config";
+import { ToolRepository } from "src/Domain/Repository/tool.repository";
+import { TagRepository } from "src/Domain/Repository/tag.repository";
 
 
 @QueryHandler(GetAllFuturpediaHomeToolsQuery)
 @Injectable()
 export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetAllFuturpediaHomeToolsQuery>{
     constructor(
-        private readonly configService: ConfigService
+        private readonly configService: ConfigService,
+        private toolRepository: ToolRepository,
+        private tagRepository: TagRepository,
     ) {}
 
     async execute(query: GetAllFuturpediaHomeToolsQuery) {
@@ -25,8 +29,6 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
             page.waitForNavigation(),
             page.goto('https://www.futurepedia.io')
         ])
-        
-        console.log('getting links ...')
 
         // Recuperamos los links a la pagina de las tools en futurpedia de la home
         const links = await page.$$eval("div.items-start", (resultItems) => {
@@ -51,47 +53,66 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
                 browserWSEndpoint: this.configService.getOrThrow('SBR_WS_ENDPOINT')
             })
 
-            console.log('item ...')
             page = await browser.newPage();
-
-            console.log('item page ...')
             page.setDefaultNavigationTimeout(2 * 60 * 1000);
-
-            console.log('item goto ...')
-            await page.goto(link)
             
-            console.log('getting item ...')
+            await page.goto(link)
 
             try {
+                
                 // Get title inside page
                 const title = await page.$eval('h1.text-2xl', h1 => h1.innerText);
 
                 const tags = await page.$$eval('p.mt-2.text-ice-700 > a.capitalize', tags => {
 
-                    const allTags = tags.map(tag => {
+                    const allTags = tags.map((tag) => {
                         return tag.innerText
                     });
 
                     return allTags;
                 });
-                console.log('getting tags ...' , tags)
-                const pricing = await page.$$eval('div.flex.flex-wrap.gap-2 > div', price => price[2].innerText); 
 
-                console.log('getting pricing ...' , pricing)
+                const allTagsToAdd = [];
+                
+                for(let tag of tags) {
+                    const new_tag = await this.tagRepository.create(
+                        {
+                            name: tag
+                        }
+                    );
+
+                    await this.tagRepository.insert(new_tag);
+
+                    allTagsToAdd.push(new_tag);
+
+                }
+                
+                const pricing = await page.$$eval('div.flex.flex-wrap.gap-2 > div', price => price[2].innerText); 
                 const link = await page.$eval('div.mt-4.flex.flex-wrap.gap-4 > a', reference => reference.href);
-                console.log('getting link ...' , link)
-                const description = await page.$eval('p.my-2', desc => desc.innerText);
-                console.log('getting description ...' , description)
+                const excerpt = await page.$eval('p.my-2', desc => desc.innerText);
+
+                
+                
+                // Creamos la nueva tool asociada al link consultado
+                const tool = await this.toolRepository.create(
+                    {
+                        name: title,
+                        excerpt
+                    }
+                );
+
+                tool.addTags(allTagsToAdd);
+
+                await this.toolRepository.insert(tool);
 
                 response.push({
                     title,
                     pricing,
                     tags,
-                    link,
-                    description
+                    link
                 })
             } catch (error) {
-                
+                throw error;
             }
 
             await browser.close();

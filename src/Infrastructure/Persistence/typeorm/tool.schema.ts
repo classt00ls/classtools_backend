@@ -12,15 +12,15 @@ export const ToolSchema = new EntitySchema<ToolModel>({
     },
     description: {
       type: String,
-      nullable: false
+      nullable: true
     }, 
     excerpt: {
       type: String,
-      nullable: false
+      nullable: true
     },
     deleted: {
       type: Boolean,
-      nullable: true
+      default: true
     },
     status: {
       type: String,
@@ -31,10 +31,18 @@ export const ToolSchema = new EntitySchema<ToolModel>({
     tags: {
       type: "many-to-many",
       target: "Tag",
-      joinColumn: {
-        name: 'tag_id',
-      },
-      inverseSide: 'tools' // Note that this is the relation name in project entity, no the entity name Order
+      joinTable: {
+        name: "tool_tag",
+        joinColumns: [{
+          name: 'tool_id',
+          referencedColumnName: 'id',
+        }],
+        inverseJoinColumns: [{
+          name: 'tag_id',
+          referencedColumnName: 'id',
+        }],
+      }
     }
-  }
+  },
+  
 });
