@@ -1,0 +1,2 @@
+### Get Statistics dashboard
+GET http://localhost:3000/utils/references?size=100000
