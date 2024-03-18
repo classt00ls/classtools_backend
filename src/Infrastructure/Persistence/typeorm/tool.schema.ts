@@ -31,6 +31,7 @@ export const ToolSchema = new EntitySchema<ToolModel>({
     tags: {
       type: "many-to-many",
       target: "Tag",
+      cascade: true,
       joinTable: {
         name: "tool_tag",
         joinColumns: [{

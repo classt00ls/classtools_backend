@@ -101,10 +101,14 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
                     }
                 );
 
-                tool.addTags(allTagsToAdd);
+                tool.tags = allTagsToAdd;
+                
+                //tool.addTags([]);
 
-                await this.toolRepository.insert(tool);
-
+                const toolSaved = await this.toolRepository.save(tool);
+                
+                console.log(toolSaved);
+                
                 response.push({
                     title,
                     pricing,
