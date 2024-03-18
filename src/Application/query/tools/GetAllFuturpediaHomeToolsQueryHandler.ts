@@ -75,46 +75,60 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
                 const allTagsToAdd = [];
                 
                 for(let tag of tags) {
-                    const new_tag = await this.tagRepository.create(
-                        {
-                            name: tag
-                        }
-                    );
+                    let new_tag;
+                    // Evitem els duplicats
+                    try {
+                        // Quan existeix el tag pasem al catch i no el creem
+                        await this.tagRepository.getOneByNameAndFail(tag);
 
-                    await this.tagRepository.insert(new_tag);
+                        new_tag = await this.tagRepository.create(
+                            {
+                                name: tag
+                            }
+                        );
+
+                        await this.tagRepository.insert(new_tag);
+                        
+                    } catch (error) {
+                        new_tag = await this.tagRepository.getOneByNameOrFail(tag);
+                    }
 
                     allTagsToAdd.push(new_tag);
-
                 }
                 
                 const pricing = await page.$$eval('div.flex.flex-wrap.gap-2 > div', price => price[2].innerText); 
                 const link = await page.$eval('div.mt-4.flex.flex-wrap.gap-4 > a', reference => reference.href);
                 const excerpt = await page.$eval('p.my-2', desc => desc.innerText);
 
-                
-                
-                // Creamos la nueva tool asociada al link consultado
-                const tool = await this.toolRepository.create(
-                    {
-                        name: title,
-                        excerpt
-                    }
-                );
+                let tool;
+                try {
+                    await this.toolRepository.getOneByNameAndFail(title);
 
-                tool.tags = allTagsToAdd;
-                
-                //tool.addTags([]);
+                    // Creamos la nueva tool asociada al link consultado solo si no falla la función anterior
+                    tool = await this.toolRepository.create(
+                        {
+                            name: title,
+                            excerpt
+                        }
+                    );
 
-                const toolSaved = await this.toolRepository.save(tool);
+                    tool.tags = allTagsToAdd;
+
+                    const toolSaved = await this.toolRepository.save(tool);
+                    
+                    console.log(toolSaved);
+                    
+                    response.push({
+                        title,
+                        pricing,
+                        tags,
+                        link
+                    })
+                } catch (error) {
+                    // En este caso si el tool ya existe no hacemos nada
+
+                }
                 
-                console.log(toolSaved);
-                
-                response.push({
-                    title,
-                    pricing,
-                    tags,
-                    link
-                })
             } catch (error) {
                 throw error;
             }

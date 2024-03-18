@@ -20,7 +20,7 @@ export const ToolSchema = new EntitySchema<ToolModel>({
     },
     deleted: {
       type: Boolean,
-      default: true
+      default: false
     },
     status: {
       type: String,

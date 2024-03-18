@@ -10,4 +10,6 @@ export abstract class ToolRepository {
   abstract insert(model: ToolModel): Promise<InsertResult>;
   abstract getAll(): Promise<ToolModel[]>;
   abstract getOneByIdOrFail(id: string): Promise<ToolModel>;
+  abstract getOneByNameAndFail(id: string): Promise<void>;
+  abstract getOneByNameOrFail(name: string): Promise<ToolModel>;
 }

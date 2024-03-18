@@ -20,7 +20,7 @@ export const TagSchema = new EntitySchema<TagModel>({
     },
     deleted: {
       type: Boolean,
-      nullable: true
+      default: false
     }
   },
   relations: {

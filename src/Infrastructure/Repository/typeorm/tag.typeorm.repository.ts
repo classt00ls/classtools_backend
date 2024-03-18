@@ -40,4 +40,21 @@ export class TagTypeormRepository extends TagRepository {
     const response = await this.repository.findOneByOrFail({id});
     return response;
   }
+
+  async getOneByNameAndFail(name: string) {
+    try {
+      await this.repository.findOneByOrFail({name});
+      
+    } catch (error) {
+      console.log("El tag " + name + " NO existe")
+       return;
+    }
+    console.log("El tag " + name + " SI existe")
+    throw new Error("El tag " + name + " ya existe");
+  }
+
+  async getOneByNameOrFail(name: string) {
+    const response = await this.repository.findOneByOrFail({name});
+    return response;
+  }
 }

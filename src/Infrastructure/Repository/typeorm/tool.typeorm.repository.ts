@@ -42,4 +42,21 @@ export class ToolTypeormRepository extends ToolRepository {
     const response = await this.repository.findOneByOrFail({id});
     return response;
   }
+
+  async getOneByNameAndFail(name: string) {
+    try {
+      await this.repository.findOneByOrFail({name});
+      
+    } catch (error) {
+      console.log("El tool " + name + " NO existe")
+      return;
+    }
+    console.log("El tool " + name + " SI existe")
+    throw new Error("La tool " + name + " ya existe");
+  }
+
+  async getOneByNameOrFail(name: string) {
+    const response = await this.repository.findOneByOrFail({name});
+    return response;
+  }
 }
