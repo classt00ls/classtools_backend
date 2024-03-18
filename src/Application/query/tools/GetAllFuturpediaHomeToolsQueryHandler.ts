@@ -47,7 +47,7 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
         let counter = 0;
         for (let link of links) {
             counter++;
-            if(counter > 2) break;
+            if(counter > 10) break;
 
             browser = await puppeteer.connect({
                 browserWSEndpoint: this.configService.getOrThrow('SBR_WS_ENDPOINT')
