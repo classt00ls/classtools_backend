@@ -25,6 +25,8 @@ export class ToolModel extends BaseModel {
 
   link: string;
 
+  url: string;
+
   addTags(tags: TagModel[]) {
     for (const tag of tags) {
       if (!(tag instanceof TagModel)) {

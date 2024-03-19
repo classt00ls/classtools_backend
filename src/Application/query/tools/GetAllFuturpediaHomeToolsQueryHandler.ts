@@ -27,7 +27,7 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
 
         await Promise.all([
             page.waitForNavigation(),
-            page.goto('https://www.futurepedia.io')
+            page.goto('https://www.futurepedia.io/ai-tools/spreadsheet-assistant?page=2')
         ])
 
         // Recuperamos los links a la pagina de las tools en futurpedia de la home
@@ -47,7 +47,7 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
         let counter = 0;
         for (let link of links) {
             counter++;
-            if(counter > 10) break;
+            if(counter > 16) break;
 
             try {
                 await this.toolRepository.getOneByLinkAndFail(link);
@@ -106,7 +106,7 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
                 }
                 
                 const pricing = await page.$$eval('div.flex.flex-wrap.gap-2 > div', price => price[2].innerText); 
-                const link = await page.$eval('div.mt-4.flex.flex-wrap.gap-4 > a', reference => reference.href);
+                const url = await page.$eval('div.mt-4.flex.flex-wrap.gap-4 > a', reference => reference.href);
                 const excerpt = await page.$eval('p.my-2', desc => desc.innerText);
 
                 let tool;
@@ -117,7 +117,9 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
                     tool = await this.toolRepository.create(
                         {
                             name: title,
-                            excerpt
+                            excerpt,
+                            link,
+                            url
                         }
                     );
 
@@ -139,7 +141,8 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
                 }
                 
             } catch (error) {
-                throw error;
+                console.log('error al scrapejar: '+link)
+                //throw error;
             }
 
             await browser.close();
