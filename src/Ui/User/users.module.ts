@@ -16,7 +16,7 @@ import { CompanyTypeormRepository } from 'src/Infrastructure/Repository/typeorm/
       UserSchema,
       CompanySchema,
       UserRepository,
-      CompanyRepository
+      CompanyRepository  
     ]),
     CqrsModule
   ],

@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { FuturpediaController } from './futurpedia.controller';
-import { GetAllFuturpediaHomeToolsQueryHandler } from 'src/Application/query/tools/GetAllFuturpediaHomeToolsQueryHandler';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ToolSchema } from 'src/Infrastructure/Persistence/typeorm/tool.schema';
@@ -9,6 +8,8 @@ import { ToolRepository } from 'src/Domain/Repository/tool.repository';
 import { TagRepository } from 'src/Domain/Repository/tag.repository';
 import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
+import { GetAllFuturpediaPageLinksQueryHandler } from 'src/Application/query/tools/GetAllFuturpediaPageLinksQueryHandler';
+import { GetAllPageToolsCommandHandler } from 'src/Application/command/tools/GetAllPageToolsCommandHandler';
 
 
 @Module({
@@ -25,7 +26,8 @@ import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.
         FuturpediaController
     ],
     providers: [
-        GetAllFuturpediaHomeToolsQueryHandler,
+        GetAllPageToolsCommandHandler,
+        GetAllFuturpediaPageLinksQueryHandler,
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,

@@ -1,50 +1,34 @@
 import { Injectable } from "@nestjs/common";
-import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
+import { CommandHandler, ICommandHandler, QueryBus, QueryHandler } from "@nestjs/cqrs";
 import puppeteer from 'puppeteer-core';
-import { GetAllFuturpediaHomeToolsQuery } from "./GetAllFuturpediaHomeToolsQuery";
+import { GetAllPageToolsCommand } from "./GetAllPageToolsCommand";
 import { ConfigService } from "@nestjs/config";
 import { ToolRepository } from "src/Domain/Repository/tool.repository";
 import { TagRepository } from "src/Domain/Repository/tag.repository";
+import { GetAllFuturpediaPageLinksQuery } from "src/Application/query/tools/GetAllFuturpediaPageLinksQuery";
 
 
-@QueryHandler(GetAllFuturpediaHomeToolsQuery)
+@CommandHandler(GetAllPageToolsCommand)
 @Injectable()
-export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetAllFuturpediaHomeToolsQuery>{
+export class GetAllPageToolsCommandHandler implements ICommandHandler<GetAllPageToolsCommand>{
     constructor(
         private readonly configService: ConfigService,
+        private readonly queryBus: QueryBus,
         private toolRepository: ToolRepository,
         private tagRepository: TagRepository,
     ) {}
 
-    async execute(query: GetAllFuturpediaHomeToolsQuery) {
+    async execute(command: GetAllPageToolsCommand) {
 
-        let browser = await puppeteer.connect({
-            browserWSEndpoint: this.configService.getOrThrow('SBR_WS_ENDPOINT')
-        })
-
-        let page = await browser.newPage();
-        page.setDefaultNavigationTimeout(2 * 60 * 1000);
-
-        await Promise.all([
-            page.waitForNavigation(),
-            page.goto('https://www.futurepedia.io/ai-tools/spreadsheet-assistant?page=2')
-        ])
-
-        // Recuperamos los links a la pagina de las tools en futurpedia de la home
-        const links = await page.$$eval("div.items-start", (resultItems) => {
-            const urls = [];
-            resultItems.map(async resultItem => {
-                const url = resultItem.querySelector('a').href;
-                if(!urls.includes(url)) urls.push(url);
-            });
-            return urls;
-        })
-
-        await browser.close();
-
-        const response = [];
+        const links = await this.queryBus.execute(
+            new GetAllFuturpediaPageLinksQuery(command.route)
+        )
+        
+        console.log('tenemos los links: ' + links);
 
         let counter = 0;
+        let browser;
+        let page;
         for (let link of links) {
             counter++;
             if(counter > 16) break;
@@ -128,13 +112,7 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
                     const toolSaved = await this.toolRepository.save(tool);
                     
                     console.log(toolSaved);
-                    
-                    response.push({
-                        title,
-                        pricing,
-                        tags,
-                        link
-                    })
+                   
                 } catch (error) {
                     // En este caso si el tool ya existe no hacemos nada
 
@@ -147,7 +125,5 @@ export class GetAllFuturpediaHomeToolsQueryHandler implements IQueryHandler<GetA
 
             await browser.close();
         }
-        
-        return response;
     }
 }
