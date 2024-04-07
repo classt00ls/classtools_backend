@@ -9,7 +9,7 @@ import { TagRepository } from 'src/Domain/Repository/tag.repository';
 import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { GetAllFuturpediaPageLinksQueryHandler } from 'src/Application/query/tools/GetAllFuturpediaPageLinksQueryHandler';
-import { GetAllPageToolsCommandHandler } from 'src/Application/command/tools/GetAllPageToolsCommandHandler';
+import { ImportToolByLinkCommandHandler } from 'src/Application/command/tools/ImportToolByLinkCommandHandler';
 
 
 @Module({
@@ -26,7 +26,7 @@ import { GetAllPageToolsCommandHandler } from 'src/Application/command/tools/Get
         FuturpediaController
     ],
     providers: [
-        GetAllPageToolsCommandHandler,
+        ImportToolByLinkCommandHandler,
         GetAllFuturpediaPageLinksQueryHandler,
         {
             provide: ToolRepository,

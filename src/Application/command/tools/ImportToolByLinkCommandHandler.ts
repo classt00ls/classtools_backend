@@ -1,55 +1,38 @@
 import { Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler, QueryBus, QueryHandler } from "@nestjs/cqrs";
 import puppeteer from 'puppeteer-core';
-import { GetAllPageToolsCommand } from "./GetAllPageToolsCommand";
+import { ImportToolByLinkCommand } from "./ImportToolByLinkCommand";
 import { ConfigService } from "@nestjs/config";
 import { ToolRepository } from "src/Domain/Repository/tool.repository";
 import { TagRepository } from "src/Domain/Repository/tag.repository";
-import { GetAllFuturpediaPageLinksQuery } from "src/Application/query/tools/GetAllFuturpediaPageLinksQuery";
 
 
-@CommandHandler(GetAllPageToolsCommand)
+@CommandHandler(ImportToolByLinkCommand)
 @Injectable()
-export class GetAllPageToolsCommandHandler implements ICommandHandler<GetAllPageToolsCommand>{
+export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToolByLinkCommand>{
     constructor(
         private readonly configService: ConfigService,
-        private readonly queryBus: QueryBus,
         private toolRepository: ToolRepository,
         private tagRepository: TagRepository,
     ) {}
 
-    async execute(command: GetAllPageToolsCommand) {
-
-        const links = await this.queryBus.execute(
-            new GetAllFuturpediaPageLinksQuery(command.route)
-        )
-        
-        console.log('tenemos los links: ' + links);
-
-        let counter = 0;
-        let browser;
-        let page;
-        for (let link of links) {
-            counter++;
-            if(counter > 16) break;
+    async execute(command: ImportToolByLinkCommand) {
 
             try {
-                await this.toolRepository.getOneByLinkAndFail(link);
+                await this.toolRepository.getOneByLinkAndFail(command.link);
             } catch (error) {
                 console.log('Ja el tenim ...  continuem.')
-                continue;
+                return;
             }
 
-            browser = await puppeteer.connect({
+            const browser = await puppeteer.connect({
                 browserWSEndpoint: this.configService.getOrThrow('SBR_WS_ENDPOINT')
             })
 
-            page = await browser.newPage();
+            let page = await browser.newPage();
             page.setDefaultNavigationTimeout(2 * 60 * 1000);
-
             
-            
-            await page.goto(link)
+            await page.goto(command.link);
 
             try {
                 
@@ -102,7 +85,7 @@ export class GetAllPageToolsCommandHandler implements ICommandHandler<GetAllPage
                         {
                             name: title,
                             excerpt,
-                            link,
+                            link:command.link,
                             url
                         }
                     );
@@ -110,8 +93,6 @@ export class GetAllPageToolsCommandHandler implements ICommandHandler<GetAllPage
                     tool.tags = allTagsToAdd;
 
                     const toolSaved = await this.toolRepository.save(tool);
-                    
-                    console.log(toolSaved);
                    
                 } catch (error) {
                     // En este caso si el tool ya existe no hacemos nada
@@ -119,11 +100,10 @@ export class GetAllPageToolsCommandHandler implements ICommandHandler<GetAllPage
                 }
                 
             } catch (error) {
-                console.log('error al scrapejar: '+link)
+                console.log('error al scrapejar: '+command.link)
                 //throw error;
             }
 
             await browser.close();
-        }
     }
 }

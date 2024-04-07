@@ -1,11 +1,14 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetAllPageToolsCommand } from 'src/Application/command/tools/GetAllPageToolsCommand';
+import { ImportToolByLinkCommand } from 'src/Application/command/tools/ImportToolByLinkCommand';
+import { GetAllFuturpediaPageLinksQuery } from 'src/Application/query/tools/GetAllFuturpediaPageLinksQuery';
 
 @Controller('futurpedia')
 export class FuturpediaController {
   constructor(
-    private readonly commandBus: CommandBus
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus
   ) {}
   
   /**
@@ -32,7 +35,14 @@ export class FuturpediaController {
       await this.commandBus.execute(
         new GetAllPageToolsCommand(routeToscrap)
       );
-
+      const links = await this.queryBus.execute(
+          new GetAllFuturpediaPageLinksQuery(routeToscrap)
+      )
+      for (let link of links) {
+          await this.commandBus.execute(
+              new ImportToolByLinkCommand(link)
+          )
+      }
     }
   }
 }

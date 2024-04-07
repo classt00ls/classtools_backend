@@ -5,5 +5,5 @@ POST http://localhost:3000/futurpedia/webTools
 Content-Type: application/json
 
 {
-    "route": "ai-tools/copywriting-assistant"
+    "route": "ai-tools/social-media"
 }
