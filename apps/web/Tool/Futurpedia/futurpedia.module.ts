@@ -7,6 +7,8 @@ import { ToolRepository } from 'src/Domain/Repository/tool.repository';
 import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
 import { GetAllFuturpediaPageLinksQueryHandler } from 'src/Application/query/tools/GetAllFuturpediaPageLinksQueryHandler';
 import { ImportToolByLinkCommandHandler } from 'src/Application/command/tools/ImportToolByLinkCommandHandler';
+import { TagRepository } from 'src/Domain/Repository/tag.repository';
+import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 
 
 @Module({
@@ -26,6 +28,10 @@ import { ImportToolByLinkCommandHandler } from 'src/Application/command/tools/Im
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,
+        },
+        {
+            provide: TagRepository,
+            useClass: TagTypeormRepository,
         }
     ]
  })

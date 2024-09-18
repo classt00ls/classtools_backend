@@ -1,0 +1,16 @@
+
+### Get futurpedia items
+
+POST http://localhost:3000/futurpedia/webTools
+Content-Type: application/json
+
+{
+    "route": "ai-tools/social-media"
+}
+
+
+###  get json
+GET http://localhost:3000/tool?page=5&pageSize=5
+
+###  get tags
+GET http://localhost:3000

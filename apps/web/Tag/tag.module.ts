@@ -4,8 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TagSchema } from 'src/Infrastructure/Persistence/typeorm/tag.schema';
 import { TagRepository } from 'src/Domain/Repository/tag.repository';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
-import { GetAllTagsQueryHandler } from 'src/Application/query/tools/GetAllTagsQueryHandler';
 import { TagController } from './tag.controller';
+import { GetAllTagsQueryHandler } from 'src/web/Application/Query/Tag/GetAllTagsQueryHandler';
 
 
 @Module({

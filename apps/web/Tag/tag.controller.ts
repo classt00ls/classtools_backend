@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { GetAllTagsQuery } from 'src/Application/query/tools/GetAllTagsQuery';
+import { GetAllTagsQuery } from 'src/web/Domain/Query/Tag/GetAllTagsQuery';
 
 @Controller('tag')
 export class TagController {

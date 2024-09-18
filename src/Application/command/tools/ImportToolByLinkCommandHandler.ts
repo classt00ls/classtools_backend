@@ -1,9 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { CommandHandler, ICommandHandler, QueryBus, QueryHandler } from "@nestjs/cqrs";
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import puppeteer from 'puppeteer-core';
 import { ImportToolByLinkCommand } from "./ImportToolByLinkCommand";
 import { ConfigService } from "@nestjs/config";
 import { ToolRepository } from "src/Domain/Repository/tool.repository";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { ToolCreatedEvent } from "src/web/Domain/Event/Tool/ToolCreatedEvent";
 import { TagRepository } from "src/Domain/Repository/tag.repository";
 
 
@@ -13,7 +15,8 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
     constructor(
         private readonly configService: ConfigService,
         private toolRepository: ToolRepository,
-        private tagRepository: TagRepository,
+        private eventEmitter: EventEmitter2,
+        private tagRepository: TagRepository
     ) {}
 
     async execute(command: ImportToolByLinkCommand) {
@@ -90,9 +93,18 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
                         }
                     );
 
-                    tool.tags = allTagsToAdd;
+                    // tool.tags = allTagsToAdd;
 
                     const toolSaved = await this.toolRepository.save(tool);
+
+                    this.eventEmitter.emit(
+                        'tool.created',
+                        new ToolCreatedEvent(
+                          toolSaved.id,
+                          toolSaved.name,
+                          tags
+                        ),
+                      );
                    
                 } catch (error) {
                     // En este caso si el tool ya existe no hacemos nada

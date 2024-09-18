@@ -1,6 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
-import { GetAllToolsQuery } from 'src/Application/query/tools/GetAllToolsQuery';
+import { ToolDashboardDto } from 'src/web/Application/Dto/Tool/tool.dashboard.dto';
+import { GetAllToolsQuery } from 'src/web/Domain/Query/Tool/GetAllToolsQuery';
+import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';
 
 @Controller('tool')
 export class ToolController {
@@ -9,10 +11,22 @@ export class ToolController {
   ) {}
 
   @Get('')
-  async getJson() {
+  @Serialize(ToolDashboardDto)
+  async getAll(
+    @Query('page') page?: number,
+		@Query('pageSize') pageSize?: number
+  ) {
     return await this.queryBus.execute(
-        new GetAllToolsQuery()
+        new GetAllToolsQuery(
+          page,
+          pageSize
+        )
     );
+  }
+
+  @Get('')
+  async getJson() {
+    
   }
   
 }
