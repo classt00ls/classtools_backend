@@ -7,6 +7,7 @@ import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/too
 import { ToolController } from './tool.controller';
 import { FuturpediaModule } from './Futurpedia/futurpedia.module';
 import { GetAllToolsQueryHandler } from 'src/web/Application/Query/Tool/GetAllToolsQueryHandler';
+import { CountToolsQueryHandler } from 'src/web/Application/Query/Tool/CountToolsQueryHandler';
 
 
 @Module({
@@ -22,6 +23,7 @@ import { GetAllToolsQueryHandler } from 'src/web/Application/Query/Tool/GetAllTo
         ToolController
     ],
     providers: [
+        CountToolsQueryHandler,
         GetAllToolsQueryHandler,
         {
             provide: ToolRepository,

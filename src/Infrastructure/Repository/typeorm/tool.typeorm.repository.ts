@@ -51,6 +51,11 @@ export class ToolTypeormRepository extends ToolRepository {
     return response;
   }
 
+  async count( ): Promise<number> {
+    const response = await this.repository.count();
+    return response;
+  }
+
   async getOneByNameAndFail(name: string) {
     try {
       await this.repository.findOneByOrFail({name});
