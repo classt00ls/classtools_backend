@@ -13,14 +13,27 @@ export class GetAllFuturpediaPageLinksQueryHandler {
     ) {}
 
     async execute(command: GetAllFuturpediaPageLinksQuery) {
-        let browser = await puppeteer.connect({
-            browserWSEndpoint: this.configService.getOrThrow('SBR_WS_ENDPOINT')
-        })
-
-        let page = await browser.newPage();
-        page.setDefaultNavigationTimeout(2 * 60 * 1000);
 
         console.log('Obtenemos links de ' + 'https://www.futurepedia.io/' + command.route)
+        const SBR_WS_ENDPOINT = 'wss://brd-customer-hl_16ecb6a4-zone-scraping_browser2:l7y9tpevqn75@brd.superproxy.io:9222';
+        console.log('La clave: ' + this.configService.getOrThrow('SBR_WS_ENDPOINT'))
+        let browser ;
+
+        try {
+            browser = await puppeteer.connect({
+                browserWSEndpoint: SBR_WS_ENDPOINT // this.configService.getOrThrow('SBR_WS_ENDPOINT')
+            })
+        } catch (error) {
+            console.log('puppeteer error', error)
+        }
+        
+
+        console.log('puppeteer connected')
+
+        let page = await browser.newPage(); 
+        page.setDefaultNavigationTimeout(2 * 60 * 1000);
+
+        
         await Promise.all([
             page.waitForNavigation(),
             page.goto('https://www.futurepedia.io/' + command.route)

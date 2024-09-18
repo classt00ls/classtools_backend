@@ -7,3 +7,10 @@ Content-Type: application/json
 {
     "route": "ai-tools/social-media"
 }
+
+
+###  get json
+GET http://localhost:3000/futurpedia/json
+
+###  get tags
+GET http://localhost:3000/futurpedia/tags

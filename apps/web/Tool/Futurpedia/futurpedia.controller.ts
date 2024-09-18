@@ -1,9 +1,7 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ImportToolByLinkCommand } from 'src/Application/command/tools/ImportToolByLinkCommand';
 import { GetAllFuturpediaPageLinksQuery } from 'src/Application/query/tools/GetAllFuturpediaPageLinksQuery';
-import { GetAllTagsQuery } from 'src/Application/query/tools/GetAllTagsQuery';
-import { GetAllToolsQuery } from 'src/Application/query/tools/GetAllToolsQuery';
 
 @Controller('futurpedia')
 export class FuturpediaController {
@@ -11,26 +9,12 @@ export class FuturpediaController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus
   ) {}
-
-  @Get('json')
-  async getJson() {
-    return await this.queryBus.execute(
-        new GetAllToolsQuery()
-    );
-  }
-
-  @Get('tags')
-  async getTags() {
-    return await this.queryBus.execute(
-        new GetAllTagsQuery()
-    );
-  }
   
   /**
    * @description A partir de una ruta del tipo "ai-tools/ ... " hacemos el scrapping de todas las tools 
    * @param route 
    */
-  @Post('webTools')
+  @Post('')
   async getWebTools(
     @Body('route') route: string
   ) {
