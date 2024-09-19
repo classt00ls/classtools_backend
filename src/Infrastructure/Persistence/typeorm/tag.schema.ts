@@ -21,6 +21,10 @@ export const TagSchema = new EntitySchema<TagModel>({
     deleted: {
       type: Boolean,
       default: false
+    },
+    isCategory: {
+      type: Boolean,
+      default: false
     }
   },
   relations: {

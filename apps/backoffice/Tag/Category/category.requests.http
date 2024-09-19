@@ -1,0 +1,10 @@
+
+### Get futurpedia items
+
+POST http://localhost:3000/backoffice/category/upgrade
+Content-Type: application/json
+
+{
+    "id": "fb09bb72-4463-4c39-aced-d76d34697874"
+}
+

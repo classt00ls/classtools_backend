@@ -18,4 +18,12 @@ export class TagModel extends BaseModel {
   isCategory: boolean;
 
   tools: ToolModel[];
+
+  public upgrade() {
+    this.isCategory = true;
+  }
+
+  public downgrade() {
+    this.isCategory = false;
+  }
 }

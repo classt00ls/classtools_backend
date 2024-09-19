@@ -1,22 +1,24 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
-import { getAllToolsDto } from 'src/web/Application/Dto/Tool/getAllTools.dto';
-import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
+import { UpgradeTagToCategoryCommand } from 'src/backoffice/Application/Command/Tag/UpgradeTagToCategoryCommand';
+import { UpgradeTagRequest } from 'src/backoffice/Application/Request/Tag/UpgradeTagRequest';
 
 @Controller('backoffice/category')
 export class BackofficeCategoryController {
   constructor(
-    private readonly queryBus: QueryBus
+    private readonly commandBus: CommandBus
   ) {}
 
-  @Get('')
-  @Serialize(getAllToolsDto)
-  async getAll(
-    @Query('page') page?: number,
-		@Query('pageSize') pageSize?: number
+  @Post('upgrade')
+  async upgrade(
+    @Body() upgradeTagRequest?: UpgradeTagRequest
   ) {
 
-    
+    await this.commandBus.execute(
+      new UpgradeTagToCategoryCommand(
+        upgradeTagRequest.id
+      )
+    );
 
   }
 
