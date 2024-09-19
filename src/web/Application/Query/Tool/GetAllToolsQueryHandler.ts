@@ -14,13 +14,9 @@ export class GetAllToolsQueryHandler {
 
     async execute(query: GetAllToolsQuery) {
 
-        const page = (query.page && query.pageSize) && query.page > 1 ? (Number(query.page) - 1)*Number(query.pageSize) : query.page;
-
-        console.log("page: " + query.page + " pageSize: " + Number(query.pageSize) + " page: " + page);
-
         return await this.toolRepository.getAll(
             new GenericFilter(
-                page,
+                query.page,
                 query.pageSize
             )
         );

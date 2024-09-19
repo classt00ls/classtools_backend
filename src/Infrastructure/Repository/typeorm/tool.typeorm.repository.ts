@@ -21,8 +21,8 @@ export class ToolTypeormRepository extends ToolRepository {
   ): Promise<ToolModel[]> {
 
     return this.repository.find({
-      skip: filter.page,
-      take: filter.pageSize,
+      skip: filter.getPage(),
+      take: filter.getPageSize(),
       relations: ['tags']
     });
 

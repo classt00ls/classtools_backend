@@ -1,7 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import puppeteer from 'puppeteer-core';
-import { ImportToolByLinkCommand } from "./ImportToolByLinkCommand";
 import { ConfigService } from "@nestjs/config";
 import { ToolRepository } from "src/Domain/Repository/tool.repository";
 import { EventEmitter2 } from "@nestjs/event-emitter";
@@ -9,9 +7,9 @@ import { ToolCreatedEvent } from "src/web/Domain/Event/Tool/ToolCreatedEvent";
 import { TagRepository } from "src/Domain/Repository/tag.repository";
 
 
-@CommandHandler(ImportToolByLinkCommand)
 @Injectable()
-export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToolByLinkCommand>{
+export class ImportTool{
+
     constructor(
         private readonly configService: ConfigService,
         private toolRepository: ToolRepository,
@@ -19,10 +17,10 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
         private tagRepository: TagRepository
     ) {}
 
-    async execute(command: ImportToolByLinkCommand) {
+    async execute(link: string) {
 
             try {
-                await this.toolRepository.getOneByLinkAndFail(command.link);
+                await this.toolRepository.getOneByLinkAndFail(link);
             } catch (error) {
                 console.log('Ja el tenim ...  continuem.')
                 return;
@@ -35,13 +33,11 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
             let page = await browser.newPage();
             page.setDefaultNavigationTimeout(2 * 60 * 1000);
             
-            await page.goto(command.link);
+            await page.goto(link);
 
             try {
-                
                 // Get title inside page
                 const title = await page.$eval('h1.text-2xl', h1 => h1.innerText);
-
                 const tags = await page.$$eval('p.mt-2.text-ice-700 > a.capitalize', tags => {
 
                     const allTags = tags.map((tag) => {
@@ -88,7 +84,7 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
                         {
                             name: title,
                             excerpt,
-                            link:command.link,
+                            link:link,
                             url
                         }
                     );
@@ -98,24 +94,20 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
                     const toolSaved = await this.toolRepository.save(tool);
 
                     this.eventEmitter.emit(
-                        'tool.created',
+                        'backoffice.tool.created',
                         new ToolCreatedEvent(
                           toolSaved.id,
                           toolSaved.name,
                           tags
                         ),
                       );
-                   
                 } catch (error) {
                     // En este caso si el tool ya existe no hacemos nada
-
                 }
-                
             } catch (error) {
-                console.log('error al scrapejar: '+command.link)
+                console.log('error al scrapejar: '+link)
                 //throw error;
             }
-
-            await browser.close();
+        await browser.close();
     }
 }

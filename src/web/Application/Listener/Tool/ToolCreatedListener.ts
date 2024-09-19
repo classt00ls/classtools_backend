@@ -5,7 +5,7 @@ import { ToolCreatedEvent } from "src/web/Domain/Event/Tool/ToolCreatedEvent";
 @Injectable()
 export class ToolCreatedListener {
 
-  @OnEvent('tool.created', { async: true }) 
+  @OnEvent('backoffice.tool.created', { async: true }) 
   handleToolCreatedEvent(event: ToolCreatedEvent) {
     console.log(event);
   }

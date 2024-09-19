@@ -1,9 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ImportToolByLinkCommand } from 'src/Application/command/tools/ImportToolByLinkCommand';
 import { GetAllFuturpediaPageLinksQuery } from 'src/Application/query/tools/GetAllFuturpediaPageLinksQuery';
+import { ImportToolByLinkCommand } from 'src/backoffice/Application/Command/ImportToolByLinkCommand';
 
-@Controller('futurpedia')
+@Controller('backoffice/futurpedia')
 export class FuturpediaController {
   constructor(
     private readonly commandBus: CommandBus,
@@ -29,7 +29,7 @@ export class FuturpediaController {
 
       const routeToscrap = route+page;
 
-      console.log('Buscamos en: ' + routeToscrap);
+console.log('Buscamos en: ' + routeToscrap);
       
       const links = await this.queryBus.execute(
           new GetAllFuturpediaPageLinksQuery(routeToscrap)

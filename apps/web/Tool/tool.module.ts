@@ -5,7 +5,7 @@ import { ToolSchema } from 'src/Infrastructure/Persistence/typeorm/tool.schema';
 import { ToolRepository } from 'src/Domain/Repository/tool.repository';
 import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
 import { ToolController } from './tool.controller';
-import { FuturpediaModule } from './Futurpedia/futurpedia.module';
+import { FuturpediaModule } from '../../backoffice/Tool/Futurpedia/futurpedia.module';
 import { GetAllToolsQueryHandler } from 'src/web/Application/Query/Tool/GetAllToolsQueryHandler';
 import { CountToolsQueryHandler } from 'src/web/Application/Query/Tool/CountToolsQueryHandler';
 
