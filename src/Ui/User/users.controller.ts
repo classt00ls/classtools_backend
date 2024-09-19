@@ -1,9 +1,9 @@
 import { BadRequestException, Body, Controller, Get, Post } from "@nestjs/common";
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-import { CreateUserDto } from "src/Domain/dto/user/create-user.dto";
+import { CreateUserDto } from "src/Shared/Domain/Dto/user/create-user.dto";
 import { CreateUserCommand } from "src/Application/command/user/CreateUserCommand";
-import { CannotCreateUserException } from "src/Domain/exception/user/CannotCreateUserException";
+import { CannotCreateUserException } from "src/Shared/Domain/Exception/user/CannotCreateUserException";
 import { ERROR_CODES } from "src/Domain/language/error.codes";
 
 @Controller('user')

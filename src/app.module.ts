@@ -9,8 +9,9 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ToolModule } from 'apps/web/Tool/tool.module';
 import { TagModule } from 'apps/web/Tag/tag.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { BackofficeToolModule } from 'apps/backoffice/Tool/BackofficeToolModule';
 
-let databaseConfig: Partial<TypeOrmModuleOptions>;
+let databaseConfig: Partial<TypeOrmModuleOptions>; 
 
 switch (process.env.NODE_ENV) {
   case 'dev':
@@ -38,7 +39,7 @@ switch (process.env.NODE_ENV) {
   imports: [
     ToolModule,
     TagModule,
-
+    BackofficeToolModule,
     EventEmitterModule.forRoot({
       // set this to `true` to use wildcards
       wildcard: false,

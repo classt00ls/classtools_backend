@@ -5,7 +5,7 @@ import { promisify } from "util";
 import { CreateUserCommand } from "./CreateUserCommand";
 import { RESPONSE_CODES } from "src/Domain/language/response.codes";
 // import { MailService } from "src/Shared/Service/MailService";
-import { CannotCreateUserException } from "src/Domain/exception/user/CannotCreateUserException";
+import { CannotCreateUserException } from "src/Shared/Domain/Exception/user/CannotCreateUserException";
 import { UserRepository } from "src/Domain/Repository/user.repository";
 import { CompanyRepository } from "src/Domain/Repository/company.repository";
 
