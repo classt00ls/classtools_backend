@@ -19,6 +19,8 @@ export class TagModel extends BaseModel {
 
   tools: ToolModel[];
 
+  imageUrl: string;
+
   public upgrade() {
     this.isCategory = true;
   }

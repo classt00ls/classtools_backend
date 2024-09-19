@@ -25,6 +25,10 @@ export const TagSchema = new EntitySchema<TagModel>({
     isCategory: {
       type: Boolean,
       default: false
+    },
+    imageUrl: {
+      type: String,
+      nullable: true
     }
   },
   relations: {

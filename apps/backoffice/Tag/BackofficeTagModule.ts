@@ -5,10 +5,10 @@ import { ToolSchema } from 'src/Infrastructure/Persistence/typeorm/tool.schema';
 import { ToolRepository } from 'src/Domain/Repository/tool.repository';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Domain/Repository/tag.repository';
-import { GetAllFuturpediaPageLinksQueryHandler } from 'src/Application/query/tools/GetAllFuturpediaPageLinksQueryHandler';
-import { ImportToolByLinkCommandHandler } from 'src/backoffice/Application/Command/Tool/ImportToolByLinkCommandHandler';
 import { BackofficeTagController } from './BackofficeTagController';
 import { BackofficeCategoryController } from './Category/BackofficeCategoryController';
+import { UpgradeTagToCategoryCommandHandler } from 'src/backoffice/Application/Command/Tag/UpgradeTagToCategoryCommandHandler';
+import { UpdateTagCommandHandler } from 'src/backoffice/Application/Command/Tag/UpdateTagCommandHandler';
 
 
 @Module({
@@ -24,8 +24,8 @@ import { BackofficeCategoryController } from './Category/BackofficeCategoryContr
         BackofficeCategoryController
     ],
     providers: [
-        ImportToolByLinkCommandHandler,
-        GetAllFuturpediaPageLinksQueryHandler,
+        UpdateTagCommandHandler,
+        UpgradeTagToCategoryCommandHandler,
         {
             provide: TagRepository,
             useClass: TagTypeormRepository,

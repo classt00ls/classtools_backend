@@ -1,10 +1,12 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
+import { Body, Controller, Get, Post, Put, Query } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { UpdateTagCommand } from 'src/backoffice/Application/Command/Tag/UpdateTagCommand';
+import { UpdateTagRequest } from 'src/backoffice/Application/Request/Tag/UpdateTagRequest';
 
 @Controller('backoffice/tag')
 export class BackofficeTagController {
   constructor(
-    private readonly queryBus: QueryBus
+    private readonly commandBus: CommandBus
   ) {}
 
   @Get('')
@@ -13,9 +15,18 @@ export class BackofficeTagController {
 
   }
 
-  @Get('')
-  async getJson() {
-    
+  @Put('')
+  async updateTag(
+    @Body() upgradeTagRequest?: UpdateTagRequest
+  ) {
+    await this.commandBus.execute(
+      new UpdateTagCommand(
+        upgradeTagRequest.id,
+        upgradeTagRequest.excerpt,
+        upgradeTagRequest.imageUrl,
+        upgradeTagRequest.name
+      )
+    );
   }
   
 }

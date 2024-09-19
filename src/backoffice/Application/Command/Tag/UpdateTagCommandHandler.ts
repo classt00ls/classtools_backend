@@ -1,30 +1,32 @@
 import { Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { UpgradeTagToCategoryCommand } from "./UpgradeTagToCategoryCommand";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { TagUpgradedEvent } from "src/Shared/Domain/Event/Tag/TagUpgradedEvent";
 import { TagRepository } from "src/Domain/Repository/tag.repository";
+import { UpdateTagCommand } from "./UpdateTagCommand";
 
 
-@CommandHandler(UpgradeTagToCategoryCommand)
+@CommandHandler(UpdateTagCommand)
 @Injectable()
-export class UpgradeTagToCategoryCommandHandler implements ICommandHandler<UpgradeTagToCategoryCommand>{
+export class UpdateTagCommandHandler implements ICommandHandler<UpdateTagCommand>{
     constructor(
         private tagRepository: TagRepository,
         private eventEmitter: EventEmitter2
     ) {}
 
-    async execute(command: UpgradeTagToCategoryCommand) {
+    async execute(command: UpdateTagCommand) {
 
         try {
             const tag = await this.tagRepository.getOneByIdOrFail(command.tagId);
 
-            tag.isCategory = true;
+            tag.name = command.name;
+            tag.excerpt = command.excerpt;
+            tag.imageUrl = command.imageUrl;
 
-            await this.tagRepository.save(tag);
+            await this.tagRepository.update(tag);
 
             this.eventEmitter.emit(
-                'backoffice.tag.upgraded',
+                'backoffice.tag.updated',
                 new TagUpgradedEvent(
                     command.tagId
                 ),

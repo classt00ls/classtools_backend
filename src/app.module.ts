@@ -10,6 +10,7 @@ import { ToolModule } from 'apps/web/Tool/tool.module';
 import { TagModule } from 'apps/web/Tag/tag.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BackofficeToolModule } from 'apps/backoffice/Tool/BackofficeToolModule';
+import { BackofficeTagModule } from 'apps/backoffice/Tag/BackofficeTagModule';
 
 let databaseConfig: Partial<TypeOrmModuleOptions>; 
 
@@ -39,6 +40,7 @@ switch (process.env.NODE_ENV) {
   imports: [
     ToolModule,
     TagModule,
+    BackofficeTagModule,
     BackofficeToolModule,
     EventEmitterModule.forRoot({
       // set this to `true` to use wildcards
