@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
+import { TagModel } from "src/Shared/Domain/Model/Tag/Tag.model";
 import { InsertResult } from "typeorm";
-import { TagModel } from "../Model/tag.model";
 
 @Injectable()
 export abstract class TagRepository {

@@ -1,6 +1,6 @@
 import { EntitySchema } from "typeorm";
 import { sharedFields } from "src/Infrastructure/Shared/typeorm/shared-fields.schema";
-import { ToolModel } from "src/Domain/Model/tool.model";
+import { ToolModel } from "src/Shared/Domain/Model/Tool/tool.model";
 
 export const ToolSchema = new EntitySchema<ToolModel>({
   name: 'Tool',

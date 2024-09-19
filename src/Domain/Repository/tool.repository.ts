@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InsertResult } from "typeorm";
-import { ToolModel } from "../Model/tool.model";
+import { ToolModel } from "../../Shared/Domain/Model/Tool/tool.model";
 import { GenericFilter } from "src/Shared/Domain/GenericFilter";
 
 @Injectable()
@@ -12,7 +12,8 @@ export abstract class ToolRepository {
   abstract getAll(filter: GenericFilter): Promise<ToolModel[]>;
   abstract getAll(filter: GenericFilter): Promise<ToolModel[]>;
   abstract count(): Promise<number>;
-  abstract getOneByNameAndFail(id: string): Promise<void>;
+  abstract getOneByNameAndFail(name: string): Promise<void>;
   abstract getOneByNameOrFail(name: string): Promise<ToolModel>;
   abstract getOneByLinkAndFail(name: string): Promise<void>;
+  abstract getOneByIdOrFail(id: string): Promise<ToolModel>;
 }

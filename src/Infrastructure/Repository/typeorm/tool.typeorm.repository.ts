@@ -2,9 +2,9 @@ import { Injectable } from "@nestjs/common";
 
 import { DataSource, InsertResult, Repository } from 'typeorm';
 import { ToolRepository } from "src/Domain/Repository/tool.repository";
-import { ToolModel } from "src/Domain/Model/tool.model";
 import { ToolSchema } from "src/Infrastructure/Persistence/typeorm/tool.schema";
 import { GenericFilter } from "src/Shared/Domain/GenericFilter";
+import { ToolModel } from "src/Shared/Domain/Model/Tool/tool.model";
 
 @Injectable()
 export class ToolTypeormRepository extends ToolRepository {

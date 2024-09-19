@@ -3,15 +3,12 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ToolSchema } from 'src/Infrastructure/Persistence/typeorm/tool.schema';
 import { ToolRepository } from 'src/Domain/Repository/tool.repository';
-import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
-import { BackofficeToolController } from './BackofficeToolcontroller';
-import { ImportTool } from 'src/backoffice/Infrastructure/Import/puppeter/Tool/ImportTool';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Domain/Repository/tag.repository';
 import { GetAllFuturpediaPageLinksQueryHandler } from 'src/Application/query/tools/GetAllFuturpediaPageLinksQueryHandler';
 import { ImportToolByLinkCommandHandler } from 'src/backoffice/Application/Command/Tool/ImportToolByLinkCommandHandler';
-import { FuturpediaController } from './Futurpedia/futurpedia.controller';
-import { GetFuturpediaPageLinks } from 'src/backoffice/Infrastructure/Import/puppeter/Tool/Futurpedia/GetFuturpediaPageLinks';
+import { BackofficeTagController } from './BackofficeTagController';
+import { BackofficeCategoryController } from './Category/BackofficeCategoryController';
 
 
 @Module({
@@ -23,28 +20,16 @@ import { GetFuturpediaPageLinks } from 'src/backoffice/Infrastructure/Import/pup
         CqrsModule
     ],
     controllers: [
-        BackofficeToolController,
-        FuturpediaController
+        BackofficeTagController,
+        BackofficeCategoryController
     ],
     providers: [
         ImportToolByLinkCommandHandler,
         GetAllFuturpediaPageLinksQueryHandler,
         {
-            provide: ToolRepository,
-            useClass: ToolTypeormRepository,
-        },
-        {
             provide: TagRepository,
             useClass: TagTypeormRepository,
-        },
-        {
-            provide: 'ImportToolInterface',
-            useClass: ImportTool,
-        },
-        {
-            provide: 'GetFuturpediaPageLinksInterface',
-            useClass: GetFuturpediaPageLinks
         }
     ]
  })
-export class BackofficeToolModule {}
+export class BackofficeTagModule {}

@@ -3,13 +3,13 @@ import puppeteer from 'puppeteer-core';
 import { ConfigService } from "@nestjs/config";
 import { ToolRepository } from "src/Domain/Repository/tool.repository";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { ToolCreatedEvent } from "src/web/Domain/Event/Tool/ToolCreatedEvent";
 import { TagRepository } from "src/Domain/Repository/tag.repository";
+import { ToolCreatedEvent } from "src/Shared/Domain/Event/Tool/ToolCreatedEvent";
 
 
 @Injectable()
-export class ImportTool{
 
+export class ImportTool{
     constructor(
         private readonly configService: ConfigService,
         private toolRepository: ToolRepository,
@@ -89,7 +89,7 @@ export class ImportTool{
                         }
                     );
 
-                    // tool.tags = allTagsToAdd;
+                    tool.tags = allTagsToAdd;
 
                     const toolSaved = await this.toolRepository.save(tool);
 

@@ -1,7 +1,8 @@
-import { BaseModel } from "../Shared/base.model";
-import { ToolModel } from "./tool.model";
+import { BaseModel } from "src/Domain/Shared/base.model";
+import { ToolModel } from "../Tool/tool.model";
 
-export class TagModel extends BaseModel {
+
+export class CategoryModel extends BaseModel {
   
   // Nombre del tag
   name: string;
