@@ -18,6 +18,14 @@ export class TagTypeormRepository extends TagRepository {
     return this.repository.find();
   }
 
+  async getAllCategories(): Promise<TagModel[]> {
+    return this.repository.find({
+      where: {
+        isCategory: true
+      }
+    });
+  }
+
   async update(tagModel: Partial<TagModel>) {
     return await this.repository.update(
       {id: tagModel.id},

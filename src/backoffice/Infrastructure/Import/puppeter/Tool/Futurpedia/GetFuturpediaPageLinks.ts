@@ -1,6 +1,7 @@
 import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
 import puppeteer from 'puppeteer-core';
+import { CannotImportToolException } from "src/Shared/Domain/Exception/Tool/CannotImportToolException";
 
 
 @Injectable()
@@ -11,9 +12,12 @@ export class GetFuturpediaPageLinks {
 
     async execute(route: string) {
 
-        console.log('Obtenemos links de ' + 'https://www.futurepedia.io/' + route)
-        const SBR_WS_ENDPOINT = 'wss://brd-customer-hl_16ecb6a4-zone-scraping_browser2:l7y9tpevqn75@brd.superproxy.io:9222';
-        console.log('La clave: ' + this.configService.getOrThrow('SBR_WS_ENDPOINT'))
+        console.log('Obtenemos links de ' + 'https://www.futurepedia.io/' + route);
+
+        const SBR_WS_ENDPOINT = 'wss://brd-customer-hl_4b0402b9-zone-scraping_browser4:3qzhznkob4x4@brd.superproxy.io:9222';
+// console.log('La clave: ' + this.configService.getOrThrow('SBR_WS_ENDPOINT'))
+
+
         let browser ;
 
         try {
@@ -21,9 +25,9 @@ export class GetFuturpediaPageLinks {
                 browserWSEndpoint: SBR_WS_ENDPOINT // this.configService.getOrThrow('SBR_WS_ENDPOINT')
             })
         } catch (error) {
-            console.log('puppeteer error', error)
+            console.log(error.stack);
+            throw CannotImportToolException.becauseCredentialsError();
         }
-        
 
         console.log('puppeteer connected')
 

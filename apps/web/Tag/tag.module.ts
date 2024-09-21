@@ -6,6 +6,8 @@ import { TagRepository } from 'src/Domain/Repository/tag.repository';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagController } from './tag.controller';
 import { GetAllTagsQueryHandler } from 'src/web/Application/Query/Tag/GetAllTagsQueryHandler';
+import { WebCategoryController } from './Category/WebCategoryController';
+import { GetAllCategoriesQueryHandler } from 'src/web/Application/Query/Tag/Category/GetAllCategoriesQueryHandler';
 
 
 @Module({
@@ -17,10 +19,12 @@ import { GetAllTagsQueryHandler } from 'src/web/Application/Query/Tag/GetAllTags
         CqrsModule
     ],
     controllers: [
-        TagController
+        TagController,
+        WebCategoryController
     ],
     providers: [
         GetAllTagsQueryHandler,
+        GetAllCategoriesQueryHandler,
         {
             provide: TagRepository,
             useClass: TagTypeormRepository,

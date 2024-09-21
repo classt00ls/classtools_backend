@@ -10,6 +10,7 @@ export abstract class TagRepository {
   abstract insert(model: TagModel): Promise<InsertResult>;
   abstract update(model: TagModel): Promise<UpdateResult>;
   abstract getAll(): Promise<TagModel[]>;
+  abstract getAllCategories(): Promise<TagModel[]>;
   abstract getOneByIdOrFail(id: string): Promise<TagModel>;
   abstract getOneByNameAndFail(name: string): Promise<void>;
   abstract getOneByNameOrFail(name: string): Promise<TagModel>;

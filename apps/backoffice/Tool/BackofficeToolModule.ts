@@ -8,10 +8,10 @@ import { BackofficeToolController } from './BackofficeToolcontroller';
 import { ImportTool } from 'src/backoffice/Infrastructure/Import/puppeter/Tool/ImportTool';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Domain/Repository/tag.repository';
-import { GetAllFuturpediaPageLinksQueryHandler } from 'src/Application/query/tools/GetAllFuturpediaPageLinksQueryHandler';
 import { ImportToolByLinkCommandHandler } from 'src/backoffice/Application/Command/Tool/ImportToolByLinkCommandHandler';
 import { FuturpediaController } from './Futurpedia/futurpedia.controller';
 import { GetFuturpediaPageLinks } from 'src/backoffice/Infrastructure/Import/puppeter/Tool/Futurpedia/GetFuturpediaPageLinks';
+import { GetAllFuturpediaPageLinksQueryHandler } from 'src/backoffice/Application/Query/Tool/Futurpedia/GetAllFuturpediaPageLinksQueryHandler';
 
 
 @Module({

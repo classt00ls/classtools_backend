@@ -1,14 +1,14 @@
 import { GetAllFuturpediaPageLinksQuery } from "./GetAllFuturpediaPageLinksQuery";
 import { QueryHandler } from "@nestjs/cqrs";
 import { Inject, Injectable } from "@nestjs/common";
-import { GetFuturpediaPageLinks } from "src/backoffice/Infrastructure/Import/puppeter/Tool/Futurpedia/GetFuturpediaPageLinks";
+import { GetFuturpediaPageLinksInterface } from "src/backoffice/Domain/Tool/Futurpedia/GetFuturpediaPageLinksInterface";
 
 
 @QueryHandler(GetAllFuturpediaPageLinksQuery)
 @Injectable()
 export class GetAllFuturpediaPageLinksQueryHandler {
     constructor(
-        @Inject('GetFuturpediaPageLinksInterface') private readonly futurpediaPageLinks: GetFuturpediaPageLinks
+        @Inject('GetFuturpediaPageLinksInterface') private readonly futurpediaPageLinks: GetFuturpediaPageLinksInterface
     ) {}
 
     async execute(command: GetAllFuturpediaPageLinksQuery) {
