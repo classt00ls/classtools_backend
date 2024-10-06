@@ -8,6 +8,14 @@ Content-Type: application/json
     "route": "ai-tools/social-media"
 }
 
+### Update futurpedia items
+POST http://localhost:3000/backoffice/futurpedia/update
+Content-Type: application/json
+
+{
+    "route": "https://www.futurepedia.io/tool/chaindesk"
+}
+
 
 ###  get json
 GET http://localhost:3000/futurpedia/json

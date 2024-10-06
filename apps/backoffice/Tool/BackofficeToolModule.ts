@@ -5,13 +5,15 @@ import { ToolSchema } from 'src/Infrastructure/Persistence/typeorm/tool.schema';
 import { ToolRepository } from 'src/Domain/Repository/tool.repository';
 import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
 import { BackofficeToolController } from './BackofficeToolcontroller';
-import { ImportTool } from 'src/backoffice/Infrastructure/Import/puppeter/Tool/ImportTool';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Domain/Repository/tag.repository';
 import { ImportToolByLinkCommandHandler } from 'src/backoffice/Application/Command/Tool/ImportToolByLinkCommandHandler';
 import { FuturpediaController } from './Futurpedia/futurpedia.controller';
 import { GetFuturpediaPageLinks } from 'src/backoffice/Infrastructure/Import/puppeter/Tool/Futurpedia/GetFuturpediaPageLinks';
 import { GetAllFuturpediaPageLinksQueryHandler } from 'src/backoffice/Application/Query/Tool/Futurpedia/GetAllFuturpediaPageLinksQueryHandler';
+import { UpdateFuturpediaTool } from 'src/backoffice/Infrastructure/Import/puppeter/Tool/Futurpedia/UpdateFuturpediaTool';
+import { UpdateToolByLinkCommandHandler } from 'src/backoffice/Application/Command/Tool/UpdateToolByLinkCommandHandler';
+import { ImportTool } from 'src/backoffice/Infrastructure/Import/puppeter/Tool/Futurpedia/ImportFuturpediaTool';
 
 
 @Module({
@@ -29,6 +31,7 @@ import { GetAllFuturpediaPageLinksQueryHandler } from 'src/backoffice/Applicatio
     providers: [
         ImportToolByLinkCommandHandler,
         GetAllFuturpediaPageLinksQueryHandler,
+        UpdateToolByLinkCommandHandler,
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,
@@ -40,6 +43,10 @@ import { GetAllFuturpediaPageLinksQueryHandler } from 'src/backoffice/Applicatio
         {
             provide: 'ImportToolInterface',
             useClass: ImportTool,
+        },
+        {
+            provide: 'UpdateFuturpediaToolInterface',
+            useClass: UpdateFuturpediaTool,
         },
         {
             provide: 'GetFuturpediaPageLinksInterface',

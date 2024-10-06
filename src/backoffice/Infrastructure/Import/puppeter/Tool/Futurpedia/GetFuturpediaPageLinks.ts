@@ -1,39 +1,29 @@
 import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
-import puppeteer from 'puppeteer-core';
-import { CannotImportToolException } from "src/Shared/Domain/Exception/Tool/CannotImportToolException";
+import puppeteer, { Browser } from 'puppeteer-core';
+import { PuppeterScrapConnectionProvider } from "src/Shared/Infrastructure/Service/Tool/PuppeterScrapConnectionProvider";
 
-
+/**
+ * @description Devuelve todos los links a páginas individuales de IA que encuentra en una página de Futurpedia
+ */
 @Injectable()
 export class GetFuturpediaPageLinks {
+
+    connection_provider: PuppeterScrapConnectionProvider;
+
     constructor(
         private readonly configService: ConfigService
-    ) {}
+    ) {
+        this.connection_provider = new PuppeterScrapConnectionProvider('wss://brd-customer-hl_4b0402b9-zone-scraping_browser4:3qzhznkob4x4@brd.superproxy.io:9222');
+    
+    }
 
     async execute(route: string) {
-
-        console.log('Obtenemos links de ' + 'https://www.futurepedia.io/' + route);
-
-        const SBR_WS_ENDPOINT = 'wss://brd-customer-hl_4b0402b9-zone-scraping_browser4:3qzhznkob4x4@brd.superproxy.io:9222';
-// console.log('La clave: ' + this.configService.getOrThrow('SBR_WS_ENDPOINT'))
-
-
-        let browser ;
-
-        try {
-            browser = await puppeteer.connect({
-                browserWSEndpoint: SBR_WS_ENDPOINT // this.configService.getOrThrow('SBR_WS_ENDPOINT')
-            })
-        } catch (error) {
-            console.log(error.stack);
-            throw CannotImportToolException.becauseCredentialsError();
-        }
-
-        console.log('puppeteer connected')
+        
+        const browser = await this.connection_provider.getConnection() as Browser;
 
         let page = await browser.newPage(); 
         page.setDefaultNavigationTimeout(2 * 60 * 1000);
-
         
         await Promise.all([
             page.waitForNavigation(),

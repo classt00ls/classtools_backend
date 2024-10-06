@@ -1,6 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ImportToolByLinkCommand } from 'src/backoffice/Application/Command/Tool/ImportToolByLinkCommand';
+import { UpdateToolByLinkCommand } from 'src/backoffice/Application/Command/Tool/UpdateToolByLinkCommand';
 import { GetAllFuturpediaPageLinksQuery } from 'src/backoffice/Application/Query/Tool/Futurpedia/GetAllFuturpediaPageLinksQuery';
 
 @Controller('backoffice/futurpedia')
@@ -43,4 +44,16 @@ console.log('Buscamos en: ' + routeToscrap);
       }
     }
   }
+
+  @Post('update')
+  async updateToolInfo(
+    @Body('route') route: string
+  ) {
+    console.log('Hola ??')
+    await this.commandBus.execute(
+        new UpdateToolByLinkCommand(route)
+    )
+      
+  }
+  
 }
