@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { DataSource, InsertResult, Repository } from 'typeorm';
 import { CompanyModel } from "src/Domain/Model/company.model";
 import { CompanyRepository } from "src/Domain/Repository/company.repository";
-import { CompanySchema } from "src/Infrastructure/Persistence/typeorm/company.schema";
+import { CompanySchema } from "src/Shared/Infrastructure/Persistence/typeorm/company.schema";
 
 @Injectable()
 export class CompanyTypeormRepository extends CompanyRepository {

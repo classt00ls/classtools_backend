@@ -8,8 +8,15 @@ export class ToolModel extends BaseModel {
   // Nombre de la IA tool
   name: string;
 
+  pricing: string;
+
+  stars: Number;
+
   // La descripción completa
   description: string;
+
+  // Las características con formato html
+  features: string;
 
   // La descripción corta
   excerpt: string;

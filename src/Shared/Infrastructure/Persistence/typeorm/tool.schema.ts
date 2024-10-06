@@ -14,7 +14,19 @@ export const ToolSchema = new EntitySchema<ToolModel>({
       type: String,
       nullable: true
     }, 
+    features: {
+      type: String,
+      nullable: true
+    }, 
+    stars: {
+      type: Number,
+      nullable: true
+    }, 
     excerpt: {
+      type: String,
+      nullable: true
+    },
+    pricing: {
       type: String,
       nullable: true
     },

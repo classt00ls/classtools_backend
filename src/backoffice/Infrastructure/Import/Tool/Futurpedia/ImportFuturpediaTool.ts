@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import puppeteer, { Browser } from 'puppeteer-core';
 import { ConfigService } from "@nestjs/config";
 import { ToolRepository } from "src/Domain/Repository/tool.repository";
 import { EventEmitter2 } from "@nestjs/event-emitter";
@@ -10,14 +9,11 @@ import { PuppeterScrapping } from "../../../../../Shared/Infrastructure/Import/p
 import { GetToolTitle } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolTitle";
 import { GetToolTags } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolTags";
 import { GetToolPricing } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolPricing";
-import { PuppeterScrapConnectionProvider } from "src/Shared/Infrastructure/Import/puppeteer/PuppeterScrapConnectionProvider";
 
 
 @Injectable()
 
 export class ImportTool extends PuppeterScrapping {
-
-    connection_provider: PuppeterScrapConnectionProvider;
 
     constructor(
         private readonly configService: ConfigService,

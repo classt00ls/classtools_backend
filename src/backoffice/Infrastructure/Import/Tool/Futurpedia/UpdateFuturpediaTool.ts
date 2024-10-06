@@ -1,13 +1,11 @@
 import { Injectable } from "@nestjs/common";
 
-import { ConfigService } from "@nestjs/config";
 import { ToolRepository } from "src/Domain/Repository/tool.repository";
-import { EventEmitter2 } from "@nestjs/event-emitter";
-import { TagRepository } from "src/Domain/Repository/tag.repository";
-import { GetToolTitle } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolTitle";
-import { GetToolTags } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolTags";
 import { GetToolPricing } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolPricing";
 import { PuppeterScrapping } from "../../../../../Shared/Infrastructure/Import/puppeteer/PuppeterScrapping";
+import { GetToolDescription } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolDescription";
+import { GetToolFeatures } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolFeatures";
+import { GetToolStars } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolStars";
 
 
 @Injectable()
@@ -15,29 +13,31 @@ import { PuppeterScrapping } from "../../../../../Shared/Infrastructure/Import/p
 export class UpdateFuturpediaTool extends PuppeterScrapping {
 
     constructor(
-        private readonly configService: ConfigService,
-        private toolRepository: ToolRepository,
-        private eventEmitter: EventEmitter2,
-        private tagRepository: TagRepository
+        private toolRepository: ToolRepository
     ) {
         super();
     }
 
     async execute(url: string) {
-        let tool;
+        const tool = await this.toolRepository.getOneByLinkOrFail(url);
 
         let page = await this.getPage(url);
 
         try {
-            const title = await GetToolTitle.execute(page);
-            const tags = await GetToolTags.execute(page);
+            const features = await GetToolFeatures.execute(page);
+            const stars = await GetToolStars.execute(page); 
             const pricing = await GetToolPricing.execute(page); 
+            const description = await GetToolDescription.execute(page);
 
-            console.log(' Princing: ', pricing);
+            tool.description = description;
+            tool.features = features;
+            tool.pricing = pricing;
+            tool.stars = stars;
 
-            const url = await page.$eval('div.mt-4.flex.flex-wrap.gap-4 > a', reference => reference.href);
+            //const pageUrl = await page.$eval('div.mt-4.flex.flex-wrap.gap-4 > a', reference => reference.href);
+            //const excerpt = await page.$eval('p.my-2', desc => desc.innerText);
 
-            const excerpt = await page.$eval('p.my-2', desc => desc.innerText);
+            const toolSaved = await this.toolRepository.save(tool);
             
 /*
             this.eventEmitter.emit(
