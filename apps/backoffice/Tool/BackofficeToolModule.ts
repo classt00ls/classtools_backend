@@ -9,11 +9,11 @@ import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.
 import { TagRepository } from 'src/Domain/Repository/tag.repository';
 import { ImportToolByLinkCommandHandler } from 'src/backoffice/Application/Command/Tool/ImportToolByLinkCommandHandler';
 import { FuturpediaController } from './Futurpedia/futurpedia.controller';
-import { GetFuturpediaPageLinks } from 'src/backoffice/Infrastructure/Import/puppeter/Tool/Futurpedia/GetFuturpediaPageLinks';
+import { GetFuturpediaPageLinks } from 'src/backoffice/Infrastructure/Import/Tool/Futurpedia/GetFuturpediaPageLinks';
 import { GetAllFuturpediaPageLinksQueryHandler } from 'src/backoffice/Application/Query/Tool/Futurpedia/GetAllFuturpediaPageLinksQueryHandler';
-import { UpdateFuturpediaTool } from 'src/backoffice/Infrastructure/Import/puppeter/Tool/Futurpedia/UpdateFuturpediaTool';
+import { UpdateFuturpediaTool } from 'src/backoffice/Infrastructure/Import/Tool/Futurpedia/UpdateFuturpediaTool';
 import { UpdateToolByLinkCommandHandler } from 'src/backoffice/Application/Command/Tool/UpdateToolByLinkCommandHandler';
-import { ImportTool } from 'src/backoffice/Infrastructure/Import/puppeter/Tool/Futurpedia/ImportFuturpediaTool';
+import { ImportTool } from 'src/backoffice/Infrastructure/Import/Tool/Futurpedia/ImportFuturpediaTool';
 
 
 @Module({

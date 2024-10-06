@@ -1,7 +1,7 @@
 import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
 import puppeteer, { Browser } from 'puppeteer-core';
-import { PuppeterScrapConnectionProvider } from "src/Shared/Infrastructure/Service/Tool/PuppeterScrapConnectionProvider";
+import { PuppeterScrapConnectionProvider } from "src/Shared/Infrastructure/Import/puppeteer/PuppeterScrapConnectionProvider";
 
 /**
  * @description Devuelve todos los links a páginas individuales de IA que encuentra en una página de Futurpedia

@@ -6,11 +6,11 @@ import { EventEmitter2 } from "@nestjs/event-emitter";
 import { TagRepository } from "src/Domain/Repository/tag.repository";
 import { ToolCreatedEvent } from "src/Shared/Domain/Event/Tool/ToolCreatedEvent";
 import { TagModel } from "src/Shared/Domain/Model/Tag/Tag.model";
-import { PuppeterScrapConnectionProvider } from "src/Shared/Infrastructure/Service/Tool/PuppeterScrapConnectionProvider";
-import { PuppeterScrapping } from "../../PuppeterScrapping";
+import { PuppeterScrapping } from "../../../../../Shared/Infrastructure/Import/puppeteer/PuppeterScrapping";
 import { GetToolTitle } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolTitle";
 import { GetToolTags } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolTags";
 import { GetToolPricing } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolPricing";
+import { PuppeterScrapConnectionProvider } from "src/Shared/Infrastructure/Import/puppeteer/PuppeterScrapConnectionProvider";
 
 
 @Injectable()

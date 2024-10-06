@@ -7,7 +7,7 @@ import { TagRepository } from "src/Domain/Repository/tag.repository";
 import { GetToolTitle } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolTitle";
 import { GetToolTags } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolTags";
 import { GetToolPricing } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolPricing";
-import { PuppeterScrapping } from "../../PuppeterScrapping";
+import { PuppeterScrapping } from "../../../../../Shared/Infrastructure/Import/puppeteer/PuppeterScrapping";
 
 
 @Injectable()
