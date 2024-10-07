@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 
-import { DataSource, InsertResult, Repository } from 'typeorm';
+import { DataSource, In, InsertResult, MoreThan, Repository } from 'typeorm';
 import { ToolRepository } from "src/Domain/Repository/tool.repository";
 import { ToolSchema } from "src/Shared/Infrastructure/Persistence/typeorm/tool.schema";
-import { GenericFilter } from "src/Shared/Domain/GenericFilter";
+import { GenericFilter } from "src/Shared/Application/Filter/Tool/GenericFilter";
 import { ToolModel } from "src/Shared/Domain/Model/Tool/tool.model";
 
 @Injectable()
@@ -23,7 +23,11 @@ export class ToolTypeormRepository extends ToolRepository {
     return this.repository.find({
       skip: filter.getPage(),
       take: filter.getPageSize(),
-      relations: ['tags']
+      relations: ['tags'],
+      where: {
+         ...(filter.getTags()?.length > 0 && {tags: {name: In(filter.getTags())}}),
+         stars: MoreThan(filter.getStars())
+      }
     });
 
   }
@@ -51,8 +55,16 @@ export class ToolTypeormRepository extends ToolRepository {
     return response;
   }
 
-  async count( ): Promise<number> {
-    const response = await this.repository.count();
+  async count( 
+    tags: Array<string>,
+    stars: number
+  ): Promise<number> {
+    const response = await this.repository.count({
+        where: {
+          ...(tags?.length > 0 && {tags: {name: In(tags)}}),
+          stars: MoreThan(stars)
+        }  
+    });
     return response;
   }
 

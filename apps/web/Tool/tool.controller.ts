@@ -1,10 +1,15 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
+// web application DTO
+import { FilterToolsDto } from 'src/web/Application/Dto/Tool/filterTools.dto';
 import { getAllToolsDto } from 'src/web/Application/Dto/Tool/getAllTools.dto';
 import { getDetailToolDto } from 'src/web/Application/Dto/Tool/getDetailTool.dto';
+// web application Queries
 import { CountToolsQuery } from 'src/web/Application/Query/Tool/CountToolsQuery';
 import { GetAllToolsQuery } from 'src/web/Application/Query/Tool/GetAllToolsQuery';
 import { GetDetailToolQuery } from 'src/web/Application/Query/Tool/GetDetailToolQuery';
+import { GetFilteredToolsQuery } from 'src/web/Application/Query/Tool/GetFilteredToolsQuery';
+
 import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';
 
 @Controller('tool')
@@ -28,7 +33,7 @@ export class ToolController {
     );
 
     const count = await this.queryBus.execute(
-      new CountToolsQuery( )
+      new CountToolsQuery(  )
     );
 
     return {
@@ -36,6 +41,36 @@ export class ToolController {
       count
     }
 
+
+  }
+
+  @Post('filter')
+  @Serialize(getAllToolsDto)
+  async getByFilter(
+    @Body() filters: FilterToolsDto
+  ) {
+
+    console.log(' ---------------- ', filters.page)
+    const data = await this.queryBus.execute(
+        new GetFilteredToolsQuery(
+          filters.page,
+          filters.pageSize,
+          filters.tags,
+          filters.stars
+        )
+    );
+
+    const count = await this.queryBus.execute(
+      new CountToolsQuery(
+        filters.tags,
+        filters.stars
+      )
+    );
+
+    return {
+      data,
+      count
+    }
 
   }
 

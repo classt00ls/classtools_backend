@@ -10,7 +10,17 @@ Content-Type: application/json
 
 
 ###  get json
-GET http://localhost:3000/tool?page=5&pageSize=5
+GET http://localhost:3000/tool?page=10&pageSize=12
+
+### filtered tools
+POST http://localhost:3000/tool/filter
+Content-Type: application/json
+
+{
+    "pageSize": 12,
+    "page": 2,
+    "tags": ["SEO", "Copywriting"]
+}
 
 ### get detail
 GET http://localhost:3000/tool/detail?id=21a63400-4dff-4d48-bb7c-ddf266abae20

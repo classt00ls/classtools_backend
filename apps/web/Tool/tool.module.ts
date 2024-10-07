@@ -8,6 +8,7 @@ import { ToolController } from './tool.controller';
 import { GetAllToolsQueryHandler } from 'src/web/Application/Query/Tool/GetAllToolsQueryHandler';
 import { CountToolsQueryHandler } from 'src/web/Application/Query/Tool/CountToolsQueryHandler';
 import { GetDetailToolQueryHandler } from 'src/web/Application/Query/Tool/GetDetailToolQueryHandler';
+import { GetFilteredToolsQueryHandler } from 'src/web/Application/Query/Tool/GetFilteredToolsQueryHandler';
 
 
 @Module({
@@ -25,6 +26,7 @@ import { GetDetailToolQueryHandler } from 'src/web/Application/Query/Tool/GetDet
         CountToolsQueryHandler,
         GetAllToolsQueryHandler,
         GetDetailToolQueryHandler,
+        GetFilteredToolsQueryHandler,
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,

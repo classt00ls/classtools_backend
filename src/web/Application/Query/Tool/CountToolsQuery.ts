@@ -4,6 +4,7 @@
  */
 export class CountToolsQuery {
     constructor(
-        
+        public tags: string[] = [],
+        public stars: number = 0
     ){}
 }
