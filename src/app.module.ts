@@ -11,6 +11,7 @@ import { TagModule } from 'apps/web/Tag/tag.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BackofficeToolModule } from 'apps/backoffice/Tool/BackofficeToolModule';
 import { BackofficeTagModule } from 'apps/backoffice/Tag/BackofficeTagModule';
+import { BackofficeFuturpediaToolModule } from 'apps/backoffice/Tool/Futurpedia/BackofficeFuturpediaToolModule';
 
 let databaseConfig: Partial<TypeOrmModuleOptions>; 
 
@@ -42,6 +43,7 @@ switch (process.env.NODE_ENV) {
     TagModule,
     BackofficeTagModule,
     BackofficeToolModule,
+    BackofficeFuturpediaToolModule,
     EventEmitterModule.forRoot({
       // set this to `true` to use wildcards
       wildcard: false,

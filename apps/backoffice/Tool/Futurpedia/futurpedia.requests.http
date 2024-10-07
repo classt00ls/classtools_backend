@@ -13,7 +13,7 @@ POST http://localhost:3000/backoffice/futurpedia/update
 Content-Type: application/json
 
 {
-    "route": "https://www.futurepedia.io/ai-tools/writing-generators"
+    "route": "https://www.futurepedia.io/ai-tools/marketing"
 }
 
 

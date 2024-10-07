@@ -1,14 +1,14 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { UpdateFuturpediaToolInterface } from "src/backoffice/Domain/Tool/Futurpedia/UpdateFuturpediaToolInterface";
 import { UpdateToolByLinkCommand } from "./UpdateToolByLinkCommand";
+import { UpdateToolInterface } from "src/backoffice/Domain/Tool/UpdateToolInterface";
 
 
 @CommandHandler(UpdateToolByLinkCommand)
 @Injectable()
 export class UpdateToolByLinkCommandHandler implements ICommandHandler<UpdateToolByLinkCommand>{
     constructor(
-        @Inject('UpdateFuturpediaToolInterface') private readonly updateTool: UpdateFuturpediaToolInterface
+        @Inject('UpdateToolInterface') private readonly updateTool: UpdateToolInterface
     ) {}
 
     async execute(command: UpdateToolByLinkCommand) {
