@@ -26,7 +26,7 @@ export class ToolTypeormRepository extends ToolRepository {
       relations: ['tags'],
       where: {
          ...(filter.getTags()?.length > 0 && {tags: {name: In(filter.getTags())}}),
-         stars: MoreThan(filter.getStars())
+         ...(filter.getStars() && {stars: MoreThan(filter.getStars()) })
       }
     });
 
@@ -62,7 +62,7 @@ export class ToolTypeormRepository extends ToolRepository {
     const response = await this.repository.count({
         where: {
           ...(tags?.length > 0 && {tags: {name: In(tags)}}),
-          stars: MoreThan(stars)
+          ...(stars && {stars: MoreThan(stars) })
         }  
     });
     return response;
