@@ -24,9 +24,6 @@ import { UpdateToolByLinkCommandHandler } from 'src/backoffice/Application/Comma
         BackofficeToolController
     ],
     providers: [
-        ImportToolByLinkCommandHandler,
-        GetAllFuturpediaPageLinksQueryHandler,
-        UpdateToolByLinkCommandHandler,
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,
@@ -37,4 +34,4 @@ import { UpdateToolByLinkCommandHandler } from 'src/backoffice/Application/Comma
         }
     ]
  })
-export class BackofficeToolModule {}
+export class BackofficeToolModule {} 
