@@ -6,6 +6,7 @@ import { PuppeterScrapping } from "../../../../../Shared/Infrastructure/Import/p
 import { GetToolDescription } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolDescription";
 import { GetToolFeatures } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolFeatures";
 import { GetToolStars } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolStars";
+import { CannotUpdateToolException } from "src/Shared/Domain/Exception/Tool/CannotUpdateToolException";
 
 
 @Injectable()
@@ -19,7 +20,15 @@ export class UpdateFuturpediaTool extends PuppeterScrapping {
     }
 
     async execute(url: string) {
-        const tool = await this.toolRepository.getOneByLinkOrFail(url);
+        let tool;
+        try {
+            tool = await this.toolRepository.getOneByLinkOrFail(url);
+        } catch (error) {
+            
+            console.log('Eps !  aquest no el tenim: ' + url);
+            return;
+        }
+        
 
         let page = await this.getPage(url);
 
@@ -38,6 +47,8 @@ export class UpdateFuturpediaTool extends PuppeterScrapping {
             //const excerpt = await page.$eval('p.my-2', desc => desc.innerText);
 
             const toolSaved = await this.toolRepository.save(tool);
+
+            console.log('hem actualitzat: '+url)
             
 /*
             this.eventEmitter.emit(

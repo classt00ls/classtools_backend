@@ -3,7 +3,7 @@ import { TagDto } from "../Tag/tag.dto";
 import { ValidateNested } from "class-validator";
 
 // Dto que se enviará al front de un lead
-export class ToolDashboardDto {
+export class getDetailToolDto {
 	constructor(data) {
 	}
 
@@ -18,19 +18,19 @@ export class ToolDashboardDto {
 	url: string;
 
 	@Expose()
-	pricing: string;
-
-	@Expose()
 	background_image: string;
 
 	@Expose()
-	price: string
+	pricing: string
 
 	@Expose()
 	stars: string
 
 	@Expose()
 	excerpt: string
+
+    @Expose()
+    features: string
 
 	@Expose()
 	description: string

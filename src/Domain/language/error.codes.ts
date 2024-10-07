@@ -39,6 +39,9 @@ export const ERROR_CODES = {
    IMPORT_TOOL: {
       CREDENTIALS_INVALID: 2001
    },
+   UPDATE_TOOL: {
+      TOOL_NOT_FOUND: 2010
+   },
    CREATE_USER_COMMAND: {
       EMAIL_IN_USE: 3001,
       COMPANY_IN_USE: 3002

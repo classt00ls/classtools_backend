@@ -12,5 +12,7 @@ Content-Type: application/json
 ###  get json
 GET http://localhost:3000/tool?page=5&pageSize=5
 
+### get detail
+GET http://localhost:3000/tool/detail?id=21a63400-4dff-4d48-bb7c-ddf266abae20
 ###  get tags
 GET http://localhost:3000

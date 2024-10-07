@@ -49,10 +49,32 @@ console.log('Buscamos en: ' + routeToscrap);
   async updateToolInfo(
     @Body('route') route: string
   ) {
-    console.log('Hola ??')
-    await this.commandBus.execute(
-        new UpdateToolByLinkCommand(route)
-    )
+
+    const response = [];
+    let page = '';
+
+    for(let i of [1,2,3,4,5]) {
+
+      page = i==1 ? '' : '?page='+i;
+
+      const routeToscrap = route+page;
+
+console.log('Buscamos en: ' + routeToscrap);
+      
+      const links = await this.queryBus.execute(
+          new GetAllFuturpediaPageLinksQuery(routeToscrap)
+      )
+
+//console.log(' --------- Los links: ', links); return;
+
+      for (let link of links) {
+          await this.commandBus.execute(
+            new UpdateToolByLinkCommand(link) 
+        )
+      }
+    }
+    
+   
       
   }
   

@@ -7,6 +7,7 @@ import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/too
 import { ToolController } from './tool.controller';
 import { GetAllToolsQueryHandler } from 'src/web/Application/Query/Tool/GetAllToolsQueryHandler';
 import { CountToolsQueryHandler } from 'src/web/Application/Query/Tool/CountToolsQueryHandler';
+import { GetDetailToolQueryHandler } from 'src/web/Application/Query/Tool/GetDetailToolQueryHandler';
 
 
 @Module({
@@ -23,6 +24,7 @@ import { CountToolsQueryHandler } from 'src/web/Application/Query/Tool/CountTool
     providers: [
         CountToolsQueryHandler,
         GetAllToolsQueryHandler,
+        GetDetailToolQueryHandler,
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,

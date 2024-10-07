@@ -7,7 +7,7 @@ export class ToolCreatedListener {
 
   @OnEvent('backoffice.tool.created', { async: true }) 
   handleToolCreatedEvent(event: ToolCreatedEvent) {
-    console.log(event);
+    console.log('Guai !!   ja tenim: ' + event.name);
   }
 
 }

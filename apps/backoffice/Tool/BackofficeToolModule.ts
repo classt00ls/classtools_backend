@@ -13,7 +13,7 @@ import { GetFuturpediaPageLinks } from 'src/backoffice/Infrastructure/Import/Too
 import { GetAllFuturpediaPageLinksQueryHandler } from 'src/backoffice/Application/Query/Tool/Futurpedia/GetAllFuturpediaPageLinksQueryHandler';
 import { UpdateFuturpediaTool } from 'src/backoffice/Infrastructure/Import/Tool/Futurpedia/UpdateFuturpediaTool';
 import { UpdateToolByLinkCommandHandler } from 'src/backoffice/Application/Command/Tool/UpdateToolByLinkCommandHandler';
-import { ImportTool } from 'src/backoffice/Infrastructure/Import/Tool/Futurpedia/ImportFuturpediaTool';
+import { ImportFuturpediaTool } from 'src/backoffice/Infrastructure/Import/Tool/Futurpedia/ImportFuturpediaTool';
 
 
 @Module({
@@ -42,7 +42,7 @@ import { ImportTool } from 'src/backoffice/Infrastructure/Import/Tool/Futurpedia
         },
         {
             provide: 'ImportToolInterface',
-            useClass: ImportTool,
+            useClass: ImportFuturpediaTool,
         },
         {
             provide: 'UpdateFuturpediaToolInterface',

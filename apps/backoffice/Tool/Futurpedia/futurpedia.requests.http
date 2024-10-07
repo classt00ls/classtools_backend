@@ -5,7 +5,7 @@ POST http://localhost:3000/backoffice/futurpedia
 Content-Type: application/json
 
 {
-    "route": "ai-tools/social-media"
+    "route": "https://www.futurepedia.io/ai-tools/chatbots"
 }
 
 ### Update futurpedia items
@@ -13,7 +13,7 @@ POST http://localhost:3000/backoffice/futurpedia/update
 Content-Type: application/json
 
 {
-    "route": "https://www.futurepedia.io/tool/chaindesk"
+    "route": "https://www.futurepedia.io/ai-tools/writing-generators"
 }
 
 
