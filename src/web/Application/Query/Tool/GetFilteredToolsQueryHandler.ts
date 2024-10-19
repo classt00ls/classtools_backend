@@ -14,6 +14,7 @@ export class GetFilteredToolsQueryHandler {
 
     async execute(query: GetFilteredToolsQuery) {
 
+        console.log('La query: ', query)
         return await this.toolRepository.getAll(
             new GenericFilter(
                 query.page,

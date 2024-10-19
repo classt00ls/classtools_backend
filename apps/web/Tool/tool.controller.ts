@@ -47,23 +47,24 @@ export class ToolController {
   @Post('filter')
   @Serialize(getAllToolsDto)
   async getByFilter(
-    @Body() filters: FilterToolsDto
+    @Body() filterTools: FilterToolsDto
   ) {
 
-    console.log(' ---------------- ', filters.page)
+    console.log(' ===========  params: ', filterTools);
+    
     const data = await this.queryBus.execute(
         new GetFilteredToolsQuery(
-          filters.page,
-          filters.pageSize,
-          filters.tags,
-          filters.stars
+          filterTools.params.page,
+          filterTools.params.pageSize,
+          filterTools.params.filters.selectedCategories,
+          filterTools.params.filters.stars
         )
     );
 
     const count = await this.queryBus.execute(
       new CountToolsQuery(
-        filters.tags,
-        filters.stars
+        filterTools.params.filters.selectedCategories,
+        filterTools.params.filters.stars
       )
     );
 
