@@ -3,8 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { DataSource, In, InsertResult, MoreThan, Repository } from 'typeorm';
 import { ToolRepository } from "src/Domain/Repository/tool.repository";
 import { ToolSchema } from "src/Shared/Infrastructure/Persistence/typeorm/tool.schema";
-import { GenericFilter } from "src/Shared/Application/Filter/Tool/GenericFilter";
 import { ToolModel } from "src/Shared/Domain/Model/Tool/tool.model";
+import { ToolGenericFilter } from "src/Shared/Application/Filter/Tool/ToolGenericFilter";
 
 @Injectable()
 export class ToolTypeormRepository extends ToolRepository {
@@ -17,7 +17,7 @@ export class ToolTypeormRepository extends ToolRepository {
   }
   
   async getAll(
-    filter: GenericFilter
+    filter: ToolGenericFilter
   ): Promise<ToolModel[]> {
 
     return this.repository.find({

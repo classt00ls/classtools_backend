@@ -49,8 +49,6 @@ export class ToolController {
   async getByFilter(
     @Body() filterTools: FilterToolsDto
   ) {
-
-    console.log(' ===========  params: ', filterTools);
     
     const data = await this.queryBus.execute(
         new GetFilteredToolsQuery(

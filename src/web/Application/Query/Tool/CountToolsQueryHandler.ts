@@ -2,7 +2,6 @@ import { QueryHandler } from "@nestjs/cqrs";
 import { Injectable } from "@nestjs/common";
 import { ToolRepository } from "src/Domain/Repository/tool.repository";
 import { CountToolsQuery } from "src/web/Application/Query/Tool/CountToolsQuery";
-import { GenericFilter } from "src/Shared/Application/Filter/Tool/GenericFilter";
 
 
 @QueryHandler(CountToolsQuery)
