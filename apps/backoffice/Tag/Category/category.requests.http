@@ -1,10 +1,10 @@
 
-### Get futurpedia items
+### upgrade tag to category by id
 
 POST http://localhost:3000/backoffice/category/upgrade
 Content-Type: application/json
 
 {
-    "id": "c7491400-b2b4-42a7-8fc2-43aea7a37624"
+    "id": "716387ee-57c2-4317-b8c9-edccf47a5b53"
 }
 

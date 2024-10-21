@@ -5,6 +5,7 @@ export class ToolGenericFilter extends GenericFilter{
   constructor (
     private tags: string[],
     private stars: number,
+    private title: string = '',
     page: number = 1,
     pageSize: number = 15,
     orderBy?: string
@@ -36,7 +37,8 @@ export class ToolGenericFilter extends GenericFilter{
   public toPrimitives() {
     return Object.assign({
       tags: this.tags,
-      stars: this.stars
+      stars: this.stars,
+      title: this.title,
     }, ...this.toPrimitives());
   }
 
@@ -46,6 +48,10 @@ export class ToolGenericFilter extends GenericFilter{
 
   public getStars(): number {
     return Number(this.stars);
+  }
+
+  public getTitle(): string {
+    return this.title;
   }
   
 }

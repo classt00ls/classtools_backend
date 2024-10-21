@@ -1,3 +1,4 @@
+import { FilterDto } from "../../Dto/Tool/filterTools.dto";
 
 /**
  * @description Filtra las tools por los parámetros genéricos (page, pagesize, ...) y además por los parámetros de busqueda propios de las tools:
@@ -11,7 +12,6 @@ export class GetFilteredToolsQuery {
     constructor(
         public page: number,
         public pageSize: number,
-        public tags: string[],
-        public stars: number
+        public filter: FilterDto
     ){}
 }

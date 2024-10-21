@@ -8,28 +8,7 @@ export class FilterDto {
 
     @Expose()
     stars: number;
+
+    @Expose()
+    title: string;
 }
-
-class ToolDto {
-    constructor(data) {
-	}
-
-    @Expose()
-    page: number;
-
-    @Expose()
-    pageSize: number;
-
-    @Expose()
-    @Type(() => FilterDto)
-    @ValidateNested()
-    filters: FilterDto
-}
-export class FilterToolsDto {
-
-    @Expose()
-    @Type(() => ToolDto)
-    @ValidateNested()
-    params: ToolDto;
-}
-

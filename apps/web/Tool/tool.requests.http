@@ -17,9 +17,15 @@ POST http://localhost:3000/tool/filter
 Content-Type: application/json
 
 {
-    "pageSize": 12,
-    "page": 2,
-    "tags": ["SEO", "Copywriting"]
+    "params": {
+        "pageSize": 12,
+        "page": 2,
+        "filters": {
+            "selectedCategories": [],
+            "title": "chat"
+        }
+    }
+    
 }
 
 ### get detail

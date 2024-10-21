@@ -16,8 +16,9 @@ export class GetFilteredToolsQueryHandler {
 
         return await this.toolRepository.getAll(
             new ToolGenericFilter(
-                query.tags,
-                query.stars,
+                query.filter.selectedCategories,
+                query.filter.stars,
+                query.filter.title,
                 query.page,
                 query.pageSize
             )

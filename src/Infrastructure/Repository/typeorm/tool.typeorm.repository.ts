@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { DataSource, In, InsertResult, MoreThan, Repository } from 'typeorm';
+import { DataSource, In, InsertResult, Like, MoreThan, Repository } from 'typeorm';
 import { ToolRepository } from "src/Domain/Repository/tool.repository";
 import { ToolSchema } from "src/Shared/Infrastructure/Persistence/typeorm/tool.schema";
 import { ToolModel } from "src/Shared/Domain/Model/Tool/tool.model";
@@ -25,8 +25,9 @@ export class ToolTypeormRepository extends ToolRepository {
       take: filter.getPageSize(),
       relations: ['tags'],
       where: {
-         ...(filter.getTags()?.length > 0 && {tags: {name: In(filter.getTags())}}),
-         ...(filter.getStars() && {stars: MoreThan(filter.getStars()) })
+        ...(filter.getTitle() != '' && {name: Like(`%${filter.getTitle()}%`)}),
+        ...(filter.getTags()?.length > 0 && {tags: {name: In(filter.getTags())}}),
+        ...(filter.getStars() && {stars: MoreThan(filter.getStars()) })
       }
     });
 
@@ -57,10 +58,12 @@ export class ToolTypeormRepository extends ToolRepository {
 
   async count( 
     tags: Array<string>,
-    stars: number
+    stars: number,
+    title: string
   ): Promise<number> {
     const response = await this.repository.count({
         where: {
+          ...(title != '' && {name: Like(`%${title}%`)}),
           ...(tags?.length > 0 && {tags: {name: In(tags)}}),
           ...(stars && {stars: MoreThan(stars) })
         }  

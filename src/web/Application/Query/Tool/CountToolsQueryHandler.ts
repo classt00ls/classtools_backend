@@ -14,8 +14,9 @@ export class CountToolsQueryHandler {
     async execute(query: CountToolsQuery) {
 
         return await this.toolRepository.count( 
-            query.tags,
-            query.stars
+            query.filter.selectedCategories,
+            query.filter.stars,
+            query.filter.title
         );
         
     }
