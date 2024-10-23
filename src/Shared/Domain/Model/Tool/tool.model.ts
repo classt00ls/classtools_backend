@@ -1,5 +1,5 @@
 import { TagModel } from "src/Shared/Domain/Model/Tag/Tag.model";
-import { BaseModel } from "../../../../Domain/Shared/base.model";
+import { BaseModel } from "../base.model";
 
 export type ToolStatus = 'pending' | 'published' //  TODO: add more status
 

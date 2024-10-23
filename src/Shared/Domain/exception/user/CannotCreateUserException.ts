@@ -1,5 +1,5 @@
 import { BadRequestException } from "@nestjs/common";
-import { ERROR_CODES } from "src/Domain/language/error.codes";
+import { ERROR_CODES } from "src/Shared/Domain/language/error.codes";
 
 export class CannotCreateUserException extends BadRequestException {
 

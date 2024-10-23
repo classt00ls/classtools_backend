@@ -4,7 +4,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateUserDto } from "src/Shared/Domain/Dto/user/create-user.dto";
 import { CreateUserCommand } from "src/Application/command/user/CreateUserCommand";
 import { CannotCreateUserException } from "src/Shared/Domain/Exception/user/CannotCreateUserException";
-import { ERROR_CODES } from "src/Domain/language/error.codes";
+import { ERROR_CODES } from "src/Shared/Domain/language/error.codes";
 
 @Controller('user')
 export class UsersController {

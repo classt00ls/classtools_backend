@@ -1,5 +1,5 @@
 import { BadRequestException, UnauthorizedException } from "@nestjs/common";
-import { ERROR_CODES } from "src/Domain/language/error.codes";
+import { ERROR_CODES } from "src/Shared/Domain/language/error.codes";
 
 export class CannotImportToolException extends UnauthorizedException {
 

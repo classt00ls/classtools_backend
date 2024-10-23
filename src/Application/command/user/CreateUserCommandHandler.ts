@@ -3,7 +3,7 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { randomBytes, scrypt  as _script} from "crypto";
 import { promisify } from "util";
 import { CreateUserCommand } from "./CreateUserCommand";
-import { RESPONSE_CODES } from "src/Domain/language/response.codes";
+import { RESPONSE_CODES } from "src/Shared/Domain/language/response.codes";
 // import { MailService } from "src/Shared/Service/MailService";
 import { CannotCreateUserException } from "src/Shared/Domain/Exception/user/CannotCreateUserException";
 import { UserRepository } from "src/Domain/Repository/user.repository";

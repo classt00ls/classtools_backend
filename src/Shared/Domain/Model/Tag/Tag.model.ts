@@ -1,4 +1,4 @@
-import { BaseModel } from "../../../../Domain/Shared/base.model";
+import { BaseModel } from "../base.model";
 import { ToolModel } from "../Tool/tool.model";
 
 export class TagModel extends BaseModel {
