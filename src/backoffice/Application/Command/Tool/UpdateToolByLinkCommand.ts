@@ -1,4 +1,3 @@
-import { IsEmail, IsString } from "class-validator";
 
 /**
  * @description Actualiza una IA

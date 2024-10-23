@@ -13,7 +13,9 @@ export class GetDetailToolQueryHandler {
 
     async execute(query: GetDetailToolQuery) {
 
-        return await this.toolRepository.getOneByIdOrFail(query.id);
+        const tool = await this.toolRepository.getOneByIdOrFail(query.id);
+        tool.url = tool.url.split('?')[0];
+        return tool;
         
     }
 }

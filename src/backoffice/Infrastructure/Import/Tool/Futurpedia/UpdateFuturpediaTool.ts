@@ -19,18 +19,18 @@ export class UpdateFuturpediaTool extends PuppeterScrapping {
         super();
     }
 
-    async execute(url: string) {
+    async execute(link: string) {
         let tool;
         try {
-            tool = await this.toolRepository.getOneByLinkOrFail(url);
+            tool = await this.toolRepository.getOneByLinkOrFail(link);
         } catch (error) {
             
-            console.log('Eps !  aquest no el tenim: ' + url);
+            console.log('Eps !  aquest no el tenim: ' + link);
             return;
         }
         
 
-        let page = await this.getPage(url);
+        let page = await this.getPage(link);
 
         try {
             const features = await GetToolFeatures.execute(page);
@@ -46,9 +46,7 @@ export class UpdateFuturpediaTool extends PuppeterScrapping {
             //const pageUrl = await page.$eval('div.mt-4.flex.flex-wrap.gap-4 > a', reference => reference.href);
             //const excerpt = await page.$eval('p.my-2', desc => desc.innerText);
 
-            const toolSaved = await this.toolRepository.save(tool);
-
-            console.log('hem actualitzat: '+url)
+            await this.toolRepository.save(tool);
             
 /*
             this.eventEmitter.emit(
@@ -61,7 +59,7 @@ export class UpdateFuturpediaTool extends PuppeterScrapping {
             );
 */
         } catch (error) {
-            console.log('error al scrapejar: '+url)
+            console.log('error al scrapejar: '+link)
             //throw error;
         }
         await this.browser.close();
