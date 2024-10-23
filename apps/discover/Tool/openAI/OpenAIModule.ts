@@ -4,9 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ToolSchema } from 'src/Shared/Infrastructure/Persistence/typeorm/tool.schema';
 import { ToolRepository } from 'src/Domain/Repository/tool.repository';
 import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
-import { BackofficeToolController } from './BackofficeToolcontroller';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Domain/Repository/tag.repository';
+import { OpenAIcontroller } from './OpenAIcontroller';
+import { OpenAITextGenerator } from 'src/discover/Infrastructure/openAI/OpenAITextGenerator';
 
 
 @Module({
@@ -18,9 +19,10 @@ import { TagRepository } from 'src/Domain/Repository/tag.repository';
         CqrsModule
     ],
     controllers: [
-        BackofficeToolController
+        OpenAIcontroller
     ],
     providers: [
+        OpenAITextGenerator,
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,
@@ -31,4 +33,4 @@ import { TagRepository } from 'src/Domain/Repository/tag.repository';
         }
     ]
  })
-export class BackofficeToolModule {} 
+export class OpenAIModule {} 

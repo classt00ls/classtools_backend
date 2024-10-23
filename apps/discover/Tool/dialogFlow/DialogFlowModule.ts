@@ -4,9 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ToolSchema } from 'src/Shared/Infrastructure/Persistence/typeorm/tool.schema';
 import { ToolRepository } from 'src/Domain/Repository/tool.repository';
 import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
-import { BackofficeToolController } from './BackofficeToolcontroller';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Domain/Repository/tag.repository';
+import { DialogFlowcontroller } from './DialogFlowcontroller';
 
 
 @Module({
@@ -18,7 +18,7 @@ import { TagRepository } from 'src/Domain/Repository/tag.repository';
         CqrsModule
     ],
     controllers: [
-        BackofficeToolController
+        DialogFlowcontroller
     ],
     providers: [
         {
@@ -31,4 +31,4 @@ import { TagRepository } from 'src/Domain/Repository/tag.repository';
         }
     ]
  })
-export class BackofficeToolModule {} 
+export class DialogFlowModule {} 

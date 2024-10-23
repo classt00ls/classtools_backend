@@ -18,6 +18,17 @@ export class ToolGenericFilter extends GenericFilter{
    * @param tags 
    * @param stars 
    */
+  public static fromPagination(
+    page: number = 1,
+    pageSize: number = 15,
+  ) {
+    return new ToolGenericFilter([], 0, "", page, pageSize);
+  }
+
+  /**
+   * @param tags 
+   * @param stars 
+   */
   public static fromTagsAndStars(
     tags: string[],
     stars: number

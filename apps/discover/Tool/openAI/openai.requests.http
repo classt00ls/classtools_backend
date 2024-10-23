@@ -1,0 +1,10 @@
+
+### Get futurpedia items
+
+POST http://localhost:3000/discover/openai
+Content-Type: application/json
+
+{
+    "systemText": "https://www.futurepedia.io/ai-tools/chatbots",
+    "userText": ""
+}

@@ -1,11 +1,10 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { getAllToolsDto } from 'src/web/Application/Dto/Tool/getAllTools.dto';
-import { GetAllToolsQuery } from 'src/web/Application/Query/Tool/GetAllToolsQuery';
 import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';
 
-@Controller('backoffice/tool')
-export class BackofficeToolController {
+@Controller('discover/dialogflow')
+export class DialogFlowcontroller {
   constructor(
     private readonly queryBus: QueryBus
   ) {}
@@ -17,16 +16,7 @@ export class BackofficeToolController {
 		@Query('pageSize') pageSize?: number
   ) {
 
-    const data = await this.queryBus.execute(
-      new GetAllToolsQuery(
-        page,
-        pageSize
-      )
-    );
-
-    return {
-      data
-    };
+    
 
   }
 

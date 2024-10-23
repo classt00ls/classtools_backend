@@ -1,0 +1,13 @@
+
+### Get futurpedia items
+
+GET http://localhost:3000/backoffice/tool?page=1&pageSize=10
+
+
+### Update futurpedia items
+POST http://localhost:3000/backoffice/futurpedia/update
+Content-Type: application/json
+
+{
+    "route": "https://www.futurepedia.io/ai-tools/marketing"
+}

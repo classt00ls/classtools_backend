@@ -12,6 +12,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BackofficeToolModule } from 'apps/backoffice/Tool/BackofficeToolModule';
 import { BackofficeTagModule } from 'apps/backoffice/Tag/BackofficeTagModule';
 import { BackofficeFuturpediaToolModule } from 'apps/backoffice/Tool/Futurpedia/BackofficeFuturpediaToolModule';
+import { OpenAIModule } from 'apps/discover/Tool/openAI/OpenAIModule';
 
 let databaseConfig: Partial<TypeOrmModuleOptions>; 
 
@@ -44,6 +45,7 @@ switch (process.env.NODE_ENV) {
     BackofficeTagModule,
     BackofficeToolModule,
     BackofficeFuturpediaToolModule,
+    OpenAIModule,
     EventEmitterModule.forRoot({
       // set this to `true` to use wildcards
       wildcard: false,
@@ -58,7 +60,7 @@ switch (process.env.NODE_ENV) {
     }),
     
     ConfigModule.forRoot(
-      {isGlobal: true}
+      {isGlobal: true,  envFilePath: process.env.NODE_ENV == 'dev' ? '.env.development' : '.env'}
     ),
     TypeOrmModule.forRootAsync({
       useFactory: () => {
