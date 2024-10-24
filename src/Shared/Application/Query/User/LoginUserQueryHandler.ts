@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { InjectRepository } from "@nestjs/typeorm";
 import { scrypt  as _script} from "crypto";
 import { promisify } from "util";
 import { LoginUserQuery } from "./LoginUserQuery";
@@ -13,7 +12,7 @@ const scrypt = promisify(_script);
 @Injectable()
 export class LoginUserQueryHandler implements IQueryHandler<LoginUserQuery>{
     constructor(
-        @InjectRepository(UserRepository) private userRepository: UserRepository
+        private userRepository: UserRepository
     ) {}
 
     async execute(query: LoginUserQuery) {

@@ -9,6 +9,10 @@ import { CompanySchema } from 'src/Shared/Infrastructure/Persistence/typeorm/com
 import { CompanyTypeormRepository } from 'src/Infrastructure/Repository/typeorm/company.typeorm.repository';
 import { CompanyRepository } from 'src/Shared/Domain/Repository/company.repository';
 import { UserRepository } from 'src/Shared/Domain/Repository/user.repository';
+import { LoginUserQueryHandler } from 'src/Shared/Application/Query/User/LoginUserQueryHandler';
+import { ConfirmUserCommandHandler } from 'src/Shared/Application/Command/ConfirmUserCommandHandler';
+import { MailerService } from '@nestjs-modules/mailer';
+import { GetCompleteUserQueryHandler } from 'src/Shared/Application/Query/User/GetCompleteUserQueryHandler';
 
 @Module({
   imports: [
@@ -22,15 +26,20 @@ import { UserRepository } from 'src/Shared/Domain/Repository/user.repository';
   ],
   controllers: [UsersController],
   providers: [
+    //MailService,
+    // MailerService,
     {
       provide: UserRepository,
       useClass: UserTypeormRepository,
     },
     {
       provide: CompanyRepository,
-      useClass: CompanyTypeormRepository,
+      useClass: CompanyTypeormRepository, 
     },
-    CreateUserCommandHandler
+    CreateUserCommandHandler,
+    LoginUserQueryHandler,
+    ConfirmUserCommandHandler,
+    GetCompleteUserQueryHandler
   ]
 })
 export class UsersModule {}

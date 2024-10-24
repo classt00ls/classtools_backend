@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,6 +13,12 @@ import { BackofficeToolModule } from 'apps/backoffice/Tool/BackofficeToolModule'
 import { BackofficeTagModule } from 'apps/backoffice/Tag/BackofficeTagModule';
 import { BackofficeFuturpediaToolModule } from 'apps/backoffice/Tool/Futurpedia/BackofficeFuturpediaToolModule';
 import { OpenAIModule } from 'apps/discover/Tool/openAI/OpenAIModule';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { join } from 'path';
+import { CurrentUserMiddleware } from './Shared/Infrastructure/middlewares/current-user.middleware';
+
+const cookieSession = require('cookie-session');
 
 let databaseConfig: Partial<TypeOrmModuleOptions>; 
 
@@ -46,6 +52,7 @@ switch (process.env.NODE_ENV) {
     BackofficeToolModule,
     BackofficeFuturpediaToolModule,
     OpenAIModule,
+    UsersModule,
     EventEmitterModule.forRoot({
       // set this to `true` to use wildcards
       wildcard: false,
@@ -69,6 +76,29 @@ switch (process.env.NODE_ENV) {
         }
       }
     }),
+    MailerModule.forRoot({
+      // transport: 'smtps://user@example.com:topsecret@smtp.example.com',
+      // or
+      transport: {
+        host: process.env.MAIL_HOST,
+        port: parseInt(process.env.MAIL_PORT),
+        secure: process.env.MAIL_SECURE == "true" ? true: false,
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASSWORD,
+        },
+      },
+      defaults: {
+        from: '"No Reply" <cars@spotileads.com>',
+      },
+      template: {
+        dir: join(__dirname, '../../../public/assets'),
+        adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+        options: {
+          strict: true,
+        },
+      },
+    }),
   UsersModule,
   UtilsModule
 ],
@@ -79,4 +109,18 @@ switch (process.env.NODE_ENV) {
     CommandBus
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(
+        cookieSession({
+          keys: ['marmota'],
+          maxAge: 5 * 60 * 60 * 1000 // 5 hour
+        }),
+        
+      ).forRoutes('*');
+    consumer
+      .apply(CurrentUserMiddleware)
+      .forRoutes('*');
+  }
+}
