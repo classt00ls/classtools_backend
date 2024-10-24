@@ -1,11 +1,13 @@
-import { BaseModel } from "../Shared/base.model";
-import { CompanyModel } from "./company.model";
+import { BaseModel } from "../base.model";
+import { CompanyModel } from "../Company/company.model";
 
 
-export type UserRoles = 'user' | 'admin' //  TODO: add more roles
+export type UserRoles = 'user' | 'editor' | 'admin' | 'superadmin';
 
 export class UserModel extends BaseModel {
-  
+
+  id: string;
+
   email: string;
 
   password: string;
@@ -17,7 +19,7 @@ export class UserModel extends BaseModel {
   surname: string;
 
   // La url del archivo GLB en s3
-  phone: string;
+  phone: string|null;
 
   // La url de la imagen en s3
   confirmed: boolean;
@@ -27,5 +29,5 @@ export class UserModel extends BaseModel {
 
   role: UserRoles;
 
-  company: CompanyModel
+  company: CompanyModel|null
 }

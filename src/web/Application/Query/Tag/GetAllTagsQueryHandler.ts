@@ -1,6 +1,6 @@
 import { QueryHandler } from "@nestjs/cqrs";
 import { Injectable } from "@nestjs/common";
-import { TagRepository } from "src/Domain/Repository/tag.repository";
+import { TagRepository } from "src/Shared/Domain/Repository/tag.repository";
 import { GetAllTagsQuery } from "src/web/Application/Query/Tag/GetAllTagsQuery";
 
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TagRepository } from 'src/Domain/Repository/tag.repository';
+import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
 
 @Injectable()
 export class CreateOnlyNewTagsService {

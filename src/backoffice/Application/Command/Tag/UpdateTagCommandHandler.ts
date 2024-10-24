@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { TagUpgradedEvent } from "src/Shared/Domain/Event/Tag/TagUpgradedEvent";
-import { TagRepository } from "src/Domain/Repository/tag.repository";
+import { TagRepository } from "src/Shared/Domain/Repository/tag.repository";
 import { UpdateTagCommand } from "./UpdateTagCommand";
 
 

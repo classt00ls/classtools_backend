@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { ToolRepository } from "src/Domain/Repository/tool.repository";
+import { ToolRepository } from "src/Shared/Domain/Repository/tool.repository";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { TagRepository } from "src/Domain/Repository/tag.repository";
+import { TagRepository } from "src/Shared/Domain/Repository/tag.repository";
 import { ToolCreatedEvent } from "src/Shared/Domain/Event/Tool/ToolCreatedEvent";
 import { TagModel } from "src/Shared/Domain/Model/Tag/Tag.model";
 import { PuppeterScrapping } from "../../../../../Shared/Infrastructure/Import/puppeteer/PuppeterScrapping";

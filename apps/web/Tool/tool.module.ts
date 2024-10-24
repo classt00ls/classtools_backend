@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ToolSchema } from 'src/Shared/Infrastructure/Persistence/typeorm/tool.schema';
-import { ToolRepository } from 'src/Domain/Repository/tool.repository';
+import { ToolRepository } from 'src/Shared/Domain/Repository/tool.repository';
 import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
 import { ToolController } from './tool.controller';
 import { GetAllToolsQueryHandler } from 'src/web/Application/Query/Tool/GetAllToolsQueryHandler';

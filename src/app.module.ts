@@ -3,7 +3,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UtilsModule } from './Shared/Module/utils/utils.module';
-import { UsersModule } from './Ui/User/users.module';
+import { UsersModule } from '../apps/Shared/User/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ToolModule } from 'apps/web/Tool/tool.module';

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { ToolRepository } from "src/Domain/Repository/tool.repository";
+import { ToolRepository } from "src/Shared/Domain/Repository/tool.repository";
 import { GetToolPricing } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolPricing";
 import { PuppeterScrapping } from "../../../../../Shared/Infrastructure/Import/puppeteer/PuppeterScrapping";
 import { GetToolDescription } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolDescription";

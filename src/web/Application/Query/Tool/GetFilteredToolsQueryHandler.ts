@@ -1,6 +1,6 @@
 import { QueryHandler } from "@nestjs/cqrs";
 import { Injectable } from "@nestjs/common";
-import { ToolRepository } from "src/Domain/Repository/tool.repository";
+import { ToolRepository } from "src/Shared/Domain/Repository/tool.repository";
 import { GetFilteredToolsQuery } from "./GetFilteredToolsQuery";
 import { ToolGenericFilter } from "src/Shared/Application/Filter/Tool/ToolGenericFilter";
 

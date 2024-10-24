@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { DataSource, InsertResult, Repository } from 'typeorm';
-import { TagRepository } from "src/Domain/Repository/tag.repository";
+import { TagRepository } from "src/Shared/Domain/Repository/tag.repository";
 import { TagSchema } from "src/Shared/Infrastructure/Persistence/typeorm/tag.schema";
 import { TagModel } from "src/Shared/Domain/Model/Tag/Tag.model";
 
