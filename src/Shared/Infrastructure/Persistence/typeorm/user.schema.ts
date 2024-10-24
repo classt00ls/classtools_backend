@@ -1,6 +1,6 @@
 import { EntitySchema } from "typeorm";
 import { sharedFields } from "src/Infrastructure/Shared/typeorm/shared-fields.schema";
-import { UserModel } from "src/Domain/Model/user.model";
+import { UserModel } from "src/Shared/Domain/Model/User/user.model";
 
 export const UserSchema = new EntitySchema<UserModel>({
   name: 'User',

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { UserModel } from "../Model/user.model";
 import { InsertResult } from "typeorm";
+import { UserModel } from "../Model/User/user.model";
 
 @Injectable()
 export abstract class UserRepository {
@@ -11,4 +11,5 @@ export abstract class UserRepository {
   abstract getAll(): Promise<UserModel[]>;
   abstract getOneByIdOrFail(id: string): Promise<UserModel>;
   abstract findOneByEmailAndFail(email: string): Promise<void>;
+  abstract findOneByEmail(email:string): Promise<UserModel>;
 }

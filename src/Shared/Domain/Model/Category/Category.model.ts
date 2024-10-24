@@ -1,4 +1,4 @@
-import { BaseModel } from "src/Domain/Shared/base.model";
+import { BaseModel } from "src/Shared/Domain/Model/base.model";
 import { ToolModel } from "../Tool/tool.model";
 
 

@@ -1,6 +1,6 @@
 import { EntitySchema } from "typeorm";
 import { sharedFields } from "src/Infrastructure/Shared/typeorm/shared-fields.schema";
-import { CompanyModel } from "src/Domain/Model/company.model";
+import { CompanyModel } from "src/Shared/Domain/Model/Company/company.model";
 
 export const CompanySchema = new EntitySchema<CompanyModel>({
   name: 'Company',

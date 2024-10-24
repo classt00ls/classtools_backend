@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InsertResult } from "typeorm";
-import { ToolModel } from "../../Shared/Domain/Model/Tool/tool.model";
 import { GenericFilter } from "src/Shared/Application/Filter/GenericFilter";
+import { ToolModel } from "../Model/Tool/tool.model";
 
 @Injectable()
 export abstract class ToolRepository {

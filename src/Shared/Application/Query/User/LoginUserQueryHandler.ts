@@ -2,10 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { InjectRepository } from "@nestjs/typeorm";
 import { scrypt  as _script} from "crypto";
-import { CannotLoginUserException } from "src/Domain/exception/user/CannotLoginUserException";
 import { promisify } from "util";
-import { UserRepository } from "../../Infrastructure/Repository/UserRepository";
 import { LoginUserQuery } from "./LoginUserQuery";
+import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
+import { CannotLoginUserException } from "src/Shared/Domain/Exception/user/CannotLoginUserException";
 
 const scrypt = promisify(_script);
 
@@ -26,12 +26,8 @@ export class LoginUserQueryHandler implements IQueryHandler<LoginUserQuery>{
 			throw CannotLoginUserException.becauseUserNotConfirmed();
 		}
 		
-		if(user.cancelled || user.deleted) {
+		if(user.deleted) {
 			throw CannotLoginUserException.becauseUserCancelled();
-		}
-
-		if(!user.active) {
-			throw CannotLoginUserException.becauseUserInactive();
 		}
 
 		const [salt, storedHash] = user.password.split('.');

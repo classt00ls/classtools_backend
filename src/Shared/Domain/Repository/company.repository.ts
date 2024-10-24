@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InsertResult } from "typeorm";
-import { CompanyModel } from "../Model/company.model";
+import { CompanyModel } from "../Model/Company/company.model";
 
 @Injectable()
 export abstract class CompanyRepository {

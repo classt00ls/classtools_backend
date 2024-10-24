@@ -56,4 +56,12 @@ export class UserTypeormRepository extends UserRepository {
       if(existingUser) throw new Error('');
   }
 
+  public async findOneByEmail(email: string): Promise<UserModel>
+  {
+      const existingUser = await this.repository.createQueryBuilder("user")
+          .where("user.email = :email", {email})
+          .getOne();
+      return existingUser;
+  }
+
 }

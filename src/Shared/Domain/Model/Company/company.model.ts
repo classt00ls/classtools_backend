@@ -1,9 +1,11 @@
-import { BaseModel } from "../Shared/base.model";
-import { UserModel } from "./user.model";
+import { BaseModel } from "../base.model";
+import { UserModel } from "../User/user.model";
 
 
 export class CompanyModel extends BaseModel {
   
+
+  id: string;
   email?: string;
   
   // Será la reference asignada para el metadata de nuestro token
