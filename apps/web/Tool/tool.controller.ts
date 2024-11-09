@@ -26,6 +26,7 @@ export class ToolController {
 		@Query('pageSize') pageSize?: number
   ) {
 
+    console.log("Alguien quiere las tools ... ")
     const data = await this.queryBus.execute(
         new GetAllToolsQuery(
           page,
@@ -50,7 +51,7 @@ export class ToolController {
   async getByFilter(
     @Body() requestGetToolDto: RequestGetToolDto
   ) {
-    
+    console.log("Alguien quiere las tools ... ");
     const data = await this.queryBus.execute(
         new GetFilteredToolsQuery(
           requestGetToolDto.params.page,

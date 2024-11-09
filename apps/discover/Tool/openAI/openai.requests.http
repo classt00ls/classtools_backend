@@ -1,10 +1,18 @@
 
 ### Get futurpedia items
 
-POST http://localhost:3000/discover/openai
+POST http://localhost:3000/discover/openai/text
 Content-Type: application/json
 
 {
     "systemText": "https://www.futurepedia.io/ai-tools/chatbots",
     "userText": ""
+}
+
+###
+POST http://localhost:3000/discover/openai/image
+Content-Type: application/json
+
+{
+    "prompt": "imagen de una calenda en oaxaca"
 }

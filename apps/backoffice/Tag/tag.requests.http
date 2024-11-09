@@ -1,11 +1,13 @@
 
 ### Get futurpedia items
 
-PUT http://localhost:3000/backoffice/tag
+PUT http://localhost:3001/backoffice/tag
 Content-Type: application/json
 
 {
-    "id": "c7491400-b2b4-42a7-8fc2-43aea7a37624",
-    "imageUrl": "https://i.ibb.co/zN4PvQW/Icon6.png"
+    "id": "a26b32ac-0d79-4c6e-a6e7-ea54ba2023cc",
+    "imageUrl": "https://i.ibb.co/W0GxSZT/Icon7.png"
 }
 
+### Get all tags
+GET http://localhost:3001/backoffice/tag

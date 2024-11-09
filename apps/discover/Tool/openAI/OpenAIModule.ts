@@ -8,6 +8,7 @@ import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.
 import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
 import { OpenAIcontroller } from './OpenAIcontroller';
 import { OpenAITextGenerator } from 'src/discover/Infrastructure/openAI/OpenAITextGenerator';
+import { OpenAIImageFromPromptGenerator } from 'src/discover/Infrastructure/openAI/OpenAIImageFromPromptGenerator';
 
 
 @Module({
@@ -23,6 +24,7 @@ import { OpenAITextGenerator } from 'src/discover/Infrastructure/openAI/OpenAITe
     ],
     providers: [
         OpenAITextGenerator,
+        OpenAIImageFromPromptGenerator,
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,

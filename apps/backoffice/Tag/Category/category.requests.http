@@ -1,10 +1,10 @@
 
 ### upgrade tag to category by id
 
-POST http://localhost:3000/backoffice/category/upgrade
+POST http://localhost:3001/backoffice/category/upgrade
 Content-Type: application/json
 
 {
-    "id": "716387ee-57c2-4317-b8c9-edccf47a5b53"
+    "id": "a26b32ac-0d79-4c6e-a6e7-ea54ba2023cc"
 }
 
