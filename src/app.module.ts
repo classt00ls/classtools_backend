@@ -17,6 +17,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 import { CurrentUserMiddleware } from './Shared/Infrastructure/middlewares/current-user.middleware';
+import { LangChainModule } from 'apps/discover/Server/LangChain/LangChainModule';
 
 const cookieSession = require('cookie-session');
 
@@ -52,6 +53,7 @@ switch (process.env.NODE_ENV) {
     BackofficeToolModule,
     BackofficeFuturpediaToolModule,
     OpenAIModule,
+    LangChainModule, 
     UsersModule,
     EventEmitterModule.forRoot({
       // set this to `true` to use wildcards
