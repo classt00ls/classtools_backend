@@ -3,6 +3,6 @@ import { UserToolSuggestions } from "../../Model/UserToolSuggestions.ts/UserTool
 
 
 
-export interface UserToolSuggestionsRepository {
-	search(userId: UserId): Promise<UserToolSuggestions | null>;
+export abstract class UserToolSuggestionsRepository {
+	abstract search(userId: UserId): Promise<UserToolSuggestions | null>;
 }
