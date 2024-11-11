@@ -2,18 +2,19 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ToolSchema } from 'src/Shared/Infrastructure/Persistence/typeorm/tool.schema';
-import { ToolRepository } from 'src/Shared/Domain/Repository/tool.repository';
-import { UserToolSuggestionsSearcher } from 'src/web/Application/Service/UserToolSuggestion.ts/UserToolSuggestionsSearcher';
+import { UserToolSuggestionsSearcher } from 'src/web/Application/Service/UserToolSuggestion/UserToolSuggestionsSearcher';
 import { UserToolSuggestionsRepository } from "src/web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository";
 import { OllamaMistralUserToolSuggestionsRepository } from 'src/web/Infrastructure/Repository/UserToolSuggestions/OllamaMistralUserToolSuggestionsRepository';
 import { UserToolSuggestionsController } from './UserToolSuggestions.controller';
-
+import { TypeormUserWebRepository } from 'src/web/Infrastructure/Repository/UserWeb/TypeormUserWebRepository';
+import { UserWebRepository } from 'src/web/Domain/Repository/UserWeb/UserWebRepository';
+import { UserWebSchema } from 'src/web/Infrastructure/Persistence/typeorm/DatabaseWebUser.schema';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([
-            ToolSchema,
-            ToolRepository
+            UserWebSchema,
+            UserWebRepository
           ]),
         CqrsModule
     ],
@@ -21,10 +22,17 @@ import { UserToolSuggestionsController } from './UserToolSuggestions.controller'
         UserToolSuggestionsController
     ],
     providers: [
-        UserToolSuggestionsSearcher,
+        {
+            provide: UserWebRepository,
+            useClass: TypeormUserWebRepository
+        },
         {
             provide: UserToolSuggestionsRepository,
             useClass: OllamaMistralUserToolSuggestionsRepository,
+        },
+        {
+            provide: 'UserToolSuggestionsSearcher',
+            useClass: UserToolSuggestionsSearcher
         }
     ]
  })

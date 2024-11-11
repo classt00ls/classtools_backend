@@ -7,6 +7,10 @@ export class CannotCreateUserException extends BadRequestException {
         super(newMessage);
     }
 
+    public static becauseInfrastructureProblem() {
+        return new this(ERROR_CODES.CREATE_USER_COMMAND.EMAIL_IN_USE);
+    }
+
     public static becauseEmailIsAlreadyInUse() {
         return new this(ERROR_CODES.CREATE_USER_COMMAND.EMAIL_IN_USE);
     }

@@ -5,7 +5,26 @@ import { CompanyModel } from "../Company/company.model";
 export type UserRoles = 'user' | 'editor' | 'admin' | 'superadmin';
 
 export class UserModel extends BaseModel {
+  /*
+  private constructor(
+    id: string,
+    email: string,
+    password: string,
+    name: string,
+    surname: string
+  ) {
 
+    super(
+      id: string,
+      email: string,
+      password,
+      name,
+      surname)
+
+  }
+  */
+
+  
   id: string;
 
   email: string;

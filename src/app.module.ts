@@ -18,6 +18,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { join } from 'path';
 import { CurrentUserMiddleware } from './Shared/Infrastructure/middlewares/current-user.middleware';
 import { LangChainModule } from 'apps/discover/Server/LangChain/LangChainModule';
+import { UserToolSuggestionsModule } from 'apps/web/UserToolSuggestions/UserToolSuggestions.module';
+import { SharedUserListener } from './web/Application/Listener/Shared/SharedUserListener';
 
 const cookieSession = require('cookie-session');
 
@@ -55,6 +57,7 @@ switch (process.env.NODE_ENV) {
     OpenAIModule,
     LangChainModule, 
     UsersModule,
+    UserToolSuggestionsModule,
     EventEmitterModule.forRoot({
       // set this to `true` to use wildcards
       wildcard: false,
@@ -106,6 +109,7 @@ switch (process.env.NODE_ENV) {
 ],
   controllers: [AppController],
   providers: [
+    SharedUserListener,
     AppService,
     QueryBus,
     CommandBus

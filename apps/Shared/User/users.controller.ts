@@ -1,7 +1,6 @@
 import { BadRequestException, Body, Controller, Get, Post, Session, UseGuards } from "@nestjs/common";
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-import { CreateUserCommand } from "src/Shared/Application/Command/CreateUserCommand";
 import { CreateUserDto } from "src/Shared/Application/Dto/create-user.dto";
 import { UserResponseDto } from "src/Shared/Application/Dto/user-response.dto";
 
@@ -18,6 +17,7 @@ import { CurrentUser } from "src/Shared/Infrastructure/decorators/user/current-u
 import { UserModel } from "src/Shared/Domain/Model/User/user.model";
 import { UserMeDto } from "./user-me.dto";
 import { GetCompleteUserQuery } from "src/Shared/Application/Query/User/GetCompleteUserQuery";
+import { SignupUserCommand } from "src/Shared/Application/Command/SignupUserCommand";
 
 
 @Controller('user')
@@ -44,7 +44,7 @@ export class UsersController {
 		let commandResponse;
 		try{
 			commandResponse = await this.commandBus.execute(
-				new CreateUserCommand(
+				new SignupUserCommand(
 					createUserDto.email,
 					createUserDto.password,
 					createUserDto.name,

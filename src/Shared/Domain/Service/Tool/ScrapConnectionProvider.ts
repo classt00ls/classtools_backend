@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-
 export class ScrapConnectionProvider{
 
     provider_key: string;

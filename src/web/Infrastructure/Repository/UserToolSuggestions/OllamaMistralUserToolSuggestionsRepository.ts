@@ -1,13 +1,14 @@
 import { PromptTemplate } from "@langchain/core/prompts";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { Ollama } from "@langchain/ollama";
+import { Inject, Injectable } from "@nestjs/common";
 
 import { UserToolSuggestions } from "src/web/Domain/Model/UserToolSuggestions.ts/UserToolSuggestions";
 import { UserToolSuggestionsRepository } from "src/web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository";
 import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
 import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
 
-
+@Injectable()
 export class OllamaMistralUserToolSuggestionsRepository
 	implements UserToolSuggestionsRepository
 {
@@ -15,8 +16,6 @@ export class OllamaMistralUserToolSuggestionsRepository
 
 	async search(userId: UserWebId): Promise<UserToolSuggestions | null> {
 
-        // New model userweb
-        
 		const user = await this.userWebRepository.search(userId);
 
 		if (user === null ) {
@@ -28,6 +27,7 @@ export class OllamaMistralUserToolSuggestionsRepository
 			PromptTemplate.fromTemplate(`Recomienda inteligencias artificiales similares a {visitedTools}`),
 			new Ollama({
 				model: "mistral",
+				baseUrl: "http://localhost:11434", // Default value
 			}),
 		]);
 

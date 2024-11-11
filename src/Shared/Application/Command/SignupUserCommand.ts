@@ -1,5 +1,5 @@
 
-export class CreateUserCommand {
+export class SignupUserCommand {
 
 	constructor(
 		public email: string,

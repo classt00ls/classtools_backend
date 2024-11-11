@@ -2,21 +2,30 @@ import { Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { randomBytes, scrypt  as _script} from "crypto";
 import { promisify } from "util";
-import { CreateUserCommand } from "./CreateUserCommand";
+import { SignupUserCommand } from "./SignupUserCommand";
 import { RESPONSE_CODES } from "src/Shared/Domain/language/response.codes";
 // import { MailService } from "src/Shared/Service/MailService";
 import { CannotCreateUserException } from "src/Shared/Domain/Exception/user/CannotCreateUserException";
 import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
 import { CompanyRepository } from "src/Shared/Domain/Repository/company.repository";
+import { UserCreator } from "../Service/UserCreator";
+import { UserCreatorRequest } from "../Request/User/UserCreatorRequest";
+import { InfrastructureException } from "src/Shared/Infrastructure/Exception/InfrastructureException";
+import { EventEmitter2, EventEmitterReadinessWatcher } from "@nestjs/event-emitter";
+import { SignupUserEvent } from "src/Shared/Domain/Event/User/SignupUserEvent";
+const {v4} = require('uuid');
 
 const scrypt = promisify(_script);
 
 @Injectable()
-@CommandHandler(CreateUserCommand)
-export class CreateUserCommandHandler implements ICommandHandler<CreateUserCommand>{
+@CommandHandler(SignupUserCommand)
+export class SignupUserCommandHandler implements ICommandHandler<SignupUserCommand>{
     constructor(
         private userRepository: UserRepository,
 		private companyRepository: CompanyRepository,
+		private userCreator: UserCreator,
+		private eventEmitter: EventEmitter2,
+		private eventEmitterReadinessWatcher: EventEmitterReadinessWatcher
 		// private emailService: MailService
     ) {}
 	
@@ -27,11 +36,9 @@ export class CreateUserCommandHandler implements ICommandHandler<CreateUserComma
 	 * @throws {CannotCreateUserException} code 3001 if email already in use
 	 * @throws {CannotCreateUserException} code: 3002 if company name is in use
 	 */
-    async execute(command: CreateUserCommand) {
+    async execute(command: SignupUserCommand) {
 
-		console.log('Executing createusercommand ... ')
-
-		let company;
+		console.log('Executing SignupUserCommand ... ')
 
 		try {
 			await this.userRepository.findOneByEmailAndFail(command.email);
@@ -39,45 +46,36 @@ export class CreateUserCommandHandler implements ICommandHandler<CreateUserComma
 			throw CannotCreateUserException.becauseEmailIsAlreadyInUse();
 		}
         
-		try {
-			await this.companyRepository.findOneByNameAndFail(command.companyName);
-		} catch (error) { 
-			// TODO: añadir usuario a compañia ya existente ?
-			throw CannotCreateUserException.becauseCompanyNameIsAlreadyInUse();
-		}
-		
 		// Generamos el hash de la contraseña
         const salt = randomBytes(8).toString('hex');
 		const hash = await scrypt(command.password, salt, 32) as Buffer;
 		const encodedPassword = salt+"."+hash.toString('hex');
-
-		if(command.companyName) {
-			// Creamos la nueva compañia asociada al usuario
-			company = await this.companyRepository.create(
-				{
-					name: command.companyName
-				}
-			);
-			// Creamos la compañia en nuestra database
-			await this.companyRepository.insert(company);
-		}
 		
-		// Creamos el usuario en nuestra database y le asignamos la company
-		const user = await this.userRepository.create(
-			{
-				email: command.email,
-				password: encodedPassword,
-				name: command.name,
-				company
-			}
-		);
-
-		await this.userRepository.insert(user);
-
 		try {
-			// await this.emailService.confirmation(command.email, user.id);
+			const userId = v4();
+
+			await this.userCreator.create(
+				new UserCreatorRequest(
+					command.email,
+					encodedPassword,
+					command.name,
+					userId
+				)
+			)
+
+			await this.eventEmitterReadinessWatcher.waitUntilReady();
+			this.eventEmitter.emit(
+				'shared.user.SignupUser',
+				new SignupUserEvent(
+					userId,
+					command.name
+				)
+			);
+
 		} catch (error) {
-			
+			if(error instanceof InfrastructureException) {
+				throw CannotCreateUserException.becauseInfrastructureProblem();
+			}
 		}
 		
 		return RESPONSE_CODES.CREATE_USER_COMMAND.CREATE_OK;

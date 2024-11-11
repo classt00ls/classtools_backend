@@ -3,7 +3,6 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './users.controller';
 import { UserTypeormRepository } from 'src/Infrastructure/Repository/typeorm/user.typeorm.repository';
-import { CreateUserCommandHandler } from 'src/Shared/Application/Command/CreateUserCommandHandler';
 import { UserSchema } from 'src/Shared/Infrastructure/Persistence/typeorm/user.schema';
 import { CompanySchema } from 'src/Shared/Infrastructure/Persistence/typeorm/company.schema';
 import { CompanyTypeormRepository } from 'src/Infrastructure/Repository/typeorm/company.typeorm.repository';
@@ -11,8 +10,9 @@ import { CompanyRepository } from 'src/Shared/Domain/Repository/company.reposito
 import { UserRepository } from 'src/Shared/Domain/Repository/user.repository';
 import { LoginUserQueryHandler } from 'src/Shared/Application/Query/User/LoginUserQueryHandler';
 import { ConfirmUserCommandHandler } from 'src/Shared/Application/Command/ConfirmUserCommandHandler';
-import { MailerService } from '@nestjs-modules/mailer';
 import { GetCompleteUserQueryHandler } from 'src/Shared/Application/Query/User/GetCompleteUserQueryHandler';
+import { UserCreator } from 'src/Shared/Application/Service/UserCreator';
+import { SignupUserCommandHandler } from 'src/Shared/Application/Command/SignupUserCommandHandler';
 
 @Module({
   imports: [
@@ -26,7 +26,7 @@ import { GetCompleteUserQueryHandler } from 'src/Shared/Application/Query/User/G
   ],
   controllers: [UsersController],
   providers: [
-    //MailService,
+    UserCreator,
     // MailerService,
     {
       provide: UserRepository,
@@ -36,7 +36,7 @@ import { GetCompleteUserQueryHandler } from 'src/Shared/Application/Query/User/G
       provide: CompanyRepository,
       useClass: CompanyTypeormRepository, 
     },
-    CreateUserCommandHandler,
+    SignupUserCommandHandler,
     LoginUserQueryHandler,
     ConfirmUserCommandHandler,
     GetCompleteUserQueryHandler
