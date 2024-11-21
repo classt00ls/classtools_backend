@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
 import { UserWebCreatorRequest } from "../../Request/UserWeb/UserWebCreatorRequest";
 import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
 
@@ -14,14 +13,14 @@ export class UserWebCreator {
         // Creamos el usuario en nuestra database y le asignamos la company
 		const user = await this.userWebRepository.create(
 			{
-				email: request.getEmail(),
-				password: request.getPassword(),
-				name: request.getName(),
+				id: request.getId(),
+				favorites: JSON.stringify(request.getFavorites()),
+				visited_tools: JSON.stringify(request.getVisitedTools()),
 				// company
 			}
 		);
 
-		await this.userRepository.insert(user);
+		await this.userWebRepository.insert(user);
 		
     }
 

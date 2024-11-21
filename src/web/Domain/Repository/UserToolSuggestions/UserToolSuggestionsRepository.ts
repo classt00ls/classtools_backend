@@ -1,5 +1,5 @@
 import { UserId } from "src/Shared/Domain/ValueObject/User/UserId";
-import { UserToolSuggestions } from "../../Model/UserToolSuggestions.ts/UserToolSuggestions";
+import { UserToolSuggestions } from "../../Model/UserToolSuggestions/UserToolSuggestions";
 
 
 

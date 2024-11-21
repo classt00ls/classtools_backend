@@ -20,6 +20,8 @@ import { CurrentUserMiddleware } from './Shared/Infrastructure/middlewares/curre
 import { LangChainModule } from 'apps/discover/Server/LangChain/LangChainModule';
 import { UserToolSuggestionsModule } from 'apps/web/UserToolSuggestions/UserToolSuggestions.module';
 import { SharedUserListener } from './web/Application/Listener/Shared/SharedUserListener';
+import { UserWebCreator } from './web/Application/Service/UserWeb/UserWebCreator';
+import { UserWebRepository } from './web/Domain/Repository/UserWeb/UserWebRepository';
 
 const cookieSession = require('cookie-session');
 
@@ -109,7 +111,7 @@ switch (process.env.NODE_ENV) {
 ],
   controllers: [AppController],
   providers: [
-    SharedUserListener,
+    // SharedUserListener,
     AppService,
     QueryBus,
     CommandBus

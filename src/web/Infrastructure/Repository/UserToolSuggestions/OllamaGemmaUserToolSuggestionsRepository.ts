@@ -9,7 +9,7 @@ import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepo
 import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
 
 @Injectable()
-export class OllamaMistralUserToolSuggestionsRepository
+export class OllamaGemmaUserToolSuggestionsRepository
 	implements UserToolSuggestionsRepository
 {
 	constructor(private readonly userWebRepository: UserWebRepository) {}

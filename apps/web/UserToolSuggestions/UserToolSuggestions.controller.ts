@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Inject, Query } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
+import { getSuggestionsDto } from 'src/web/Application/Dto/Suggestions/getSuggestions.dto';
 // web application DTO
 import { getAllToolsDto } from 'src/web/Application/Dto/Tool/getAllTools.dto';
 import { UserToolSuggestionsSearcher } from 'src/web/Application/Service/UserToolSuggestion/UserToolSuggestionsSearcher';
@@ -15,7 +16,7 @@ export class UserToolSuggestionsController {
   ) {}
 
   @Get('')
-  @Serialize(getAllToolsDto)
+  @Serialize(getSuggestionsDto)
   async getAll(
     @Query('id') id?: string
   ) {
@@ -23,9 +24,9 @@ export class UserToolSuggestionsController {
   // console.log("Alguien quiere las tools ... ")
     const data = await this.searcher.search(id);
 
-    return {
-      data
-    }
+    console.log(data.toPrimitives());
+
+    return data.toPrimitives()
 
   }
   
