@@ -7,7 +7,7 @@ import { UserToolSuggestionsController } from './UserToolSuggestions.controller'
 import { TypeormUserWebRepository } from 'src/web/Infrastructure/Repository/UserWeb/TypeormUserWebRepository';
 import { UserWebRepository } from 'src/web/Domain/Repository/UserWeb/UserWebRepository';
 import { UserWebSchema } from 'src/web/Infrastructure/Persistence/typeorm/DatabaseWebUser.schema';
-import { OllamaGemmaUserToolSuggestionsRepository } from 'src/web/Infrastructure/Repository/UserToolSuggestions/OllamaGemmaUserToolSuggestionsRepository';
+import { OllamaLangchainUserToolSuggestionsRepository } from 'src/web/Infrastructure/Repository/UserToolSuggestions/OllamaLangchainUserToolSuggestionsRepository';
 
 @Module({
     imports: [
@@ -27,7 +27,7 @@ import { OllamaGemmaUserToolSuggestionsRepository } from 'src/web/Infrastructure
         },
         {
             provide: UserToolSuggestionsRepository,
-            useClass: OllamaGemmaUserToolSuggestionsRepository,
+            useClass: OllamaLangchainUserToolSuggestionsRepository,
         },
         {
             provide: 'UserToolSuggestionsSearcher',
