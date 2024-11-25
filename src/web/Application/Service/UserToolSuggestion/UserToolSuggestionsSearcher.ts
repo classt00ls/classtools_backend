@@ -11,6 +11,6 @@ export class UserToolSuggestionsSearcher {
 	) {}
 
 	async search(userId: string): Promise<UserToolSuggestions | null> {
-		return await this.userToolSuggestionsRepository.search(new UserWebId(userId));
+		return await this.userToolSuggestionsRepository.byVisitedTools(new UserWebId(userId));
 	}
 }

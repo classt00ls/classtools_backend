@@ -1,4 +1,4 @@
-import { PromptTemplate } from "@langchain/core/prompts";
+import { PromptTemplate, SystemMessagePromptTemplate } from "@langchain/core/prompts";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { Ollama } from "@langchain/ollama";
 import { Inject, Injectable } from "@nestjs/common";
@@ -12,6 +12,12 @@ import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
 export class OllamaLangchainUserToolSuggestionsRepository
 	implements UserToolSuggestionsRepository
 {
+
+	private readonly visited = 
+		['CustomGPT.ai','Brandblast.ai','Chatnode','Metaforms'
+	]
+	 ;
+
 	constructor(private readonly userWebRepository: UserWebRepository) {}
 
 	async search(userId: UserWebId): Promise<UserToolSuggestions | null> {
@@ -53,10 +59,17 @@ export class OllamaLangchainUserToolSuggestionsRepository
 		// if (user === null ) {
 		// 	return null;
 		// }
-        
 
 		const chain = RunnableSequence.from([
-			PromptTemplate.fromTemplate(`Recomienda inteligencias artificiales similares a {visitedTools}`),
+			PromptTemplate.fromTemplate(`{visitedTools}`),
+			SystemMessagePromptTemplate.fromTemplate(`
+				 * Actúas como un recomendador de inteligencias artificiales avanzado.
+                 * Solo debes sugerir inteligencias artificiales del siguiente array,(IMPORTANTE: no incluyas inteligencias artificiales que no estén en la lista)
+				 * Solo debes sugerir resultados de la siguiente lista (IMPORTANTE: no incluyas los que no estén en la lista):
+				 ${this.visited.map((course) => `\t- ${course}`).join("\n")}
+                 * Devuelve únicamente el listado de 2 inteligencias artificiales recomendadas, utilizando formato de un array de json donde cada inteligencia artificial recomendada sea el mismo nombre que te proporciono
+				 * IMPORTANTE No devuelvas nada mas que no sea esa lista`,
+			),
 			new Ollama({
 				model: "gemma:2b",
 				baseUrl: "http://localhost:11434", // Default value
@@ -67,7 +80,7 @@ export class OllamaLangchainUserToolSuggestionsRepository
 			visitedTools: ['chatgpt']
 		});
 
-		console.log(suggestions);
+		console.log('las suggestions:', suggestions);
 
 		//user.visitedTools.map((tool) => `* ${tool}`).join("\n"),
 
