@@ -5,7 +5,7 @@ import { UserToolSuggestionsSearcher } from 'src/web/Application/Service/UserToo
 @Controller('userweb')
 export class UserWebController {
   constructor(
-    @Inject('UserToolSuggestionsSearcher') private searcher: UserToolSuggestionsSearcher,
+    
     private readonly queryBus: QueryBus
     
   ) {}
