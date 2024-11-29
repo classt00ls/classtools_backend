@@ -22,6 +22,7 @@ import { UserToolSuggestionsModule } from 'apps/web/UserToolSuggestions/UserTool
 import { SharedUserListener } from './web/Application/Listener/Shared/SharedUserListener';
 import { UserWebCreator } from './web/Application/Service/UserWeb/UserWebCreator';
 import { UserWebRepository } from './web/Domain/Repository/UserWeb/UserWebRepository';
+import { TypeormUserWebRepository } from './web/Infrastructure/Repository/UserWeb/TypeormUserWebRepository';
 
 const cookieSession = require('cookie-session');
 
@@ -112,6 +113,14 @@ switch (process.env.NODE_ENV) {
   controllers: [AppController],
   providers: [
     SharedUserListener,
+    {
+      provide: UserWebRepository,
+      useClass: TypeormUserWebRepository
+    },
+    {
+      provide: 'UserWebCreator',
+      useClass: UserWebCreator
+    },
     // SharedUserListener,
     AppService,
     QueryBus,

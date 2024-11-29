@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
 import { SignupUserEvent } from "src/Shared/Domain/Event/User/SignupUserEvent";
 import { UserWebCreatorRequest } from "../../Request/UserWeb/UserWebCreatorRequest";
@@ -9,7 +9,7 @@ import { UserWebCreator } from "src/Web/Application/Service/UserWeb/UserWebCreat
 export class SharedUserListener {
 
   constructor(
-    private userWebCreator:UserWebCreator
+    @Inject('UserWebCreator') private userWebCreator: UserWebCreator
   ) {}
 
   @OnEvent('shared.user.signup', { async: true }) 
@@ -19,9 +19,9 @@ export class SharedUserListener {
 
     await this.userWebCreator.create(
       new UserWebCreatorRequest(
-        v4(),
-        [],
-        []
+        event.aggregateId,
+        event.email,
+        event.name
       )
     );
 

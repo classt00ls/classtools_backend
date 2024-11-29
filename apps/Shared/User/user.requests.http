@@ -7,10 +7,10 @@ POST http://localhost:3000/user/signup
 Content-Type: application/json
 
 {
-	"email": "user4@email.com",
+	"email": "user12@email.com",
 	"password": "qweasd",
-	"name": "user user4",
-	"companyName": "company pruebas"
+	"name": "user user12",
+	"companyName": "company lol"
 }
 
 ### login admin

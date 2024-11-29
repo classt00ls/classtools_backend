@@ -37,6 +37,8 @@ export class TypeormUserWebRepository extends UserWebRepository {
 
 		await this.repository.insert({
 			id: userPrimitives.id,
+			email: userPrimitives.email,
+			name: userPrimitives.name,
 			favorites: JSON.stringify(userPrimitives.favorites),
 			visited_tools: JSON.stringify(userPrimitives.visitedTools)
 		});
@@ -48,7 +50,9 @@ export class TypeormUserWebRepository extends UserWebRepository {
 			return UserWeb.fromPrimitives({
 				id: response.id,
 				favorites: JSON.parse(response.favorites),
-				visitedTools: JSON.parse(response.visited_tools)
+				visitedTools: JSON.parse(response.visited_tools),
+				email: response.email,
+				name: response.name
 			});
 		} catch (error) {
 			return null;

@@ -24,7 +24,7 @@ const scrypt = promisify(_script);
 export class SignupUserCommandHandler implements ICommandHandler<SignupUserCommand>{
     constructor(
         private userRepository: UserRepository,
-		private userCreator: UserCreator,
+		@Inject('UserCreator') private userCreator: UserCreator,
 		private eventEmitter: EventEmitter2,
 		private eventEmitterReadinessWatcher: EventEmitterReadinessWatcher
 		// private emailService: MailService

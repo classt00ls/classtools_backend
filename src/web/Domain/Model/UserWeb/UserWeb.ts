@@ -5,6 +5,8 @@ export type UserWebPrimitives = {
 	id: string;
 	visitedTools: string[];
 	favorites: string[];
+	email: string,
+	name: string
 }
 
 export class UserWeb extends AggregateRoot{
@@ -13,7 +15,9 @@ export class UserWeb extends AggregateRoot{
 		public readonly id: UserWebId,
         // TODO: darle estructura json. {toolname: nº clicks}
 		public readonly visitedTools: string[],
-		public favorites: string[]
+		public favorites: string[],
+		public email: string,
+		public name: string
     ){
 		super();
 	}
@@ -23,14 +27,22 @@ export class UserWeb extends AggregateRoot{
 			new UserWebId(primitives.id),
 			primitives.visitedTools,
 			primitives.favorites,
+			primitives.email,
+			primitives.name
 		);
 	}
 
-	static create(userId: string): UserWeb {
+	static create(
+		userId: string,
+		email: string,
+		name: string
+	): UserWeb {
 		return new UserWeb(
             new UserWebId(userId),
             [], 
-            []
+            [],
+			email,
+			name
         );
 	}
 
@@ -43,6 +55,8 @@ export class UserWeb extends AggregateRoot{
 			id: this.id.value,
 			visitedTools: this.visitedTools,
 			favorites: this.favorites,
+			email: this.email,
+			name: this.name
 		};
 	}
 }

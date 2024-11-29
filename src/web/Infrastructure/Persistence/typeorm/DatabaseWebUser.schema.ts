@@ -4,6 +4,8 @@ export type DatabaseWebUser = {
 	id: string;
 	visited_tools: string;
 	favorites: string;
+  email: string;
+  name: string;
 };
 
 export const UserWebSchema = new EntitySchema<DatabaseWebUser>({
@@ -21,6 +23,14 @@ export const UserWebSchema = new EntitySchema<DatabaseWebUser>({
     visited_tools: {
       type: String,
       nullable: true
-    }
+    },
+    email: {
+      type: String,
+      nullable: true
+    },
+    name: {
+      type: String,
+      nullable: true
+    },
   }
 });

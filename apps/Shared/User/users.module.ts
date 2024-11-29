@@ -26,7 +26,6 @@ import { SignupUserCommandHandler } from 'src/Shared/Application/Command/SignupU
   ],
   controllers: [UsersController],
   providers: [
-    UserCreator,
     // MailerService,
     {
       provide: UserRepository,
@@ -35,6 +34,10 @@ import { SignupUserCommandHandler } from 'src/Shared/Application/Command/SignupU
     {
       provide: CompanyRepository,
       useClass: CompanyTypeormRepository, 
+    },
+    {
+      provide: 'UserCreator',
+      useClass: UserCreator, 
     },
     SignupUserCommandHandler,
     LoginUserQueryHandler,
