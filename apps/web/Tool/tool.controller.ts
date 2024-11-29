@@ -81,7 +81,7 @@ export class ToolController {
     @Query('id') id: string
   ) {
 
-    const userId = session.user ? session.user.id : null;
+    const userId = session.user ?? -1;
     const data = await this.queryBus.execute(
         new GetDetailToolQuery(
           id,
@@ -89,6 +89,7 @@ export class ToolController {
         )
     );
 
+    console.log('return: ', data)
     return data;
 
   }

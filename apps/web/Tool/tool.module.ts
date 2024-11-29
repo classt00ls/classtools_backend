@@ -9,6 +9,7 @@ import { GetAllToolsQueryHandler } from 'src/web/Application/Query/Tool/GetAllTo
 import { CountToolsQueryHandler } from 'src/web/Application/Query/Tool/CountToolsQueryHandler';
 import { GetDetailToolQueryHandler } from 'src/web/Application/Query/Tool/GetDetailToolQueryHandler';
 import { GetFilteredToolsQueryHandler } from 'src/web/Application/Query/Tool/GetFilteredToolsQueryHandler';
+import { ToolGetDetailListener } from 'src/web/Application/Listener/Tool/ToolGetDetailListener';
 
 
 @Module({
@@ -27,6 +28,7 @@ import { GetFilteredToolsQueryHandler } from 'src/web/Application/Query/Tool/Get
         GetAllToolsQueryHandler,
         GetDetailToolQueryHandler,
         GetFilteredToolsQueryHandler,
+        ToolGetDetailListener,
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,
