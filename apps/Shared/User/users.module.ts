@@ -32,10 +32,6 @@ import { SignupUserCommandHandler } from 'src/Shared/Application/Command/SignupU
       useClass: UserTypeormRepository,
     },
     {
-      provide: CompanyRepository,
-      useClass: CompanyTypeormRepository, 
-    },
-    {
       provide: 'UserCreator',
       useClass: UserCreator, 
     },

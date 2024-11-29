@@ -114,11 +114,6 @@ switch (process.env.NODE_ENV) {
 ],
   controllers: [AppController],
   providers: [
-    {
-      provide: UserWebRepository,
-      useClass: TypeormUserWebRepository
-    },
-    // SharedUserListener,
     AppService,
     QueryBus,
     CommandBus
