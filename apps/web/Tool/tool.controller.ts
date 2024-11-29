@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Session } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 // web application DTO
 import { getAllToolsDto } from 'src/web/Application/Dto/Tool/getAllTools.dto';
@@ -77,11 +77,16 @@ export class ToolController {
   @Get('detail')
   @Serialize(getDetailToolDto)
   async getTool(
-    @Query('id') id?: string
+    @Session() session: any,
+    @Query('id') id: string
   ) {
 
+    const userId = session.user ? session.user.id : null;
     const data = await this.queryBus.execute(
-        new GetDetailToolQuery(id)
+        new GetDetailToolQuery(
+          id,
+          userId
+        )
     );
 
     return data;

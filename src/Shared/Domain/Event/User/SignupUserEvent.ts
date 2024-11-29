@@ -1,15 +1,28 @@
+import { DomainEventAttributes } from "src/Shared/Application/Event/ApplicationEvent";
+import { DomainEvent } from "../DomainEvent";
 
-export class SignupUserEvent {
+export class SignupUserEvent extends DomainEvent{
 
-  id: string;
+  email: string;
   name: string;
 
   constructor(
-    id: string,
+    aggregateId: string,
+    email: string,
     name: string
   ) {
-    this.id = id;
+    super('shared.user.signup', aggregateId);
+    
+    this.email = email;
     this.name = name;
+  }
+
+  public toPrimitives():DomainEventAttributes {
+    return {
+      'aggregateId': this.aggregateId,
+      'email': this.email,
+      'name': this.name
+    }
   }
   
 }

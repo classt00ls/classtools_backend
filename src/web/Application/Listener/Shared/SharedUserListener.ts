@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
 import { SignupUserEvent } from "src/Shared/Domain/Event/User/SignupUserEvent";
-import { UserWebCreator } from "../../Service/UserWeb/UserWebCreator";
 import { UserWebCreatorRequest } from "../../Request/UserWeb/UserWebCreatorRequest";
 import {v4} from 'uuid';
+import { UserWebCreator } from "src/Web/Application/Service/UserWeb/UserWebCreator";
 
 @Injectable()
 export class SharedUserListener {
@@ -12,7 +12,7 @@ export class SharedUserListener {
     private userWebCreator:UserWebCreator
   ) {}
 
-  @OnEvent('shared.user.SignupUser', { async: true }) 
+  @OnEvent('shared.user.signup', { async: true }) 
   async handleSignupUserEvent(event: SignupUserEvent) {
 
     console.log('Guai !!   ja tenim SignupUserEvent : ', event);

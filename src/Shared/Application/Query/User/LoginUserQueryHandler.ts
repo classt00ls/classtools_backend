@@ -5,6 +5,7 @@ import { promisify } from "util";
 import { LoginUserQuery } from "./LoginUserQuery";
 import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
 import { CannotLoginUserException } from "src/Shared/Domain/Exception/user/CannotLoginUserException";
+import { UserModel } from "src/Shared/Domain/Model/User/user.model";
 
 const scrypt = promisify(_script);
 
@@ -15,7 +16,7 @@ export class LoginUserQueryHandler implements IQueryHandler<LoginUserQuery>{
         private userRepository: UserRepository
     ) {}
 
-    async execute(query: LoginUserQuery) {
+    async execute(query: LoginUserQuery): Promise<UserModel> {
 		
         const user = await this.userRepository.findOneByEmail(query.email);
 		if(!user) {

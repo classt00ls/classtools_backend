@@ -77,8 +77,8 @@ export class UsersController {
 					loginUserDto.email,
 					loginUserDto.password
 				)
-			);
-			session.user = user;
+			) as UserModel;
+			session.user = user.id;
 			session.impersonated = user;
 			return user;
 		} catch (error) {

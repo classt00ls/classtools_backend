@@ -4,6 +4,7 @@
  */
 export class GetDetailToolQuery {
     constructor(
-        public id: string
+        public id: string,
+        public userId?: string
     ){}
 }

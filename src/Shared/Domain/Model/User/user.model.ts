@@ -1,3 +1,4 @@
+import { SignupUserEvent } from "../../Event/User/SignupUserEvent";
 import { BaseModel } from "../base.model";
 import { CompanyModel } from "../Company/company.model";
 
@@ -5,24 +6,57 @@ import { CompanyModel } from "../Company/company.model";
 export type UserRoles = 'user' | 'editor' | 'admin' | 'superadmin';
 
 export class UserModel extends BaseModel {
-  /*
+  
   private constructor(
     id: string,
     email: string,
     password: string,
-    name: string,
-    surname: string
+    role: UserRoles,
+    confirmed: boolean,
+    name?: string,
+    surname?: string
   ) {
 
-    super(
-      id: string,
-      email: string,
+    super( );
+    this.id = id;
+    this.email = email;
+    
+    this.password = password;
+
+    this.name = name ?? null;
+    this.surname = surname ?? null;
+
+    this.confirmed = confirmed;
+    this.role = role;
+  }
+
+  public static crear = (
+    id: string,
+    email: string,
+    password: string,
+    nombre?: string
+  ) => {
+    const nuevo_usuario = new UserModel(
+      id,
+      email,
       password,
-      name,
-      surname)
+      'user',
+      false,
+      nombre
+    );
+
+    nuevo_usuario.record(
+      new SignupUserEvent(
+        id,
+        email,
+        nombre
+      )
+    );
+
+    return nuevo_usuario;
 
   }
-  */
+  
 
   
   id: string;

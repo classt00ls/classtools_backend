@@ -111,6 +111,7 @@ switch (process.env.NODE_ENV) {
 ],
   controllers: [AppController],
   providers: [
+    SharedUserListener,
     // SharedUserListener,
     AppService,
     QueryBus,

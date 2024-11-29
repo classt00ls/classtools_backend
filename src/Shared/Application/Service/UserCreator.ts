@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
-import { UserCreatorRequest } from "../Request/User/UserCreatorRequest";
-import { EventEmitter2 } from "@nestjs/event-emitter";
+import { UserCreatorRequest } from "../../Domain/Request/User/UserCreatorRequest";
+import { UserModel } from "src/Shared/Domain/Model/User/user.model";
 
 @Injectable()
 export class UserCreator {
@@ -10,18 +10,18 @@ export class UserCreator {
         private userRepository: UserRepository
     ) {}
 
-    async create(request: UserCreatorRequest): Promise<any>{ 
+    async create(request: UserCreatorRequest): Promise<UserModel>{ 
         // Creamos el usuario en nuestra database y le asignamos la company
-		const user = await this.userRepository.create(
-			{
-				email: request.getEmail(),
-				password: request.getPassword(),
-				name: request.getName(),
-				// company
-			}
-		);
+		const user = UserModel.crear(
+			request.getId(),
+			request.getEmail(),
+			request.getPassword(),
+			request.getName()
+		)
 
 		await this.userRepository.insert(user);
+
+		return user;
 		
     }
 
