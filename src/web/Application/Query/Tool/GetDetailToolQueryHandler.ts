@@ -19,8 +19,6 @@ export class GetDetailToolQueryHandler {
         const tool = await this.toolRepository.getOneByIdOrFail(query.id);
         tool.url = tool.url.split('?')[0];
 
-        console.log('Emitimos el evento visited');
-
         this.eventEmitter.emit(
             'web.tool.get_detail',
             new ToolVisitedEvent(

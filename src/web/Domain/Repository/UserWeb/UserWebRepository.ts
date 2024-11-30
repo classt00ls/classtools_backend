@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { UserWeb } from "../../Model/UserWeb/UserWeb";
-import { UserWebId } from "../../ValueObject/UserWebId";
 import { InsertResult } from "typeorm";
 import { DatabaseWebUser } from "src/web/Infrastructure/Persistence/typeorm/DatabaseWebUser.schema";
+import { UserWebId } from "../../ValueObject/UserWebId";
 
 @Injectable()
 export abstract class UserWebRepository {
@@ -13,4 +13,6 @@ export abstract class UserWebRepository {
 	abstract save(user: UserWeb): Promise<void>;
 
 	abstract search(id: UserWebId): Promise<UserWeb | null>;
+
+	abstract deleteAll(): Promise<void>;
 }

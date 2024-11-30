@@ -35,22 +35,25 @@ export class TypeormUserWebRepository extends UserWebRepository {
 	async save(user: UserWeb): Promise<void> {
 		const userPrimitives = user.toPrimitives();
 
-		await this.repository.insert({
+		await this.repository.save({
 			id: userPrimitives.id,
 			email: userPrimitives.email,
 			name: userPrimitives.name,
 			favorites: JSON.stringify(userPrimitives.favorites),
-			visited_tools: JSON.stringify(userPrimitives.visitedTools)
+			visited_tools: userPrimitives.visitedTools
 		});
+
 	}
 
 	async search(id: UserWebId): Promise<UserWeb | null> {
 		try {
+			console.log('id.value: ', id.value)
 			const response = await this.repository.findOneByOrFail({id: id.value});
+			
 			return UserWeb.fromPrimitives({
 				id: response.id,
 				favorites: JSON.parse(response.favorites),
-				visitedTools: JSON.parse(response.visited_tools),
+				visitedTools: response.visited_tools,
 				email: response.email,
 				name: response.name
 			});
@@ -60,5 +63,9 @@ export class TypeormUserWebRepository extends UserWebRepository {
 		
 		
 		
+	}
+
+	public async deleteAll(): Promise<void> {
+		await this.repository.clear();
 	}
 }

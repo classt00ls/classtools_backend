@@ -10,6 +10,8 @@ import { CountToolsQueryHandler } from 'src/web/Application/Query/Tool/CountTool
 import { GetDetailToolQueryHandler } from 'src/web/Application/Query/Tool/GetDetailToolQueryHandler';
 import { GetFilteredToolsQueryHandler } from 'src/web/Application/Query/Tool/GetFilteredToolsQueryHandler';
 import { ToolGetDetailListener } from 'src/web/Application/Listener/Tool/ToolGetDetailListener';
+import { UserWebRepository } from 'src/web/Domain/Repository/UserWeb/UserWebRepository';
+import { TypeormUserWebRepository } from 'src/web/Infrastructure/Repository/UserWeb/TypeormUserWebRepository';
 
 
 @Module({
@@ -32,6 +34,10 @@ import { ToolGetDetailListener } from 'src/web/Application/Listener/Tool/ToolGet
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,
+        },
+        {
+            provide: UserWebRepository,
+            useClass: TypeormUserWebRepository,
         }
     ]
  })

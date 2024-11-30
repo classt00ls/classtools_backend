@@ -15,8 +15,6 @@ export class SharedUserListener {
   @OnEvent('shared.user.signup', { async: true }) 
   async handleSignupUserEvent(event: SignupUserEvent) {
 
-    console.log('Guai !!   ja tenim SignupUserEvent : ', event);
-
     await this.userWebCreator.create(
       new UserWebCreatorRequest(
         event.aggregateId,
@@ -24,8 +22,6 @@ export class SharedUserListener {
         event.name
       )
     );
-
-    console.log('Guai !!   ja tenim UserWebCreator : ');
 
   }
 

@@ -1,14 +1,24 @@
-import { Controller, Inject } from '@nestjs/common';
+import { Controller, Get, Inject } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { UserToolSuggestionsSearcher } from 'src/web/Application/Service/UserToolSuggestion/UserToolSuggestionsSearcher';
+import { UserWebRepository } from 'src/web/Domain/Repository/UserWeb/UserWebRepository';
 
 @Controller('userweb')
 export class UserWebController {
   constructor(
     
-    private readonly queryBus: QueryBus
+    private readonly repo: UserWebRepository
     
   ) {}
+
+  @Get('delete')
+  async getTool(
+  ) {
+
+    await this.repo.deleteAll();
+    return 'ok';
+
+  }
   
   
 }

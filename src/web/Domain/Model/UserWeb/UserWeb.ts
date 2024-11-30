@@ -13,7 +13,6 @@ export class UserWeb extends AggregateRoot{
 
     private constructor(
 		public readonly id: UserWebId,
-        // TODO: darle estructura json. {toolname: nº clicks}
 		public visitedTools: string,
 		public favorites: string[],
 		public email: string,
@@ -33,12 +32,12 @@ export class UserWeb extends AggregateRoot{
 	}
 
 	static create(
-		userId: string,
+		id: string,
 		email: string,
 		name: string
 	): UserWeb {
 		return new UserWeb(
-            new UserWebId(userId),
+            new UserWebId(id),
             '[]', 
             [],
 			email,
@@ -48,20 +47,20 @@ export class UserWeb extends AggregateRoot{
 
 	addvisitedTool(visitedTool: string): void {
 		let tools = JSON.parse(this.visitedTools);
-		const index = tools.findIndex(item => item.id === visitedTool);
+		const index = tools.findIndex(item => item['id'] == visitedTool);
 		// si no la teniamos la añadimos
 		if(index == -1) {
 			const new_element = {
 				id: visitedTool,
 				visited: 1
 			};
-			tools.push(JSON.stringify(new_element));
+			tools.push(new_element);
+			this.visitedTools = JSON.stringify(tools);
 			return;
 		}
 		
 		tools[index].visited = tools[index].visited + 1;
 		this.visitedTools = JSON.stringify(tools);
-
 	}
 
 	toPrimitives(): UserWebPrimitives {

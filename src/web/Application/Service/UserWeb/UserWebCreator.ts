@@ -18,10 +18,8 @@ export class UserWebCreator {
 			request.getName()
 
 		) 
-		
+		console.log('userWeb: ', userWeb);
 		await this.userWebRepository.save(userWeb);
-
-		console.log('Ja hem creat el userweb');
 		
     }
 

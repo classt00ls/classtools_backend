@@ -13,8 +13,7 @@ export const UserWebSchema = new EntitySchema<DatabaseWebUser>({
   columns: {
     id: {
       type: String,
-      primary: true,
-      generated: 'uuid',
+      primary: true
     },
     favorites: {
       type: String,
