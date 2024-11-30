@@ -40,7 +40,8 @@ export class TypeormUserWebRepository extends UserWebRepository {
 			email: userPrimitives.email,
 			name: userPrimitives.name,
 			favorites: JSON.stringify(userPrimitives.favorites),
-			visited_tools: userPrimitives.visitedTools
+			visited_tools: userPrimitives.visitedTools,
+			suggestions: userPrimitives.suggestions
 		});
 
 	}
@@ -55,7 +56,8 @@ export class TypeormUserWebRepository extends UserWebRepository {
 				favorites: JSON.parse(response.favorites),
 				visitedTools: response.visited_tools,
 				email: response.email,
-				name: response.name
+				name: response.name,
+				suggestions: response.suggestions
 			});
 		} catch (error) {
 			return null;

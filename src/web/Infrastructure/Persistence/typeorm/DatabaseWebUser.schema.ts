@@ -6,6 +6,7 @@ export type DatabaseWebUser = {
 	favorites: string;
   email: string;
   name: string;
+  suggestions: string;
 };
 
 export const UserWebSchema = new EntitySchema<DatabaseWebUser>({
@@ -28,6 +29,10 @@ export const UserWebSchema = new EntitySchema<DatabaseWebUser>({
       nullable: true
     },
     name: {
+      type: String,
+      nullable: true
+    },
+    suggestions: {
       type: String,
       nullable: true
     },

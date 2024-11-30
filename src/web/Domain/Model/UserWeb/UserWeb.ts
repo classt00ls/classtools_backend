@@ -3,6 +3,7 @@ import { AggregateRoot } from "src/Shared/Domain/Model/aggregateRoot";
 
 export type UserWebPrimitives = {
 	id: string;
+	suggestions: string;
 	visitedTools: string;
 	favorites: string[];
 	email: string,
@@ -16,7 +17,8 @@ export class UserWeb extends AggregateRoot{
 		public visitedTools: string,
 		public favorites: string[],
 		public email: string,
-		public name: string
+		public name: string,
+		public suggestions: string
     ){
 		super();
 	}
@@ -27,7 +29,8 @@ export class UserWeb extends AggregateRoot{
 			primitives.visitedTools,
 			primitives.favorites,
 			primitives.email,
-			primitives.name
+			primitives.name,
+			primitives.suggestions
 		);
 	}
 
@@ -41,7 +44,8 @@ export class UserWeb extends AggregateRoot{
             '[]', 
             [],
 			email,
-			name
+			name,
+			''
         );
 	}
 
@@ -63,13 +67,19 @@ export class UserWeb extends AggregateRoot{
 		this.visitedTools = JSON.stringify(tools);
 	}
 
+	setSuggestions(suggestions: string) {
+		this.suggestions = suggestions;
+
+	}
+
 	toPrimitives(): UserWebPrimitives {
 		return {
 			id: this.id.value,
 			visitedTools: this.visitedTools,
 			favorites: this.favorites,
 			email: this.email,
-			name: this.name
+			name: this.name,
+			suggestions: this.suggestions
 		};
 	}
 }

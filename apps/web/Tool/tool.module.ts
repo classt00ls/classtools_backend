@@ -12,6 +12,9 @@ import { GetFilteredToolsQueryHandler } from 'src/web/Application/Query/Tool/Get
 import { ToolGetDetailListener } from 'src/web/Application/Listener/Tool/ToolGetDetailListener';
 import { UserWebRepository } from 'src/web/Domain/Repository/UserWeb/UserWebRepository';
 import { TypeormUserWebRepository } from 'src/web/Infrastructure/Repository/UserWeb/TypeormUserWebRepository';
+import { UserToolSuggestionsSearcher } from 'src/web/Application/Service/UserToolSuggestion/UserToolSuggestionsSearcher';
+import { UserToolSuggestionsRepository } from 'src/web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository';
+import { OllamaLangchainUserToolSuggestionsRepository } from 'src/web/Infrastructure/Repository/UserToolSuggestions/OllamaLangchainUserToolSuggestionsRepository';
 
 
 @Module({
@@ -26,6 +29,7 @@ import { TypeormUserWebRepository } from 'src/web/Infrastructure/Repository/User
         ToolController
     ],
     providers: [
+        UserToolSuggestionsSearcher,
         CountToolsQueryHandler,
         GetAllToolsQueryHandler,
         GetDetailToolQueryHandler,
@@ -38,7 +42,12 @@ import { TypeormUserWebRepository } from 'src/web/Infrastructure/Repository/User
         {
             provide: UserWebRepository,
             useClass: TypeormUserWebRepository,
+        },
+        {
+            provide: UserToolSuggestionsRepository,
+            useClass: OllamaLangchainUserToolSuggestionsRepository,
         }
+        
     ]
  })
 export class ToolModule {}
