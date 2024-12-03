@@ -6,10 +6,12 @@ import { GetAuthTokenQuery } from "src/Shared/Application/Query/User/GetAuthToke
 import { LoginUserDto } from "../User/login-user.dto";
 import { LoginUserCommand } from "src/Shared/Application/Command/User/LoginUserCommand";
 import { SignupUserCommand } from "src/Shared/Application/Command/User/SignupUserCommand";
-import { Serialize } from "src/web/Infrastructure/interceptors/serialize.interceptor";
 import { AuthGuard } from "src/Shared/Infrastructure/guards/auth.guard";
 import { UserMeDto } from "../User/user-me.dto";
 import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
+import { CreateUserDto } from "src/Shared/Application/Dto/create-user.dto";
+import { CannotCreateUserException } from "src/Shared/Domain/Exception/user/CannotCreateUserException";
+import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
 
 
 @Controller('auth')
@@ -57,8 +59,42 @@ export class AuthController {
 	async me(
 		@Request() req
 	) {
-		const userWeb = await this.userRepository.search(req.userId);
+		const userWeb = await this.userRepository.search(new UserWebId(req.userId));
 		return userWeb.toPrimitives();
+	}
+
+	/**
+	 * @description
+	 * ---------------------------------------------------
+	 * @param createUserDto 
+	 * @throws {CannotCreateUserException} code 3001 if user with email was founded
+	 * @throws {CannotCreateUserException} code 3002 if company with name was founded
+	 * @throws {BadRequestException} code: 1 - if system error occurs
+	 */
+	@Post('signup')
+	async createUser(
+		@Body() createUserDto: CreateUserDto
+	) {
+
+		let commandResponse;
+		try{
+			commandResponse = await this.commandBus.execute(
+				new SignupUserCommand(
+					createUserDto.email,
+					createUserDto.password,
+					createUserDto.name,
+					createUserDto.companyName
+				)
+			);
+			
+		} catch(error){
+			if(error instanceof CannotCreateUserException) throw error;
+			else {
+				console.log('El error: ', error)
+				throw new BadRequestException(ERROR_CODES.COMMON.USER.ERROR_CREATING_USER);
+			}
+		}
+		return {code: true};
 	}
 
 

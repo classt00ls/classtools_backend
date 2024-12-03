@@ -2,16 +2,7 @@
 ### Recover password
 GET http://localhost:3000/user/recoverpassword?email=user@email.com
 
-### Create new user
-POST http://localhost:3000/user/signup
-Content-Type: application/json
 
-{
-	"email": "user24@email.com",
-	"password": "qweasd",
-	"name": "user user16",
-	"companyName": "company lol"
-}
 
 ### login admin
 POST http://localhost:3001/user/auth/signin

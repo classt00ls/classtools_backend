@@ -73,7 +73,6 @@ export class SignupUserCommandHandler implements ICommandHandler<SignupUserComma
 			// Publicamos los eventos de dominio desde el caso de uso
 			await Promise.all(
 				events.map(async (event: DomainEvent) => {
-					console.log('Emiting Event: ' + event.eventName)
 					await this.eventEmitter.emit(
 						event.eventName,
 						event.toPrimitives()

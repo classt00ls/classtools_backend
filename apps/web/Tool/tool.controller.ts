@@ -82,7 +82,6 @@ export class ToolController {
   @UseGuards(PublicGuard)
   @Serialize(getDetailToolDto)
   async getTool(
-    @Request() req,
     @Request() request,
     @Query('id') id: string
   ) {

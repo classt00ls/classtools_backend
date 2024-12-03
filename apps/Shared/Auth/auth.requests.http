@@ -3,13 +3,13 @@
 GET http://localhost:3000/user/recoverpassword?email=user@email.com
 
 ### Create new user
-POST http://localhost:3000/user/signup
+POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-	"email": "user24@email.com",
+	"email": "usernew@email.com",
 	"password": "qweasd",
-	"name": "user user16",
+	"name": "user new",
 	"companyName": "company lol"
 }
 

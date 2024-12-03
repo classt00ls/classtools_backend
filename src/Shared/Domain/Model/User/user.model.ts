@@ -41,7 +41,7 @@ export class UserModel extends BaseModel {
       email,
       password,
       'user',
-      false,
+      true,
       nombre
     );
 

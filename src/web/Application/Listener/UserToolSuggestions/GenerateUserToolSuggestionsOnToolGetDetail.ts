@@ -15,12 +15,14 @@ export class GenerateUserToolSuggestionsOnToolGetDetail {
 
   @OnEvent('web.tool.get_detail', { async: true }) 
   async handleToolCreatedEvent(event: ToolVisitedEvent) {
+    console.log('buscamos el userweb: ', event.userId)
     // Recuperamos el userWeb
     const userWeb = await this.userWebRepository.search(new UserWebId(event.userId));
     // Añadimos la visita
     userWeb.addvisitedTool(event.eventName);
 
     const suggestions = await this.userToolSuggestionsSearcher.search(event.userId);
+    
     userWeb.setSuggestions(suggestions.suggestions);
     // Guardamos el userWeb
     await this.userWebRepository.save(userWeb);
