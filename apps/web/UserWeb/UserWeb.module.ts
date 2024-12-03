@@ -6,7 +6,7 @@ import { UserWebRepository } from 'src/web/Domain/Repository/UserWeb/UserWebRepo
 import { UserWebSchema } from 'src/web/Infrastructure/Persistence/typeorm/DatabaseWebUser.schema';
 import { UserWebController } from './UserWeb.controller';
 import { UserWebCreator } from 'src/Web/Application/Service/UserWeb/UserWebCreator';
-import { SharedUserListener } from 'src/web/Application/Listener/Shared/SharedUserListener';
+import { CreateUserWebOnSharedUserCreated } from 'src/web/Application/Listener/UserWeb/CreateUserWebOnSharedUserCreated';
 
 @Module({
     imports: [
@@ -20,7 +20,7 @@ import { SharedUserListener } from 'src/web/Application/Listener/Shared/SharedUs
         UserWebController
     ],
     providers: [
-        SharedUserListener,
+        CreateUserWebOnSharedUserCreated,
         {
             provide: 'UserWebCreator',
             useClass: UserWebCreator

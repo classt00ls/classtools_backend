@@ -6,7 +6,7 @@ import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
 import { UserToolSuggestionsSearcher } from "../../Service/UserToolSuggestion/UserToolSuggestionsSearcher";
 
 @Injectable()
-export class ToolGetDetailListener {
+export class GenerateUserToolSuggestionsOnToolGetDetail {
 
   constructor(
     private userWebRepository: UserWebRepository,

@@ -19,11 +19,8 @@ import { join } from 'path';
 import { CurrentUserMiddleware } from './Shared/Infrastructure/middlewares/current-user.middleware';
 import { LangChainModule } from 'apps/discover/Server/LangChain/LangChainModule';
 import { UserToolSuggestionsModule } from 'apps/web/UserToolSuggestions/UserToolSuggestions.module';
-import { SharedUserListener } from './web/Application/Listener/Shared/SharedUserListener';
-import { UserWebCreator } from './web/Application/Service/UserWeb/UserWebCreator';
-import { UserWebRepository } from './web/Domain/Repository/UserWeb/UserWebRepository';
-import { TypeormUserWebRepository } from './web/Infrastructure/Repository/UserWeb/TypeormUserWebRepository';
 import { UserWebModule } from 'apps/web/UserWeb/UserWeb.module';
+import { AuthModule } from 'apps/Shared/Auth/auth.module';
 
 const cookieSession = require('cookie-session');
 
@@ -61,6 +58,7 @@ switch (process.env.NODE_ENV) {
     OpenAIModule,
     LangChainModule, 
     UsersModule,
+    AuthModule,
     UserWebModule,
     UserToolSuggestionsModule,
     EventEmitterModule.forRoot({

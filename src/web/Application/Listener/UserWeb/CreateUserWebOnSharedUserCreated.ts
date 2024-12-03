@@ -6,7 +6,7 @@ import {v4} from 'uuid';
 import { UserWebCreator } from "src/Web/Application/Service/UserWeb/UserWebCreator";
 
 @Injectable()
-export class SharedUserListener {
+export class CreateUserWebOnSharedUserCreated {
 
   constructor(
     @Inject('UserWebCreator') private userWebCreator: UserWebCreator

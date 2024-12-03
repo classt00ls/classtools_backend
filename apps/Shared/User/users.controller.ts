@@ -2,22 +2,17 @@ import { BadRequestException, Body, Controller, Get, Post, Session, UseGuards } 
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import { CreateUserDto } from "src/Shared/Application/Dto/create-user.dto";
-import { UserResponseDto } from "src/Shared/Application/Dto/user-response.dto";
-
 import { CannotCreateUserException } from "src/Shared/Domain/Exception/user/CannotCreateUserException";
 import { ERROR_CODES } from "src/Shared/Domain/language/error.codes";
 import { Serialize } from "src/web/Infrastructure/interceptors/serialize.interceptor";
-import { LoginUserDto } from "./login-user.dto";
-import { LoginUserQuery } from "src/Shared/Application/Query/User/LoginUserQuery";
-import { CannotLoginUserException } from "src/Shared/Domain/Exception/user/CannotLoginUserException";
 import { ConfirmUserDto } from "./confirm-user.dto";
-import { ConfirmUserCommand } from "src/Shared/Application/Command/ConfirmUserCommand";
 import { AuthGuard } from "src/Shared/Infrastructure/guards/auth.guard";
 import { CurrentUser } from "src/Shared/Infrastructure/decorators/user/current-user";
 import { UserModel } from "src/Shared/Domain/Model/User/user.model";
 import { UserMeDto } from "./user-me.dto";
 import { GetCompleteUserQuery } from "src/Shared/Application/Query/User/GetCompleteUserQuery";
-import { SignupUserCommand } from "src/Shared/Application/Command/SignupUserCommand";
+import { SignupUserCommand } from "src/Shared/Application/Command/User/SignupUserCommand";
+import { ConfirmUserCommand } from "src/Shared/Application/Command/User/ConfirmUserCommand";
 
 
 @Controller('user')
@@ -60,32 +55,6 @@ export class UsersController {
 			}
 		}
 		return {code: true};
-	}
-
-	@Serialize(UserResponseDto)
-	@Post('/auth/signin')
-	async loginUser(
-		@Body() loginUserDto: LoginUserDto,
-		@Session() session: any,
-	) {
-
-// console.log('session', session); 
-		
-		try {
-			const user = await this.queryBus.execute(
-				new LoginUserQuery(
-					loginUserDto.email,
-					loginUserDto.password
-				)
-			) as UserModel;
-			session.user = user.id;
-			session.impersonated = user;
-			return user;
-		} catch (error) {
-			throw error;
-			if(error instanceof CannotLoginUserException) throw error;
-			else throw new BadRequestException(ERROR_CODES.COMMON.USER.ERROR_LOGIN);
-		}
 	}
 
 	@Post('/auth/confirm')

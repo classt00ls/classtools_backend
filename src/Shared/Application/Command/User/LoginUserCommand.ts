@@ -1,11 +1,7 @@
 import { IsEmail, IsString } from "class-validator";
 
-/**
- * @returns Promise<UserModel>
- */
-export class LoginUserQuery {
+export class LoginUserCommand {
 	
-
 	constructor(
 		public email: string,
 		public password: string

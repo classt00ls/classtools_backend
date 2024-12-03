@@ -10,11 +10,11 @@ import { RESPONSE_CODES } from "src/Shared/Domain/language/response.codes";
 // import { MailService } from "src/Shared/Service/MailService";
 import { CannotCreateUserException } from "src/Shared/Domain/Exception/user/CannotCreateUserException";
 import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
-import { UserCreatorRequest } from "../../Domain/Request/User/UserCreatorRequest";
 import { InfrastructureException } from "src/Shared/Infrastructure/Exception/InfrastructureException";
 
 import { UserCreator } from "src/Shared/Domain/Service/User/UserCreator";
 import { DomainEvent } from "src/Shared/Domain/Event/DomainEvent";
+import { UserCreatorRequest } from "src/Shared/Domain/Request/User/UserCreatorRequest";
 const {v4} = require('uuid');
 
 const scrypt = promisify(_script);
