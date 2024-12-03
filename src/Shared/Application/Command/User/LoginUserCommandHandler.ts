@@ -18,7 +18,7 @@ export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand
 		private jwtService: JwtService
     ) {}
 
-    async execute(query: LoginUserCommand): Promise<{ access_token: string }> {
+    async execute(query: LoginUserCommand): Promise<void> {
 		
         const user = await this.userRepository.findOneByEmail(query.email);
 		if(!user) {
@@ -38,10 +38,7 @@ export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand
 		const hash = await scrypt(query.password, salt, 32) as Buffer;
 
 		if(storedHash === hash.toString('hex')) {
-			const payload = { sub: user.id, useremail: user.email };
-			return {
-				access_token: await this.jwtService.signAsync(payload),
-			};
+			return;
 		} else {
 			throw CannotLoginUserException.becausePasswordIncorrect();
 		}

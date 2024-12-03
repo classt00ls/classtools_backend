@@ -75,27 +75,6 @@ export class UsersController {
 		}
 	}
 
-	@Get('/auth/me')
-	@UseGuards(AuthGuard)
-	@Serialize(UserMeDto)
-	async whoAmI(
-		@Session() session: any, 
-		@CurrentUser() user: UserModel
-	) {
-		const userCompanyAndPlan = await this.queryBus.execute(
-			new GetCompleteUserQuery(
-				user.id
-			)
-		);
-
-		//const permissions = await this.queryBus.execute( new GetPermissionsQuery( user ));
-
-		userCompanyAndPlan.impersonating = (session.user.id !== session.impersonated.id);
-		//userCompanyAndPlan.permissions = permissions;
-		
-		return userCompanyAndPlan;
-	}
-
 
 	@Post('/auth/signout') 
 	async signoutUser(@Session() session: any){

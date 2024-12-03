@@ -114,7 +114,7 @@ switch (process.env.NODE_ENV) {
   providers: [
     AppService,
     QueryBus,
-    CommandBus
+    CommandBus,
   ],
 })
 export class AppModule {

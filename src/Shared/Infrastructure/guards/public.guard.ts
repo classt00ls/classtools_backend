@@ -4,7 +4,7 @@ import { Request } from 'express';
 import { jwtConstants } from "../jwt/constants";
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class PublicGuard implements CanActivate {
 
 	constructor(
 		private jwtService: JwtService
@@ -20,25 +20,24 @@ export class AuthGuard implements CanActivate {
 
 			const token = this.extractTokenFromHeader(request);
 
-			if (!token) throw new UnauthorizedException();
+			if (!token) {
+				request['userId'] = null;
+				return true;
+			}
 
-			try {
-				const payload = await this.jwtService.verifyAsync(
-				  token,
-				  {
-					secret: jwtConstants.secret
-				  }
-				);
+			
+			const payload = await this.jwtService.verifyAsync(
+				token,
+				{
+				secret: jwtConstants.secret
+				}
+			);
 
-				console.log('auth guard payload: ');
-
-				// We're assigning the payload to the request object here
-				// so that we can access it in our route handlers
-				request['userId'] = payload.sub;
-				request['useremail'] = payload.sub;
-			  } catch {
-				throw new UnauthorizedException();
-			  }
+			// We're assigning the payload to the request object here
+			// so that we can access it in our route handlers
+			request['userId'] = payload.sub;
+			request['useremail'] = payload.sub;
+			  
 			return true;
 		} catch (error) {
 			return false;

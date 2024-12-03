@@ -1,5 +1,7 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { AuthGuard } from './Shared/Infrastructure/guards/auth.guard';
+import { JwtService } from '@nestjs/jwt';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,6 +27,7 @@ async function bootstrap() {
   };
 
   app.enableCors(options);
+  // app.useGlobalGuards(new AuthGuard(new JwtService(), new Reflector()));
 
   await app.listen(3000);
 }
