@@ -13,7 +13,7 @@ Content-Type: application/json
 GET http://localhost:3000/tool?page=10&pageSize=12
 
 ###  get SUGGESTIONS
-GET http://localhost:3000/tool/suggestions?suggestions=[CustomGPT.ai,Brandblast.ai]
+GET http://localhost:3000/tool/suggestions?userId=5cc02058-3e2b-4682-a6d2-9823798f8733
 
 
 ### filtered tools

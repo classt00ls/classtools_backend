@@ -100,8 +100,21 @@ export class ToolTypeormRepository extends ToolRepository {
     return await this.repository.findOneByOrFail({link});
   }
 
-  async getOneByNameOrFail(name: string) {
+  async getOneByNameOrFail(name: string): Promise<ToolModel> {
     const response = await this.repository.findOneByOrFail({name});
-    return response;
+
+    return ToolModel.fromPrimitives(
+      response.id,
+      response.name,
+      response.pricing,
+      response.stars,
+      response.description,
+      response.features,
+      response.excerpt,
+      response.tags,
+      response.link,
+      response.url,
+      response.status
+    );
   }
 }

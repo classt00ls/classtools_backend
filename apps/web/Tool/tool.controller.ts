@@ -53,11 +53,11 @@ export class ToolController {
   // @UseGuards(AuthGuard)
   @Get('suggestions')
   async getSuggestions(
-    @Query() suggestions: string
+    @Query('userId') userId: string
   ) {
     const data = await this.queryBus.execute(
         new GetSuggestedToolsQuery(
-          '[\n  \"CustomGPT.ai\",\n  \"Brandblast.ai\"\n]'
+          userId
         )
     );
 

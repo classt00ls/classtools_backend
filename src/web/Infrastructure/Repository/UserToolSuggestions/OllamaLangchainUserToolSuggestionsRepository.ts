@@ -12,7 +12,7 @@ import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
 export class OllamaLangchainUserToolSuggestionsRepository
 	implements UserToolSuggestionsRepository
 {
-
+	// Demo para fase beta
 	private readonly existingTools = [
 		'Chaindesk','Jasper','Luminal','Formula Generator','Piggy', 'Google Gemini', 'GPT-3 Playground', 'Monica', 'Multilings'
 	];

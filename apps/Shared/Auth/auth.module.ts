@@ -24,7 +24,7 @@ import { TypeormUserWebRepository } from 'src/web/Infrastructure/Repository/User
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '180s' },
+      signOptions: { expiresIn: '2h' },
     }),
     CqrsModule
   ],
