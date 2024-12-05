@@ -13,10 +13,9 @@ export class OllamaLangchainUserToolSuggestionsRepository
 	implements UserToolSuggestionsRepository
 {
 
-	private readonly visited = 
-		['CustomGPT.ai','Brandblast.ai','Chatnode','Metaforms'
-	]
-	 ;
+	private readonly existingTools = [
+		'Chaindesk','Jasper','Luminal','Formula Generator','Piggy', 'Google Gemini', 'GPT-3 Playground', 'Monica', 'Multilings'
+	];
 
 	constructor(private readonly userWebRepository: UserWebRepository) {}
 
@@ -66,7 +65,7 @@ export class OllamaLangchainUserToolSuggestionsRepository
 				 * Actúas como un recomendador de inteligencias artificiales avanzado.
                  * Solo debes sugerir inteligencias artificiales del siguiente array,(IMPORTANTE: no incluyas inteligencias artificiales que no estén en la lista)
 				 * Solo debes sugerir resultados de la siguiente lista (IMPORTANTE: no incluyas los que no estén en la lista):
-				 ${this.visited.map((course) => `\t- ${course}`).join("\n")}
+				 ${this.existingTools.map((ExistingTool) => `\t- ${ExistingTool}`).join("\n")}
                  * Devuelve únicamente el listado de 2 inteligencias artificiales recomendadas, utilizando formato de un array de json donde cada inteligencia artificial recomendada sea el mismo nombre que te proporciono
 				 * IMPORTANTE No devuelvas nada mas que no sea esa lista`,
 			),

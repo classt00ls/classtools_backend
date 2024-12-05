@@ -48,4 +48,12 @@ export class ToolModel extends BaseModel {
       }
     }
   }
+
+  public toPrimitives() {
+    return {
+      name: this.name,
+      excerpt: this.excerpt,
+      link: this.link
+    }
+  }
 }

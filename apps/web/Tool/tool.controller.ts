@@ -13,6 +13,8 @@ import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interce
 import { RequestGetToolDto } from './request.get.tool.dto';
 import { FilterDto } from 'src/web/Application/Dto/Tool/filterTools.dto';
 import { PublicGuard } from 'src/Shared/Infrastructure/guards/public.guard';
+import { AuthGuard } from 'src/Shared/Infrastructure/guards/auth.guard';
+import { GetSuggestedToolsQuery } from 'src/web/Application/Query/Tool/GetSuggestedToolsQuery';
 
 @Controller('tool')
 export class ToolController {
@@ -29,8 +31,6 @@ export class ToolController {
     @Query('page') page?: number,
 		@Query('pageSize') pageSize?: number
   ) {
-
-    console.log("Alguien quiere las tools '''...''' ", req)
     const data = await this.queryBus.execute(
         new GetAllToolsQuery(
           page,
@@ -48,6 +48,22 @@ export class ToolController {
     }
 
 
+  }
+
+  // @UseGuards(AuthGuard)
+  @Get('suggestions')
+  async getSuggestions(
+    @Query() suggestions: string
+  ) {
+    const data = await this.queryBus.execute(
+        new GetSuggestedToolsQuery(
+          '[\n  \"CustomGPT.ai\",\n  \"Brandblast.ai\"\n]'
+        )
+    );
+
+    return {
+      data
+    }
   }
 
   @UseGuards(PublicGuard)

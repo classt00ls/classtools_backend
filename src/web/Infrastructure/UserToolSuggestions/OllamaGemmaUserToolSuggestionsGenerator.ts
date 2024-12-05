@@ -2,15 +2,8 @@
 import { PromptTemplate, SystemMessagePromptTemplate } from "@langchain/core/prompts";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { Ollama } from "@langchain/ollama";
-import { Inject, Injectable } from "@nestjs/common";
 
-import { UserToolSuggestions } from "src/web/Domain/Model/UserToolSuggestions/UserToolSuggestions";
-import { UserToolSuggestionsRepository } from "src/web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository";
-import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
-import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
-
-
-class OllamaGemmaUserToolSuggestionsGenerator {
+export class OllamaGemmaUserToolSuggestionsGenerator {
 
     async generate(visited) {
 

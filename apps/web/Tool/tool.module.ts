@@ -15,13 +15,14 @@ import { UserToolSuggestionsSearcher } from 'src/web/Application/Service/UserToo
 import { UserToolSuggestionsRepository } from 'src/web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository';
 import { OllamaLangchainUserToolSuggestionsRepository } from 'src/web/Infrastructure/Repository/UserToolSuggestions/OllamaLangchainUserToolSuggestionsRepository';
 import { GenerateUserToolSuggestionsOnToolGetDetail } from 'src/web/Application/Listener/UserToolSuggestions/GenerateUserToolSuggestionsOnToolGetDetail';
+import { GetSuggestedToolsQueryHandler } from 'src/web/Application/Query/Tool/GetSuggestedToolsQueryHandler';
+import { GetUserToolSuggestionsFromString } from 'src/web/Domain/Service/UserToolSuggestions/GetUserToolSuggestionsFromString';
 
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([
-            ToolSchema,
-            ToolRepository
+            ToolSchema
           ]),
         CqrsModule
     ],
@@ -29,6 +30,8 @@ import { GenerateUserToolSuggestionsOnToolGetDetail } from 'src/web/Application/
         ToolController
     ],
     providers: [
+        GetSuggestedToolsQueryHandler,
+        GetUserToolSuggestionsFromString,
         UserToolSuggestionsSearcher,
         CountToolsQueryHandler,
         GetAllToolsQueryHandler,

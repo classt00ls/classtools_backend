@@ -48,7 +48,6 @@ export class TypeormUserWebRepository extends UserWebRepository {
 
 	async search(id: UserWebId): Promise<UserWeb | null> {
 		try {
-			console.log('id.value: ', id.value)
 			const response = await this.repository.findOneByOrFail({id: id.value});
 			
 			return UserWeb.fromPrimitives({

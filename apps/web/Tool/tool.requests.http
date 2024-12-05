@@ -12,6 +12,10 @@ Content-Type: application/json
 ###  get json
 GET http://localhost:3000/tool?page=10&pageSize=12
 
+###  get SUGGESTIONS
+GET http://localhost:3000/tool/suggestions?suggestions=[CustomGPT.ai,Brandblast.ai]
+
+
 ### filtered tools
 POST http://localhost:3000/tool/filter
 Content-Type: application/json

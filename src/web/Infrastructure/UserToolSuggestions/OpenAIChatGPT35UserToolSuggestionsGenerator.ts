@@ -5,7 +5,7 @@ import { OpenAI } from "@langchain/openai";
 import { ConfigService } from "@nestjs/config";
 
 
-class OpenAIChatGPT35UserToolSuggestionsGenerator {
+export class OpenAIChatGPT35UserToolSuggestionsGenerator {
 
 	constructor(
 		private configService: ConfigService

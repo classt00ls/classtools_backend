@@ -14,9 +14,9 @@ export class PublicGuard implements CanActivate {
 		context: ExecutionContext
 	): Promise<boolean> 
 	{
-
+		const request = context.switchToHttp().getRequest();
 		try {
-			const request = context.switchToHttp().getRequest();
+			
 
 			const token = this.extractTokenFromHeader(request);
 
@@ -40,7 +40,8 @@ export class PublicGuard implements CanActivate {
 			  
 			return true;
 		} catch (error) {
-			return false;
+			request['userId'] = null;
+			return true;
 		}
 	}
 
