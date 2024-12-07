@@ -7,6 +7,9 @@ import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/too
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
 import { DiscoverToolcontroller } from './DiscoverToolcontroller';
+import { SuggestionsGenerator } from 'src/discover/Domain/Tool/SuggestionsGenerator';
+import { OllamaGemmaToolSuggestionsGenerator } from 'src/discover/Infrastructure/Ollama/OllamaGemmaToolSuggestionsGenerator';
+import { GetSuggestedToolsByUserDescriptionQueryHandler } from 'src/discover/Application/query/Tool/GetSuggestedToolsByUserDescriptionQueryHandler';
 
 
 @Module({
@@ -21,13 +24,14 @@ import { DiscoverToolcontroller } from './DiscoverToolcontroller';
         DiscoverToolcontroller
     ],
     providers: [
+        GetSuggestedToolsByUserDescriptionQueryHandler,
+        {
+            provide: SuggestionsGenerator,
+            useClass: OllamaGemmaToolSuggestionsGenerator,
+        },
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,
-        },
-        {
-            provide: TagRepository,
-            useClass: TagTypeormRepository,
         }
     ]
  })

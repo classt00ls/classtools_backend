@@ -30,8 +30,6 @@ export class AuthGuard implements CanActivate {
 				  }
 				);
 
-				console.log('auth guard');
-
 				// We're assigning the payload to the request object here
 				// so that we can access it in our route handlers
 				request['userId'] = payload.sub;

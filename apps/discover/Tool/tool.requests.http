@@ -1,0 +1,9 @@
+
+### Get futurpedia items
+
+POST http://localhost:3000/discover/tool
+Content-Type: application/json
+
+{
+    "text": "programador freelance"
+}

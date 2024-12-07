@@ -1,29 +1,28 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
-import { getAllToolsDto } from 'src/web/Application/Dto/Tool/getAllTools.dto';
-import { GetAllToolsQuery } from 'src/web/Application/Query/Tool/GetAllToolsQuery';
-import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { GetSuggestedToolsByUserDescriptionQuery } from 'src/discover/Application/query/Tool/GetSuggestedToolsByUserDescriptionQuery';
 
 @Controller('discover/tool')
 export class DiscoverToolcontroller {
   constructor(
-    private readonly queryBus: QueryBus
+    private readonly querybus: QueryBus
   ) {}
 
-  @Get('')
-  @Serialize(getAllToolsDto)
+  @Post('')
   async getAll(
-    @Query('page') page?: number,
-		@Query('pageSize') pageSize?: number
+    @Body() request: any
   ) {
 
-    this.queryBus.execute(
-      new GetAllToolsQuery(
-        page,
-        pageSize
+      const response = await this.querybus.execute(
+        new GetSuggestedToolsByUserDescriptionQuery(
+          request.text
+        )
       )
-    )
 
+      return {
+        message: '',
+        data: response
+      }
   }
 
 

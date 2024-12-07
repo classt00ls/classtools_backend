@@ -21,6 +21,8 @@ import { LangChainModule } from 'apps/discover/Server/LangChain/LangChainModule'
 import { UserToolSuggestionsModule } from 'apps/web/UserToolSuggestions/UserToolSuggestions.module';
 import { UserWebModule } from 'apps/web/UserWeb/UserWeb.module';
 import { AuthModule } from 'apps/Shared/Auth/auth.module';
+import { DiscoverAuthModule } from 'apps/discover/auth/auth.module';
+import { DiscoverToolModule } from 'apps/discover/Tool/DiscoverToolModule';
 
 const cookieSession = require('cookie-session');
 
@@ -51,6 +53,8 @@ switch (process.env.NODE_ENV) {
 @Module({
   imports: [
     ToolModule,
+    DiscoverToolModule,
+    DiscoverAuthModule,
     TagModule,
     BackofficeTagModule,
     BackofficeToolModule,

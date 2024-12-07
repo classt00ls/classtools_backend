@@ -14,7 +14,7 @@ export class OllamaLangchainUserToolSuggestionsRepository
 {
 	// Demo para fase beta
 	private readonly existingTools = [
-		'Chaindesk','Jasper','Luminal','Formula Generator','Piggy', 'Google Gemini', 'GPT-3 Playground', 'Monica', 'Multilings'
+		'Chaindesk','Jasper','Luminal','Formula Generator','Freed','Endel','Piggy', 'Google Gemini', 'GPT-3 Playground', 'Monica', 'Multilings'
 	];
 
 	constructor(private readonly userWebRepository: UserWebRepository) {}
@@ -65,9 +65,11 @@ export class OllamaLangchainUserToolSuggestionsRepository
 				 * Actúas como un recomendador de inteligencias artificiales avanzado.
                  * Solo debes sugerir inteligencias artificiales del siguiente array,(IMPORTANTE: no incluyas inteligencias artificiales que no estén en la lista)
 				 * Solo debes sugerir resultados de la siguiente lista (IMPORTANTE: no incluyas los que no estén en la lista):
-				 ${this.existingTools.map((ExistingTool) => `\t- ${ExistingTool}`).join("\n")}
-                 * Devuelve únicamente el listado de 3 inteligencias artificiales recomendadas, utilizando formato de un array de json donde cada inteligencia artificial recomendada sea el mismo nombre que te proporciono
-				 * IMPORTANTE No devuelvas nada mas que no sea esa lista`,
+				 * MUY IMPORTANTE!! Asegurate que los nombres sugesridos son exactmante iguales a los de la lista que te proporciono
+				${this.existingTools.map((ExistingTool) => `\t- ${ExistingTool}`).join("\n")}
+                 * Devuelve únicamente el listado de 4 inteligencias artificiales recomendadas, utilizando formato de un array de json donde cada inteligencia artificial recomendada sea el mismo nombre que te proporciono
+				 * IMPORTANTE No devuelvas nada mas que no sea esa lista
+				 *`,
 			),
 			new Ollama({
 				model: "gemma:2b",
