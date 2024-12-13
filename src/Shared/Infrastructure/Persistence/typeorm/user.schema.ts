@@ -27,26 +27,20 @@ export const UserSchema = new EntitySchema<UserModel>({
       nullable: true
     }, 
     confirmed: {
-      type: Boolean,
-      nullable: true
+      type: "integer",
+      default: 0
     },
     deleted: {
-      type: Boolean,
-      nullable: true
+      type: "integer",
+      default: 0
     },
     role: {
       type: String,
       nullable: true
-    }
-  },
-  relations: {
+    },
     company: {
-      type: "many-to-one",
-      target: "Company",
-      joinColumn: {
-        name: 'company_id',
-      },
-      inverseSide: 'users' // Note that this is the relation name in project entity, no the entity name Order
-    }
+      type: String, // Tipo UUID para la columna de clave foránea
+      nullable: true, // Esto depende de si permites valores nulos o no
+    },
   }
 });

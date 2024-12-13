@@ -42,13 +42,5 @@ export const CompanySchema = new EntitySchema<CompanyModel>({
       type: String,
       nullable: true
     },
-  },
-  relations: {
-    users: {
-      type: "one-to-many",
-      target: "User",
-      cascade: true,
-      inverseSide: 'company' // Note that this is relation name, not the entity name
-    }
   }
 });

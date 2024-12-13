@@ -15,17 +15,17 @@ export class TagModel extends BaseModel {
   deleted: boolean;
 
   // De momento las categorias no son un módulo propio
-  isCategory: boolean;
+  isCategory: number;
 
   tools: ToolModel[];
 
   imageUrl: string;
 
   public upgrade() {
-    this.isCategory = true;
+    this.isCategory = 1;
   }
 
   public downgrade() {
-    this.isCategory = false;
+    this.isCategory = 0;
   }
 }

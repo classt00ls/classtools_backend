@@ -21,7 +21,7 @@ export class TagTypeormRepository extends TagRepository {
   async getAllCategories(): Promise<TagModel[]> {
     return this.repository.find({
       where: {
-        isCategory: true
+        isCategory: 1
       }
     });
   }

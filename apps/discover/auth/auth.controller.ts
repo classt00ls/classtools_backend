@@ -12,7 +12,7 @@ export class AuthController {
   async verifyToken(
     @Query('token') token: string
   ) {
-
+    
     try {
       const payload = await this.jwtService.verifyAsync(
         token,

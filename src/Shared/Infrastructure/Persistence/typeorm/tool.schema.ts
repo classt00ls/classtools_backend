@@ -5,7 +5,24 @@ import { ToolModel } from "src/Shared/Domain/Model/Tool/tool.model";
 export const ToolSchema = new EntitySchema<ToolModel>({
   name: 'Tool',
   columns: {
-    ...sharedFields,
+    id: {
+      type: String,
+      primary: true
+    },
+    createdAt: {
+      type: Date,
+      createDate: true,
+    },
+    updatedAt: {
+      type: Date,
+      nullable: true,
+      updateDate: true,
+    },
+    deletedAt: {
+      type: Date,
+      nullable: true,
+      deleteDate: true,
+    },
     name: {
       type: String,
       nullable: true
@@ -14,19 +31,7 @@ export const ToolSchema = new EntitySchema<ToolModel>({
       type: String,
       nullable: true
     }, 
-    features: {
-      type: String,
-      nullable: true
-    }, 
-    stars: {
-      type: Number,
-      nullable: true
-    }, 
     excerpt: {
-      type: String,
-      nullable: true
-    },
-    pricing: {
       type: String,
       nullable: true
     },
@@ -39,17 +44,29 @@ export const ToolSchema = new EntitySchema<ToolModel>({
       nullable: true
     },
     deleted: {
-      type: Boolean,
-      default: false
+      type: "integer",
+      default: 0
     },
     uploaded: {
-      type: Boolean,
-      default: false
+      type: "integer",
+      default: 0
     },
     status: {
       type: String,
       nullable: true
-    }
+    },
+    features: {
+      type: String,
+      nullable: true
+    }, 
+    stars: {
+      type: Number,
+      nullable: true
+    }, 
+    pricing: {
+      type: String,
+      nullable: true
+    },
   },
   relations: {
     tags: {

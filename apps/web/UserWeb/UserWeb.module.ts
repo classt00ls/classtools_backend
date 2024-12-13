@@ -5,7 +5,7 @@ import { TypeormUserWebRepository } from 'src/web/Infrastructure/Repository/User
 import { UserWebRepository } from 'src/web/Domain/Repository/UserWeb/UserWebRepository';
 import { UserWebSchema } from 'src/web/Infrastructure/Persistence/typeorm/DatabaseWebUser.schema';
 import { UserWebController } from './UserWeb.controller';
-import { UserWebCreator } from 'src/Web/Application/Service/UserWeb/UserWebCreator';
+import { UserWebCreator } from '../../../src/web/Application/Service/UserWeb/UserWebCreator';
 import { CreateUserWebOnSharedUserCreated } from 'src/web/Application/Listener/UserWeb/CreateUserWebOnSharedUserCreated';
 
 @Module({

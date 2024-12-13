@@ -33,10 +33,14 @@ switch (process.env.NODE_ENV) {
   case 'test':
   case 'development':
     databaseConfig = {
-      type        : 'sqlite',
+      type        : 'postgres',
+      host        : 'postgres_pgvector',
+      port        : 5432,
       synchronize : true,
-      autoLoadEntities: true,
-      database    : process.env.DB_NAME,
+      username: 'classtools',
+      password: 'classtools',
+      database: 'classtools',
+      autoLoadEntities: true
     };
   break;
   default:

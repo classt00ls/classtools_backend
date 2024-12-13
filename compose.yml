@@ -1,0 +1,29 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: classtools
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - postgres_pgvector
+
+  postgres_pgvector:
+    image: pgvector/pgvector:0.7.4-pg16
+    restart: always
+
+    environment:
+      POSTGRES_DB: classtools
+      POSTGRES_USER: classtools
+      POSTGRES_PASSWORD: classtools
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - /c/Users/mfarres/Desktop/projects/classtools/classtools_backend/databases:/docker-entrypoint-initdb.d
+
+volumes:
+  db_data:

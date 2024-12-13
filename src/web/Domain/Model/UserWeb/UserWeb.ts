@@ -1,5 +1,5 @@
+import { AggregateRoot } from "../../../../Shared/Domain/Model/AggregateRoot";
 import { UserWebId } from "../../ValueObject/UserWebId";
-import { AggregateRoot } from "src/Shared/Domain/Model/aggregateRoot";
 
 export type UserWebPrimitives = {
 	id: string;
