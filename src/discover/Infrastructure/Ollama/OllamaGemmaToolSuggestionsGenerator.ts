@@ -29,7 +29,7 @@ export class OllamaGemmaToolSuggestionsGenerator
 			),
 			new Ollama({
 				model: "gemma:2b",
-				baseUrl: "http://localhost:11434", // Default value
+				baseUrl: "http://ollama:11434", // Default value
 			}),
 		]);
 

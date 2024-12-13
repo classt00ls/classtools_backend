@@ -45,12 +45,10 @@ switch (process.env.NODE_ENV) {
   break;
   default:
     databaseConfig = {
-      type        : 'mariadb',
+      type        : 'sqlite',
       synchronize : true, // TODO !! This can be dangerous
       autoLoadEntities: true,
-      database    : process.env.DB_NAME,
-      username    : process.env.DB_USER,
-      password    : process.env.DB_PASSWORD,
+      database    : process.env.DB_NAME
     };
   break;
 }

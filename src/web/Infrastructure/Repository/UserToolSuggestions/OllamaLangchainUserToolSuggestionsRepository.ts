@@ -32,7 +32,7 @@ export class OllamaLangchainUserToolSuggestionsRepository
 			PromptTemplate.fromTemplate(`Recomienda inteligencias artificiales similares a {visitedTools}`),
 			new Ollama({
 				model: "gemma:2b",
-				baseUrl: "http://localhost:11434", // Default value
+				baseUrl: "http://ollama:11434", // Default value
 			}),
 		]);
 
@@ -73,7 +73,7 @@ export class OllamaLangchainUserToolSuggestionsRepository
 			),
 			new Ollama({
 				model: "gemma:2b",
-				baseUrl: "http://localhost:11434", // Default value
+				baseUrl: "http://ollama:11434", // Default value
 			}),
 		]);
 
@@ -105,7 +105,7 @@ export class OllamaLangchainUserToolSuggestionsRepository
 			PromptTemplate.fromTemplate(`Recomienda inteligencias artificiales similares a {visitedTools}`),
 			new Ollama({
 				model: "gemma:2b",
-				baseUrl: "http://localhost:11434", // Default value
+				baseUrl: "http://ollama:11434", // Default value
 			}),
 		]);
 
