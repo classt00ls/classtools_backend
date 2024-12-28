@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { QueryBus } from '@nestjs/cqrs';
 import { getAllCategoriesDto } from 'src/web/Application/Dto/Tag/getAllCategories.dto';
 import { GetAllCategoriesQuery } from 'src/web/Application/Query/Tag/Category/GetAllCategoriesQuery';
 import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';

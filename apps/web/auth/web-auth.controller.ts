@@ -1,21 +1,22 @@
 import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Post, Request, Session, UseGuards } from "@nestjs/common";
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ERROR_CODES } from "src/Shared/Domain/language/error.codes";
-import { CannotLoginUserException } from "src/Shared/Domain/Exception/user/CannotLoginUserException";
-import { GetAuthTokenQuery } from "src/Shared/Application/Query/User/GetAuthTokenQuery";
-import { LoginUserDto } from "../User/login-user.dto";
-import { LoginUserCommand } from "src/Shared/Application/Command/User/LoginUserCommand";
-import { SignupUserCommand } from "src/Shared/Application/Command/User/SignupUserCommand";
-import { AuthGuard } from "src/Shared/Infrastructure/guards/auth.guard";
-import { UserMeDto } from "../User/user-me.dto";
-import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
-import { CreateUserDto } from "src/Shared/Application/Dto/create-user.dto";
-import { CannotCreateUserException } from "src/Shared/Domain/Exception/user/CannotCreateUserException";
-import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
+import { CommandBus, QueryBus } from 		'@nestjs/cqrs';
 
+import { ERROR_CODES } from 				"@Shared/Domain/language/error.codes";
+import { CannotLoginUserException } from 	"@Shared/Domain/Exception/user/CannotLoginUserException";
+import { GetAuthTokenFromEmailQuery } from 	"@Web/Application/Query/Auth/GetAuthTokenFromEmailQuery";
+import { LoginUserCommand } from 			"@Shared/Application/Command/User/LoginUserCommand";
+import { SignupUserCommand } from 			"@Shared/Application/Command/User/SignupUserCommand";
+import { CreateUserDto } from 				"@Shared/Application/Dto/create-user.dto";
+import { TokenAuthGuard } from				"@Shared/Infrastructure/guards/token.auth.guard";
+import { CannotCreateUserException } from 	"@Shared/Domain/Exception/user/CannotCreateUserException";
 
-@Controller('auth')
-export class AuthController {
+import { UserWebRepository } from 			"@Web/Domain/Repository/UserWeb/UserWebRepository";
+import { UserWebId } from 					"@Web/Domain/ValueObject/UserWebId";
+
+import { WebAuthLoginDto } from 			"@web/auth/web-auth-login.dto";
+
+@Controller('')
+export class WebAuthController {
 
 	constructor(
 		private readonly commandBus:CommandBus,
@@ -27,7 +28,7 @@ export class AuthController {
 	@HttpCode(HttpStatus.OK)
 	@Post('login')
 	async loginUser(
-		@Body() loginUserDto: LoginUserDto
+		@Body() loginUserDto: WebAuthLoginDto
 	) {
 		
 		try {
@@ -39,7 +40,7 @@ export class AuthController {
 			);
 
 			const acces_token = await this.queryBus.execute(
-				new GetAuthTokenQuery(
+				new GetAuthTokenFromEmailQuery(
 					loginUserDto.email
 				)
 			) as { access_token: string };
@@ -47,19 +48,20 @@ export class AuthController {
 			return acces_token;
 
 		} catch (error) {
-			throw error;
 			if(error instanceof CannotLoginUserException) throw error;
 			else throw new BadRequestException(ERROR_CODES.COMMON.USER.ERROR_LOGIN);
 		}
 	}
 
-	@Get('/me')
-	@UseGuards(AuthGuard)
+	@Get('me')
+	@UseGuards(TokenAuthGuard)
 	// @Serialize(UserMeDto)
 	async me(
 		@Request() req
 	) {
-		const userWeb = await this.userRepository.search(new UserWebId(req.userId));
+		const userWeb = await this.userRepository.search(
+			new UserWebId(req.userId)
+		);
 		return userWeb.toPrimitives();
 	}
 
@@ -90,7 +92,6 @@ export class AuthController {
 		} catch(error){
 			if(error instanceof CannotCreateUserException) throw error;
 			else {
-				console.log('El error: ', error)
 				throw new BadRequestException(ERROR_CODES.COMMON.USER.ERROR_CREATING_USER);
 			}
 		}
@@ -98,12 +99,12 @@ export class AuthController {
 	}
 
 
-	@Post('/auth/signout') 
+	@Post('signout') 
 	async signoutUser(@Session() session: any){
 		session.user = session.impersonated = null;
 	}
 
-	@Get('/auth/getRole')
+	@Get('getRole')
 	async getRole( )
 	{
 		return true;

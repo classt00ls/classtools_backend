@@ -2,6 +2,8 @@ import { PromptTemplate, SystemMessagePromptTemplate } from "@langchain/core/pro
 import { RunnableSequence } from "@langchain/core/runnables";
 import { Ollama } from "@langchain/ollama";
 import { Inject, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { CannotConnectToOllamaException } from "@Web/Infrastructure/exception/CannotConnectToOllamaException";
 
 import { UserToolSuggestions } from "src/web/Domain/Model/UserToolSuggestions/UserToolSuggestions";
 import { UserToolSuggestionsRepository } from "src/web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository";
@@ -17,7 +19,10 @@ export class OllamaLangchainUserToolSuggestionsRepository
 		'Chaindesk','Jasper','Luminal','Formula Generator','Freed','Endel','Piggy', 'Google Gemini', 'GPT-3 Playground', 'Monica', 'Multilings'
 	];
 
-	constructor(private readonly userWebRepository: UserWebRepository) {}
+	constructor(
+		private readonly userWebRepository: UserWebRepository,
+		private readonly configService: ConfigService
+	) {}
 
 	async search(userId: UserWebId): Promise<UserToolSuggestions | null> {
 
@@ -32,7 +37,7 @@ export class OllamaLangchainUserToolSuggestionsRepository
 			PromptTemplate.fromTemplate(`Recomienda inteligencias artificiales similares a {visitedTools}`),
 			new Ollama({
 				model: "gemma:2b",
-				baseUrl: "http://ollama:11434", // Default value
+				baseUrl: "localhost:11434", // Default value
 			}),
 		]);
 
@@ -40,7 +45,7 @@ export class OllamaLangchainUserToolSuggestionsRepository
 			visitedTools: ['chatgpt']
 		});
 
-		console.log(suggestions);
+		console.log('punto de entrada ...', suggestions);
 
 		//user.visitedTools.map((tool) => `* ${tool}`).join("\n"),
 
@@ -73,23 +78,27 @@ export class OllamaLangchainUserToolSuggestionsRepository
 			),
 			new Ollama({
 				model: "gemma:2b",
-				baseUrl: "http://ollama:11434", // Default value
+				baseUrl: this.configService.getOrThrow('OLLAMA_ROUTE') + ":" + this.configService.getOrThrow('OLLAMA_PORT'), // Default value
 			}),
 		]);
+		try{
+			const suggestions = await chain.invoke({
+				visitedTools: ['chatgpt']
+			});
 
-		const suggestions = await chain.invoke({
-			visitedTools: ['chatgpt']
-		});
+			console.log('las suggestions:', suggestions);
 
-		console.log('las suggestions:', suggestions);
+			return UserToolSuggestions.fromPrimitives({
+				userId: userId.value,
+				visitedTools: ['chatgpt'],
+				suggestions
+			});
+			
+		} catch (error) {
+			throw CannotConnectToOllamaException.becauseNotFound();
+		}
 
 		//user.visitedTools.map((tool) => `* ${tool}`).join("\n"),
-
-		return UserToolSuggestions.fromPrimitives({
-			userId: userId.value,
-			visitedTools: ['chatgpt'],
-			suggestions
-		});
 	}
 
 	async byVisitedAndFavoriteTools(userId: UserWebId): Promise<UserToolSuggestions | null> {
@@ -105,7 +114,7 @@ export class OllamaLangchainUserToolSuggestionsRepository
 			PromptTemplate.fromTemplate(`Recomienda inteligencias artificiales similares a {visitedTools}`),
 			new Ollama({
 				model: "gemma:2b",
-				baseUrl: "http://ollama:11434", // Default value
+				baseUrl: "localhost:11434", // Default value
 			}),
 		]);
 

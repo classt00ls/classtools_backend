@@ -14,11 +14,11 @@ Content-Type: application/json
 }
 
 ### login user
-POST http://localhost:3000/auth/login
+POST http://localhost:3000/web/auth/login
 Content-Type: application/json
 
 {
-	"email": "user@email.com",
+	"email": "usernew@email.com",
 	"password": "qweasd"
 }
 
@@ -34,7 +34,7 @@ Content-Type: application/json
 }
 
 ### Get the current user
-GET http://localhost:3001/user/auth/me
+GET http://localhost:3000/web/auth/me
 
 ### impersonate user
 GET http://localhost:3000/user/6caf9f97-0431-4be7-9bdf-daede29f6eb4/impersonate

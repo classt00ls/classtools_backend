@@ -1,28 +1,35 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { RouterModule } from '@nestjs/core';
+import { join } from 'path';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UtilsModule } from './Shared/Module/utils/utils.module';
 import { UsersModule } from '../apps/Shared/User/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ToolModule } from 'apps/web/Tool/tool.module';
-import { TagModule } from 'apps/web/Tag/tag.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+
 import { BackofficeToolModule } from 'apps/backoffice/Tool/BackofficeToolModule';
 import { BackofficeTagModule } from 'apps/backoffice/Tag/BackofficeTagModule';
 import { BackofficeFuturpediaToolModule } from 'apps/backoffice/Tool/Futurpedia/BackofficeFuturpediaToolModule';
 import { OpenAIModule } from 'apps/discover/Tool/openAI/OpenAIModule';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { join } from 'path';
-import { CurrentUserMiddleware } from './Shared/Infrastructure/middlewares/current-user.middleware';
+
+import { CurrentUserMiddleware } from '@Shared/Infrastructure/middlewares/current-user.middleware';
 import { LangChainModule } from 'apps/discover/Server/LangChain/LangChainModule';
-import { UserToolSuggestionsModule } from 'apps/web/UserToolSuggestions/UserToolSuggestions.module';
-import { UserWebModule } from 'apps/web/UserWeb/UserWeb.module';
-import { AuthModule } from 'apps/Shared/Auth/auth.module';
+
 import { DiscoverAuthModule } from 'apps/discover/auth/auth.module';
 import { DiscoverToolModule } from 'apps/discover/Tool/DiscoverToolModule';
+
+import { ToolModule } from                '@web/Tool/tool.module';
+import { TagModule } from                 '@web/Tag/tag.module';
+import { UserToolSuggestionsModule } from '@web/UserToolSuggestions/UserToolSuggestions.module';
+import { UserWebModule } from             '@web/UserWeb/UserWeb.module';
+import { webRoutes } from                 '@web/web.routes';
+import { WebAuthModule } from             '@web/auth/web-auth.module';
 
 const cookieSession = require('cookie-session');
 
@@ -34,6 +41,18 @@ switch (process.env.NODE_ENV) {
   case 'development':
     databaseConfig = {
       type        : 'postgres',
+      host        : 'localhost',
+      port        : 5432,
+      synchronize : true,
+      username: 'postgres', 
+      password: 'eurega',
+      database: 'classtools',
+      autoLoadEntities: true
+    };
+  break;
+  default:
+    databaseConfig = {
+      type        : 'postgres',
       host        : 'postgres_pgvector',
       port        : 5432,
       synchronize : true,
@@ -43,17 +62,10 @@ switch (process.env.NODE_ENV) {
       autoLoadEntities: true
     };
   break;
-  default:
-    databaseConfig = {
-      type        : 'sqlite',
-      synchronize : true, // TODO !! This can be dangerous
-      autoLoadEntities: true,
-      database    : process.env.DB_NAME
-    };
-  break;
 }
 @Module({
   imports: [
+    RouterModule.register(webRoutes),
     ToolModule,
     DiscoverToolModule,
     DiscoverAuthModule,
@@ -64,9 +76,9 @@ switch (process.env.NODE_ENV) {
     OpenAIModule,
     LangChainModule, 
     UsersModule,
-    AuthModule,
     UserWebModule,
     UserToolSuggestionsModule,
+    WebAuthModule,
     EventEmitterModule.forRoot({
       // set this to `true` to use wildcards
       wildcard: false,

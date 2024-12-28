@@ -1,6 +1,6 @@
 import { IsEmail, IsString } from "class-validator";
 
-export class GetAuthTokenQuery {
+export class GetAuthTokenFromEmailQuery {
 	
 
 	constructor(
