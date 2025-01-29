@@ -7,7 +7,7 @@ import { GetAuthTokenFromEmailQuery } from 	"@Web/Application/Query/Auth/GetAuth
 import { LoginUserCommand } from 			"@Shared/Application/Command/User/LoginUserCommand";
 import { SignupUserCommand } from 			"@Shared/Application/Command/User/SignupUserCommand";
 import { CreateUserDto } from 				"@Shared/Application/Dto/create-user.dto";
-import { TokenAuthGuard } from				"@Shared/Infrastructure/guards/token.auth.guard";
+import { TokenAuthGuard } from				"@Web/Infrastructure/guard/token.auth.guard";
 import { CannotCreateUserException } from 	"@Shared/Domain/Exception/user/CannotCreateUserException";
 
 import { UserWebRepository } from 			"@Web/Domain/Repository/UserWeb/UserWebRepository";
@@ -39,6 +39,7 @@ export class WebAuthController {
 				)
 			);
 
+			// @TODO El token tiene que generarse con la id del usuario
 			const acces_token = await this.queryBus.execute(
 				new GetAuthTokenFromEmailQuery(
 					loginUserDto.email
@@ -59,6 +60,7 @@ export class WebAuthController {
 	async me(
 		@Request() req
 	) {
+
 		const userWeb = await this.userRepository.search(
 			new UserWebId(req.userId)
 		);

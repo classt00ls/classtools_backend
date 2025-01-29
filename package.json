@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@langchain/community": "^0.3.12",
+    "@langchain/core": "^0.3.26",
     "@langchain/ollama": "^0.1.2",
     "@nestjs-modules/mailer": "^1.6.1",
     "@nestjs/common": "^9.0.0",
@@ -37,14 +38,18 @@
     "cookie-session": "^2.1.0",
     "env-cmd": "^10.1.0",
     "event-emitter": "^0.3.5",
+    "firebase-admin": "^13.0.2",
+    "langchain": "^0.3.8",
     "mysql2": "^3.11.4",
     "nestjs-modules": "^1.0.9",
     "openai": "^4.68.1",
+    "pg": "^8.13.1",
     "puppeteer-core": "^22.5.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "sqlite3": "^5.1.4",
-    "typeorm": "^0.3.11"
+    "typeorm": "^0.3.11",
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "@compodoc/compodoc": "^1.1.19",

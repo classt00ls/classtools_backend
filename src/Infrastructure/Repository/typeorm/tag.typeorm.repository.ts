@@ -53,7 +53,14 @@ export class TagTypeormRepository extends TagRepository {
     id: string
   ): Promise<TagModel> {
     const response = await this.repository.findOneByOrFail({id});
-    return response;
+    return TagModel.fromPrimitives(
+      response.id,
+      response.name,
+      response.description,
+      response.excerpt,
+      response.deleted,
+      response.isCategory
+    );
   }
 
   async getOneByNameAndFail(name: string) {
@@ -70,6 +77,13 @@ export class TagTypeormRepository extends TagRepository {
 
   async getOneByNameOrFail(name: string) {
     const response = await this.repository.findOneByOrFail({name});
-    return response;
+    return TagModel.fromPrimitives(
+      response.id,
+      response.name,
+      response.description,
+      response.excerpt,
+      response.deleted,
+      response.isCategory
+    );
   }
 }

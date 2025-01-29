@@ -18,7 +18,7 @@ export class UpgradeTagToCategoryCommandHandler implements ICommandHandler<Upgra
 
         try {
             const tag = await this.tagRepository.getOneByIdOrFail(command.tagId);
-
+            console.log('UpgradeTagToCategory error.', tag);
             tag.upgrade();
 
             await this.tagRepository.save(tag);

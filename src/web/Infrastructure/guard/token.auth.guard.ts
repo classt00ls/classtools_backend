@@ -1,21 +1,18 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
-import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { jwtConstants } from "../jwt/constants";
+import { UserWebExtractor } from "@Web/Domain/Service/UserWeb/UserWebExtractor";
 
 @Injectable()
 export class TokenAuthGuard implements CanActivate {
 
 	constructor(
-		private jwtService: JwtService
+		private userExtractor: UserWebExtractor
 	) {}
 
 	async canActivate(
 		context: ExecutionContext
 	): Promise<boolean> 
 	{
-
-		try {
 			const request = context.switchToHttp().getRequest();
 
 			const token = this.extractTokenFromHeader(request);
@@ -23,26 +20,20 @@ export class TokenAuthGuard implements CanActivate {
 			if (!token) throw new UnauthorizedException();
 
 			try {
-				const payload = await this.jwtService.verifyAsync(
-				  token,
-				  {
-					secret: jwtConstants.secret
-				  }
-				);
+				const user = await this.userExtractor.execute(token);
+				
+				console.log('tenemos user: ', user)
 				
 				// We're assigning the payload to the request object here so that we can access it in our route handlers
-				request['userId'] = payload.sub;
-				request['useremail'] = payload.email;
-
-			  } catch {
-
-				throw new UnauthorizedException();
+				request['userId'] = user.id.value;
+				request['useremail'] = user.email;
 				
-			  }
-			return true;
-		} catch (error) {
-			return false;
-		}
+				return true;
+
+			} catch(exception) {
+				throw new UnauthorizedException();
+			
+			}
 	}
 
 	private extractTokenFromHeader(request: Request): string | undefined {

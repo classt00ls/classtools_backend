@@ -1,13 +1,12 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
-import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { jwtConstants } from "../jwt/constants";
+import { UserWebExtractor } from "@Web/Domain/Service/UserWeb/UserWebExtractor";
 
 @Injectable()
 export class PublicGuard implements CanActivate {
 
 	constructor(
-		private jwtService: JwtService
+		private userExtractor: UserWebExtractor
 	) {}
 
 	async canActivate(
@@ -15,29 +14,20 @@ export class PublicGuard implements CanActivate {
 	): Promise<boolean> 
 	{
 		const request = context.switchToHttp().getRequest();
+		const token = this.extractTokenFromHeader(request);
+		console.log('public guard, tenemos token')
+		if (!token) {
+			console.log('public guard, NO tenemos token')
+			request['userId'] = null;
+			return true;
+		}
 		try {
 			
-
-			const token = this.extractTokenFromHeader(request);
-
-			if (!token) {
-				request['userId'] = null;
-				return true;
-			}
-
+			const user = await this.userExtractor.execute(token);
+			console.log('Public guard, tenemos user: ', user)
+			request['userId'] = user.id.value;
+			request['useremail'] = user.email;
 			
-			const payload = await this.jwtService.verifyAsync(
-				token,
-				{
-				secret: jwtConstants.secret
-				}
-			);
-
-			// We're assigning the payload to the request object here
-			// so that we can access it in our route handlers
-			request['userId'] = payload.sub;
-			request['useremail'] = payload.sub;
-			  
 			return true;
 		} catch (error) {
 			request['userId'] = null;

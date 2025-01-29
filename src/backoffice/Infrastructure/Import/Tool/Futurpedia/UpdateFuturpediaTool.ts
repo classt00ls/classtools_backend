@@ -31,7 +31,7 @@ export class UpdateFuturpediaTool extends PuppeterScrapping {
         
 
         let page = await this.getPage(link);
-
+        console.log('Si !  aquest el fem: ' + link);
         try {
             const features = await GetToolFeatures.execute(page);
             const stars = await GetToolStars.execute(page); 

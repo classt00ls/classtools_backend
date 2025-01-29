@@ -16,6 +16,11 @@ import { TypeormUserWebRepository } from  '@Web/Infrastructure/Repository/UserWe
 
 import { WebAuthController } from         '@web/auth/web-auth.controller';
 import { GetAuthTokenFromEmailQueryHandler } from '@Web/Application/Query/Auth/GetAuthTokenFromEmailQueryHandler';
+import { GetUsuarioFromTokenQueryHandler } from '@Web/Application/Query/Auth/GetUsuarioFromTokenQueryHandler';
+import { UserWebExtractor } from '@Web/Domain/Service/UserWeb/UserWebExtractor';
+import { UserWebExtractorFromFirebaseOrJwt } from '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromFirebaseOrJwt';
+import { UserWebExtractorFromFirebase } from '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromFirebase';
+import { UserWebExtractorFromJwt } from '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromJwt';
 
 @Module({
   imports: [
@@ -34,10 +39,17 @@ import { GetAuthTokenFromEmailQueryHandler } from '@Web/Application/Query/Auth/G
   providers: [
     LoginUserCommandHandler,
     SignupUserCommandHandler,
+    UserWebExtractorFromFirebase,
+    UserWebExtractorFromJwt,
     GetAuthTokenFromEmailQueryHandler,
+    GetUsuarioFromTokenQueryHandler,
     {
       provide: UserWebRepository,
       useClass: TypeormUserWebRepository,
+    },
+    {
+      provide: UserWebExtractor,
+      useClass: UserWebExtractorFromFirebaseOrJwt,
     },
     {
       provide: UserRepository,

@@ -3,19 +3,16 @@ import { ToolModel } from "../Tool/tool.model";
 
 export class TagModel extends BaseModel {
   
-  // Nombre del tag
-  name: string;
-
-  // La descripción completa de la tag
-  description: string;
-
-  // La descripción corta
-  excerpt: string;
-
-  deleted: boolean;
-
-  // De momento las categorias no son un módulo propio
-  isCategory: number;
+  private constructor(
+		public readonly id: string,
+		public name: string,
+		public description: string,
+		public excerpt: string,
+		public deleted: boolean,
+		public isCategory: number
+    ){
+		super();
+	}
 
   tools: ToolModel[];
 
@@ -27,5 +24,33 @@ export class TagModel extends BaseModel {
 
   public downgrade() {
     this.isCategory = 0;
+  }
+
+  toPrimitives() {
+    return {
+      id: this.id,
+      name: this.name,
+      excerpt: this.excerpt,
+      description: this.description,
+      isCategory: this.isCategory
+    }
+  }
+
+  static fromPrimitives(
+    id: string,
+		name: string,
+		description: string,
+		excerpt: string,
+		deleted: boolean,
+		isCategory: number
+  ) {
+    return new TagModel(
+      id,
+      name,
+      description,
+      excerpt,
+      deleted,
+      isCategory
+    )
   }
 }

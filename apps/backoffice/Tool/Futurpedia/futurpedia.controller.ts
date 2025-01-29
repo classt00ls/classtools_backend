@@ -1,14 +1,18 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ImportToolByLinkCommand } from 'src/backoffice/Application/Command/Tool/ImportToolByLinkCommand';
 import { UpdateToolByLinkCommand } from 'src/backoffice/Application/Command/Tool/UpdateToolByLinkCommand';
 import { GetAllFuturpediaPageLinksQuery } from 'src/backoffice/Application/Query/Tool/Futurpedia/GetAllFuturpediaPageLinksQuery';
+import { ImportToolInterface } from 'src/backoffice/Domain/Tool/ImportToolInterface';
+import { UpdateToolInterface } from 'src/backoffice/Domain/Tool/UpdateToolInterface';
 
 @Controller('backoffice/futurpedia')
 export class FuturpediaController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
+    @Inject('UpdateToolInterface') private readonly updateTool: UpdateToolInterface,
+    @Inject('ImportToolInterface') private readonly importTool: ImportToolInterface
   ) {}
   
   /**
@@ -23,11 +27,11 @@ export class FuturpediaController {
     const response = [];
     let page = '';
 
-    for(let i of [1,2,3,4,5]) {
+    for(let i of [1,2,3,4,5,6]) {
 
-      page = i==1 ? '' : '?page='+i;
+      page = i==1 ? '' : '?page='+i;  
 
-      const routeToscrap = route+page;
+      const routeToscrap = route+page; 
 
 console.log('Buscamos en: ' + routeToscrap);
       
@@ -38,9 +42,7 @@ console.log('Buscamos en: ' + routeToscrap);
 // console.log(' --------- Los links: ', links); return;
 
       for (let link of links) {
-          await this.commandBus.execute(
-              new ImportToolByLinkCommand(link)
-          )
+        await this.importTool.execute(link);
       }
     }
   }
@@ -53,7 +55,7 @@ console.log('Buscamos en: ' + routeToscrap);
     const response = [];
     let page = '';
 
-    for(let i of [1,2,3,4,5]) {
+    for(let i of [1,2,3,4]) {
 
       page = i==1 ? '' : '?page='+i;
 
@@ -68,9 +70,7 @@ console.log('Buscamos en: ' + routeToscrap);
 //console.log(' --------- Los links: ', links); return;
 
       for (let link of links) {
-          await this.commandBus.execute(
-            new UpdateToolByLinkCommand(link) 
-        )
+          await this.updateTool.execute(link); 
       }
     }
     

@@ -13,6 +13,7 @@ import { GetToolStars } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetT
 import { GetToolFeatures } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolFeatures";
 import { GetToolDescription } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolDescription";
 
+import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
 
 @Injectable()
 
@@ -62,6 +63,7 @@ export class ImportFuturpediaTool extends PuppeterScrapping {
             
             tool = await this.toolRepository.create(
                 {
+                    id: uuidv6(),
                     name: title,
                     excerpt,
                     link:link,
@@ -86,8 +88,7 @@ export class ImportFuturpediaTool extends PuppeterScrapping {
                 ),
             );
         } catch (error) {
-            console.log('error al scrapejar: '+link)
-            //throw error;
+            console.log('error al scrapejar: ', error);
         }
         await this.browser.close();
     }
@@ -105,6 +106,7 @@ export class ImportFuturpediaTool extends PuppeterScrapping {
 
                     new_tag = await this.tagRepository.create(
                         {
+                            id: uuidv6(),
                             name: tag
                         }
                     );

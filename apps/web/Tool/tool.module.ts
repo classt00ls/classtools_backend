@@ -17,6 +17,10 @@ import { OllamaLangchainUserToolSuggestionsRepository } from 'src/web/Infrastruc
 import { GenerateUserToolSuggestionsOnToolGetDetail } from 'src/web/Application/Listener/UserToolSuggestions/GenerateUserToolSuggestionsOnToolGetDetail';
 import { GetSuggestedToolsQueryHandler } from 'src/web/Application/Query/Tool/GetSuggestedToolsQueryHandler';
 import { GetUserToolSuggestionsFromString } from 'src/web/Domain/Service/UserToolSuggestions/GetUserToolSuggestionsFromString';
+import { UserWebExtractor } from '@Web/Domain/Service/UserWeb/UserWebExtractor';
+import { UserWebExtractorFromFirebaseOrJwt } from '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromFirebaseOrJwt';
+import { UserWebExtractorFromFirebase } from '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromFirebase';
+import { UserWebExtractorFromJwt } from '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromJwt';
 
 
 @Module({
@@ -38,6 +42,8 @@ import { GetUserToolSuggestionsFromString } from 'src/web/Domain/Service/UserToo
         GetDetailToolQueryHandler,
         GetFilteredToolsQueryHandler,
         GenerateUserToolSuggestionsOnToolGetDetail,
+        UserWebExtractorFromFirebase,
+        UserWebExtractorFromJwt,
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,
@@ -49,8 +55,11 @@ import { GetUserToolSuggestionsFromString } from 'src/web/Domain/Service/UserToo
         {
             provide: UserToolSuggestionsRepository,
             useClass: OllamaLangchainUserToolSuggestionsRepository,
+        },
+        {
+            provide: UserWebExtractor,
+            useClass: UserWebExtractorFromFirebaseOrJwt,
         }
-        
     ]
  })
 export class ToolModule {}

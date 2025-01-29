@@ -49,7 +49,7 @@ import { BackofficeToolController } from '../BackofficeToolcontroller';
             useClass: UpdateFuturpediaTool,
         },
         {
-            provide: 'GetFuturpediaPageLinksInterface',
+            provide: 'GetFuturpediaPageLinksInterface', 
             useClass: GetFuturpediaPageLinks
         }
     ]
