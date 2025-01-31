@@ -3,7 +3,7 @@
 /node_modules
 
 .env.development
-
+/misc/tools.json
 # Logs
 logs
 *.log

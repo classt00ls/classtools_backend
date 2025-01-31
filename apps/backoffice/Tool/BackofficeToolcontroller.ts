@@ -1,5 +1,8 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+
+import { ToolSchema } from '@Shared/Infrastructure/Persistence/typeorm/tool.schema';
+import { ToolExportCommand } from '@Web/Application/Command/Tool/ToolExportCommand';
 import { getAllToolsDto } from 'src/web/Application/Dto/Tool/getAllTools.dto';
 import { GetAllToolsQuery } from 'src/web/Application/Query/Tool/GetAllToolsQuery';
 import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';
@@ -7,7 +10,8 @@ import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interce
 @Controller('backoffice/tool')
 export class BackofficeToolController {
   constructor(
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
+    private readonly commandBus: CommandBus
   ) {}
 
   @Get('')
@@ -28,6 +32,15 @@ export class BackofficeToolController {
       data
     };
 
+  }
+
+  @Get('generate')
+  async generateJson() {
+
+    await this.queryBus.execute(
+      new ToolExportCommand(  )
+    );
+    
   }
 
 

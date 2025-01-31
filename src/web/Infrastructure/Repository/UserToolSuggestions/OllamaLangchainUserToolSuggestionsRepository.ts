@@ -1,7 +1,7 @@
 import { PromptTemplate, SystemMessagePromptTemplate } from "@langchain/core/prompts";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { Ollama } from "@langchain/ollama";
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { CannotConnectToOllamaException } from "@Web/Infrastructure/exception/CannotConnectToOllamaException";
 

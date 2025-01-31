@@ -6,6 +6,8 @@ import { ToolSchema } from "src/Shared/Infrastructure/Persistence/typeorm/tool.s
 import { ToolModel } from "src/Shared/Domain/Model/Tool/tool.model";
 import { ToolGenericFilter } from "src/Shared/Application/Filter/Tool/ToolGenericFilter";
 
+import * as fs from 'fs/promises';
+
 @Injectable()
 export class ToolTypeormRepository extends ToolRepository {
   
@@ -116,5 +118,18 @@ export class ToolTypeormRepository extends ToolRepository {
       response.url,
       response.status
     );
+  }
+
+  async export() {
+    const data = await this.repository.find({
+      select: {
+        name: true,
+        description: true,
+        excerpt: true,
+        id: true
+      },
+    });
+    // Escribe en un archivo JSON
+    await fs.writeFile('./output.json', JSON.stringify(data, null, 2));
   }
 }

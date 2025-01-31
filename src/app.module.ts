@@ -33,13 +33,13 @@ import { WebAuthModule } from             '@web/auth/web-auth.module';
 
 const cookieSession = require('cookie-session');
 
-let databaseConfig: Partial<TypeOrmModuleOptions>; 
+let databaseConfig: Partial<TypeOrmModuleOptions>[]; 
 
 switch (process.env.NODE_ENV) {
   case 'dev':
   case 'test':
   case 'development':
-    databaseConfig = {
+    databaseConfig = [{
       type        : 'postgres',
       host        : 'localhost',
       port        : 5432,
@@ -48,10 +48,21 @@ switch (process.env.NODE_ENV) {
       password: 'eurega',
       database: 'classtools',
       autoLoadEntities: true
-    };
+    },
+    {
+      name        : "pgvector",
+      type        : 'postgres',
+      host        : 'localhost',
+      port        : 5431,
+      synchronize : false,
+      username: 'classtools',
+      password: 'classtools',
+      database: 'classtools',
+      autoLoadEntities: false
+    }];
   break;
   default:
-    databaseConfig = {
+    databaseConfig = [{
       type        : 'postgres',
       host        : 'postgres_pgvector',
       port        : 5432,
@@ -60,9 +71,17 @@ switch (process.env.NODE_ENV) {
       password: 'classtools',
       database: 'classtools',
       autoLoadEntities: true
-    };
+    }];
   break;
 }
+
+const databaseModules = databaseConfig.map((config) =>
+  TypeOrmModule.forRootAsync({
+    useFactory: () => {return {...config}},
+  })
+);
+
+
 @Module({
   imports: [
     RouterModule.register(webRoutes),
@@ -95,13 +114,7 @@ switch (process.env.NODE_ENV) {
     ConfigModule.forRoot(
       {isGlobal: true,  envFilePath: process.env.NODE_ENV == 'dev' ? '.env.development' : '.env'}
     ),
-    TypeOrmModule.forRootAsync({
-      useFactory: () => {
-        return { 
-          ...databaseConfig
-        }
-      }
-    }),
+    ...databaseModules,
     MailerModule.forRoot({
       // transport: 'smtps://user@example.com:topsecret@smtp.example.com',
       // or

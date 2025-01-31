@@ -7,6 +7,7 @@ import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/too
 import { BackofficeToolController } from './BackofficeToolcontroller';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
+import { ToolExportCommandHandler } from '@Web/Application/Command/Tool/ToolExportCommandHandler';
 
 
 @Module({
@@ -21,6 +22,7 @@ import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
         BackofficeToolController
     ],
     providers: [
+        ToolExportCommandHandler,
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,

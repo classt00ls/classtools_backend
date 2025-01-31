@@ -1,18 +1,17 @@
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: classtools
-    ports:
-      - "3000:3000"
-    environment:
-      NODE_ENV: development
-    depends_on:
-      - postgres_pgvector
-      - ollama
-    networks:
-      - app_network
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: classtools
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     NODE_ENV: development
+  #   depends_on:
+  #     - postgres_pgvector
+  #   networks:
+  #     - app_network
 
   postgres_pgvector:
     image: pgvector/pgvector:0.7.4-pg16
@@ -23,26 +22,21 @@ services:
       POSTGRES_USER: classtools
       POSTGRES_PASSWORD: classtools
     ports:
-      - "5432:5432"
-    networks:
-      - app_network  # Asegúrate de que esté en la misma red
+      - "5431:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
-      - /c/Users/mfarres/Desktop/projects/classtools/classtools_backend/databases:/docker-entrypoint-initdb.d
+      - ./databases:/docker-entrypoint-initdb.d
+    command: ["postgres"]
   
-  ollama:
-    image: ollama/ollama
-    container_name: ollama
-    volumes:
-      - ~/.ollama:/root/.ollama
-    ports:
-      - "11434:11434"
-    networks:
-      - app_network
+  # ollama:
+  #   image: ollama/ollama
+  #   container_name: ollama
+  #   volumes:
+  #     - ~/.ollama:/root/.ollama
+  #   ports:
+  #     - "11434:11434"
+  #   networks:
+  #     - app_network
+
 volumes:
   db_data:
-  ollama:
-
-networks:
-  app_network:
-    driver: bridge
