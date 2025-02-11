@@ -1,6 +1,6 @@
-import { GenericFilter } from "../GenericFilter";
+import { GenericFilter } from "../../../Shared/Application/Filter/GenericFilter";
 
-export class ToolGenericFilter extends GenericFilter{
+export class ToolFilter extends GenericFilter{
   
   constructor (
     private tags: string[],
@@ -22,7 +22,7 @@ export class ToolGenericFilter extends GenericFilter{
     page: number = 1,
     pageSize: number = 15,
   ) {
-    return new ToolGenericFilter([], 0, "", page, pageSize);
+    return new ToolFilter([], 0, "", page, pageSize);
   }
 
   /**
@@ -33,7 +33,7 @@ export class ToolGenericFilter extends GenericFilter{
     tags: string[],
     stars: number
   ) {
-    return new ToolGenericFilter(tags, stars);
+    return new ToolFilter(tags, stars);
   }
 
   /**
@@ -42,7 +42,7 @@ export class ToolGenericFilter extends GenericFilter{
   public static fromTags(
     tags: string[]
   ) {
-    return new ToolGenericFilter(tags, 0);
+    return new ToolFilter(tags, 0);
   }
 
   public toPrimitives() {

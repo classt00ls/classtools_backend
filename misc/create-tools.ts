@@ -19,8 +19,8 @@ async function main(
 			]);
 
 			await pgConnection.sql`
-				INSERT INTO classtools.tools (id, name, embedding)
-				VALUES (${jsonTool.id}, ${jsonTool.name}, ${JSON.stringify(embedding)});
+				INSERT INTO classtools.tools (id, name, excerpt, description, embedding)
+				VALUES (${jsonTool.id}, ${jsonTool.name}, ${jsonTool.excerpt}, ${jsonTool.description}, ${JSON.stringify(embedding)});
 			`;
 		}),
 	);

@@ -10,27 +10,16 @@ Content-Type: application/json
 
 
 ###  get json
-GET http://localhost:3000/tool?page=10&pageSize=12
+GET http://localhost:3001/tool?page=10&pageSize=12
 
 ###  get SUGGESTIONS
 GET http://localhost:3000/tool/suggestions?userId=5cc02058-3e2b-4682-a6d2-9823798f8733
 
+###  get SUGGESTIONS PROMPT
+GET http://localhost:3000/tool/suggestions/prompt?prompt='soy profesor de ingles, quiero mejorar mis clases'
 
-### filtered tools
-POST http://localhost:3000/tool/filter
-Content-Type: application/json
-
-{
-    "params": {
-        "pageSize": 12,
-        "page": 2,
-        "filters": {
-            "selectedCategories": [],
-            "title": "chat"
-        }
-    }
-    
-}
+### search tools
+GET http://localhost:3000/tool/search/?page=1&pageSize=2&filters[selectedCategories]=cat1&filters[selectedCategories]=cat2&filters[stars]=1&filters[title]=lolrelol&filters[propmt]=para programar
 
 ### get detail
 GET http://localhost:3000/tool/detail?id=21a63400-4dff-4d48-bb7c-ddf266abae20

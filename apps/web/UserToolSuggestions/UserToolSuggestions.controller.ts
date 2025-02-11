@@ -24,7 +24,19 @@ export class UserToolSuggestionsController {
   // console.log("Alguien quiere las tools ... ")
     const data = await this.searcher.search(id);
 
-    console.log(data.toPrimitives());
+    return data.toPrimitives()
+
+  }
+
+  // Texto proveniente de un input
+  @Get('user_prompt')
+  @Serialize(getSuggestionsDto)
+  async getFromUserPromt(
+    @Query('id') id?: string
+  ) {
+
+  // console.log("Alguien quiere las tools ... ")
+    const data = await this.searcher.search(id);
 
     return data.toPrimitives()
 

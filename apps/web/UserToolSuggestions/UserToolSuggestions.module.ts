@@ -8,11 +8,15 @@ import { TypeormUserWebRepository } from 'src/web/Infrastructure/Repository/User
 import { UserWebRepository } from 'src/web/Domain/Repository/UserWeb/UserWebRepository';
 import { UserWebSchema } from 'src/web/Infrastructure/Persistence/typeorm/DatabaseWebUser.schema';
 import { OllamaLangchainUserToolSuggestionsRepository } from 'src/web/Infrastructure/Repository/UserToolSuggestions/OllamaLangchainUserToolSuggestionsRepository';
+import { ToolWebSchema } from '@Web/Infrastructure/Persistence/typeorm/ToolWeb.schema';
+import { PostgreToolVectorRepository } from '@Web/Tool/Infrastructure/Persistence/Postgre/PostgreToolVectorRepository';
+import { ToolVectorRepository } from '@Web/Tool/Domain/tool.vector.repository';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([
             UserWebSchema,
+            ToolWebSchema,
             UserWebRepository
           ]),
         CqrsModule
@@ -21,6 +25,10 @@ import { OllamaLangchainUserToolSuggestionsRepository } from 'src/web/Infrastruc
         UserToolSuggestionsController
     ],
     providers: [
+        {
+            provide: ToolVectorRepository,
+            useClass: PostgreToolVectorRepository
+        },
         {
             provide: UserWebRepository,
             useClass: TypeormUserWebRepository

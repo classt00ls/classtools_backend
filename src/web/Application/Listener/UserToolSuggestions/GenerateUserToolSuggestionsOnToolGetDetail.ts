@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
+import { UserToolSuggestionsSearcher } from "@Web/Application/Service/UserToolSuggestion/UserToolSuggestionsSearcher";
 import { ToolVisitedEvent } from "src/Shared/Application/Event/Tool/ToolVisitedEvent";
 import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
 import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
-import { UserToolSuggestionsSearcher } from "../../Service/UserToolSuggestion/UserToolSuggestionsSearcher";
 
 @Injectable()
 export class GenerateUserToolSuggestionsOnToolGetDetail {

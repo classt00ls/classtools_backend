@@ -1,23 +1,27 @@
-import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ToolSchema } from 'src/Shared/Infrastructure/Persistence/typeorm/tool.schema';
-import { ToolRepository } from 'src/Shared/Domain/Repository/tool.repository';
-import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
-import { ToolController } from './tool.controller';
-import { GetAllToolsQueryHandler } from 'src/web/Application/Query/Tool/GetAllToolsQueryHandler';
-import { CountToolsQueryHandler } from 'src/web/Application/Query/Tool/CountToolsQueryHandler';
-import { GetDetailToolQueryHandler } from 'src/web/Application/Query/Tool/GetDetailToolQueryHandler';
+import { Module } from                                      '@nestjs/common';
+import { CqrsModule } from                                  '@nestjs/cqrs';
+import { TypeOrmModule } from                               '@nestjs/typeorm';
+import { ToolSchema } from                                  'src/Shared/Infrastructure/Persistence/typeorm/tool.schema';
+import { ToolRepository } from                              'src/Shared/Domain/Repository/tool.repository';
+import { ToolTypeormRepository } from                       'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
 
+import { GetDetailToolQueryHandler } from                           '@Web/Application/Query/Tool/GetDetailToolQueryHandler';
 import { UserWebRepository } from                                   '@Web/Domain/Repository/UserWeb/UserWebRepository';
 import { TypeormUserWebRepository } from                            '@Web/Infrastructure/Repository/UserWeb/TypeormUserWebRepository';
 import { GenerateUserToolSuggestionsOnToolGetDetail } from          '@Web/Application/Listener/UserToolSuggestions/GenerateUserToolSuggestionsOnToolGetDetail';
-
 import { UserWebExtractor } from                                    '@Web/Domain/Service/UserWeb/UserWebExtractor';
 import { UserWebExtractorFromFirebaseOrJwt } from                   '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromFirebaseOrJwt';
 import { UserWebExtractorFromFirebase } from                        '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromFirebase';
 import { UserWebExtractorFromJwt } from                             '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromJwt';
 import { ToolWebSchema } from                                       '@Web/Infrastructure/Persistence/typeorm/ToolWeb.schema';
+
+import { GetFilteredToolsQueryHandler } from                        '@Web/Tool/Application/search/GetFilteredToolsQueryHandler';
+
+import { ToolSearchController } from                                './tool.search.controller';
+import { ToolVectorSearcher } from '@Web/Tool/Application/search/ToolVectorSearcher';
+import { ToolVectorRepository } from '@Web/Tool/Domain/tool.vector.repository';
+import { PostgreToolVectorRepository } from '@Web/Tool/Infrastructure/Persistence/Postgre/PostgreToolVectorRepository';
+import { ToolSearcher } from '@Web/Tool/Application/search/ToolSearcher';
 import { UserToolSuggestionsSearcher } from '@Web/Application/Service/UserToolSuggestion/UserToolSuggestionsSearcher';
 import { UserToolSuggestionsRepository } from '@Web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository';
 import { OllamaLangchainUserToolSuggestionsRepository } from '@Web/Infrastructure/Repository/UserToolSuggestions/OllamaLangchainUserToolSuggestionsRepository';
@@ -31,12 +35,13 @@ import { OllamaLangchainUserToolSuggestionsRepository } from '@Web/Infrastructur
         CqrsModule
     ],
     controllers: [
-        ToolController
+        ToolSearchController
     ],
     providers: [
-        CountToolsQueryHandler,
-        GetAllToolsQueryHandler,
+        ToolVectorSearcher,
         GetDetailToolQueryHandler,
+        ToolSearcher,
+        GetFilteredToolsQueryHandler,
         UserToolSuggestionsSearcher,
         GenerateUserToolSuggestionsOnToolGetDetail,
         UserWebExtractorFromFirebase,
@@ -50,13 +55,17 @@ import { OllamaLangchainUserToolSuggestionsRepository } from '@Web/Infrastructur
             useClass: TypeormUserWebRepository,
         },
         {
-            provide: UserToolSuggestionsRepository,
-            useClass: OllamaLangchainUserToolSuggestionsRepository
+            provide: ToolVectorRepository,
+            useClass: PostgreToolVectorRepository,
         },
         {
             provide: UserWebExtractor,
             useClass: UserWebExtractorFromFirebaseOrJwt,
-        }
+        },
+        {
+            provide: UserToolSuggestionsRepository,
+            useClass: OllamaLangchainUserToolSuggestionsRepository
+        },
     ],
  })
-export class ToolModule {}
+export class ToolSearchModule {}

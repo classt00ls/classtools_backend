@@ -4,7 +4,7 @@ import { DataSource, In, InsertResult, Like, MoreThan, Repository } from 'typeor
 import { ToolRepository } from "src/Shared/Domain/Repository/tool.repository";
 import { ToolSchema } from "src/Shared/Infrastructure/Persistence/typeorm/tool.schema";
 import { ToolModel } from "src/Shared/Domain/Model/Tool/tool.model";
-import { ToolGenericFilter } from "src/Shared/Application/Filter/Tool/ToolGenericFilter";
+import { ToolFilter } from "@Web/Tool/Domain/tool.filter";
 
 import * as fs from 'fs/promises';
 
@@ -19,7 +19,7 @@ export class ToolTypeormRepository extends ToolRepository {
   }
   
   async getAll(
-    filter: ToolGenericFilter
+    filter: ToolFilter
   ): Promise<ToolModel[]> {
 
     return this.repository.find({

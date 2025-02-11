@@ -30,6 +30,7 @@ import { UserToolSuggestionsModule } from '@web/UserToolSuggestions/UserToolSugg
 import { UserWebModule } from             '@web/UserWeb/UserWeb.module';
 import { webRoutes } from                 '@web/web.routes';
 import { WebAuthModule } from             '@web/auth/web-auth.module';
+import { ToolSearchModule } from '@web/Tool/search/tool.search.module';
 
 const cookieSession = require('cookie-session');
 
@@ -86,6 +87,7 @@ const databaseModules = databaseConfig.map((config) =>
   imports: [
     RouterModule.register(webRoutes),
     ToolModule,
+    ToolSearchModule,
     DiscoverToolModule,
     DiscoverAuthModule,
     TagModule,

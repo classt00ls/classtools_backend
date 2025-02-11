@@ -36,11 +36,13 @@ const embeddingsGenerator = new OllamaEmbeddings({
 	baseUrl: "http://localhost:11434",
 });
 
-main(process.argv[2], pgConnection, embeddingsGenerator)
+export async function executePrompt(prompt) {
+	main(prompt, pgConnection, embeddingsGenerator)
 	.catch(console.error)
 	.finally(async () => {
 		await pgConnection.end();
-		console.log("Done!");
 
 		process.exit(0);
 	});
+}
+

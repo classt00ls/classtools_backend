@@ -1,8 +1,8 @@
+import { ToolResponse } from "@Web/Tool/Domain/tool.response";
 import { Expose, Type } from "class-transformer";
 import { ValidateNested } from "class-validator";
-import { ToolResponse } from "../../../Tool/Domain/tool.response";
 
-export class getAllToolsDto {
+export class ToolsSearchResponse {
 
     @Expose()
 	@Type(() => ToolResponse)
