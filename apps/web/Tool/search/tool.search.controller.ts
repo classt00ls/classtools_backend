@@ -21,24 +21,24 @@ export class ToolSearchController {
   @Get('')
   @Serialize(ToolsSearchResponse)
   async getByFilter(
-    @Query() searchQRquest: ToolSearchRequest
+    @Query() searchRequest: ToolSearchRequest
   ) {
     
     const data = await this.queryBus.execute(
         new GetFilteredToolsQuery(
-          searchQRquest.page,
-          searchQRquest.pageSize,
-          searchQRquest.filters
+          searchRequest.page,
+          searchRequest.pageSize,
+          searchRequest.filters
         )
     );
 
     const total = await this.queryBus.execute(
       new CountToolsQuery(
-        searchQRquest.filters
+        searchRequest.filters
       )
     );
     
-    const count = !searchQRquest.filters.prompt ? total : 0;
+    const count = !searchRequest.filters.prompt ? total : 0;
 
     return {
       data,

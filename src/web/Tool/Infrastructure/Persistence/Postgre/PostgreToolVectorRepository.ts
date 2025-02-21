@@ -6,6 +6,10 @@ import { OllamaEmbeddings } from "@langchain/ollama";
 import { PostgresRepository } from "@Shared/Infrastructure/Persistence/postgres/PostgresRepository";
 import { DatabaseToolWeb } from "@Web/Infrastructure/Persistence/typeorm/ToolWeb.schema";
 
+/**
+ * Este repositorio usa una conexion a la database echa en pgVector a la que llamamos directamente
+ * mediante nuestro propio PostgresRepository
+ */
 
 @Injectable()
 export class PostgreToolVectorRepository extends PostgresRepository implements ToolVectorRepository{
@@ -36,7 +40,6 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 		return await this.repository.insert(model);
 	  }
 	
-      
 
 	async save(tool: ToolVector): Promise<void> {
 		const ToolVectorPrimitives = tool.toPrimitives();
@@ -44,19 +47,32 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 		const embedding =
 			await this.generateToolVectorDocumentEmbedding(ToolVectorPrimitives);
 
-		await this.repository.save({
-			id: ToolVectorPrimitives.id,
-			excerpt: ToolVectorPrimitives.excerpt,
-			name: ToolVectorPrimitives.name
-		});
+		await this.execute`
+			INSERT INTO classtools.tools (id, name, excerpt, description, embedding)
+			VALUES (
+				${ToolVectorPrimitives.id},
+				${ToolVectorPrimitives.name},
+				${ToolVectorPrimitives.excerpt},
+				${ToolVectorPrimitives.description},
+				${embedding}
+			)
+			ON CONFLICT (id) DO UPDATE SET
+				name = EXCLUDED.name,
+				summary = EXCLUDED.summary,
+				categories = EXCLUDED.categories,
+				published_at = EXCLUDED.published_at,
+				embedding = EXCLUDED.embedding;
+		`;
+	}	
 
-	}
-
-	async search(query: string): Promise<ToolVector[]> {
+	/**
+	 * 
+	 * @param query Texto que ha de permitir realizar la búsqueda
+	 * @param limit Limite de resultados, por defecto es 5
+	 * @description Realizamos una busqueda vectorial a partir de un texto cualquiera (query) 
+	 */
+	async search(query: string, limit: number = 5): Promise<ToolVector[]> {
 		try {
-			
-			// await executePrompt(query);
-
 			const embedding = JSON.stringify(
 				await this.embeddingsGenerator.embedQuery(query),
 			);
@@ -65,7 +81,7 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 			SELECT id,name, description, excerpt
 			FROM classtools.tools
 			ORDER BY (embedding <=> ${embedding})
-			LIMIT 4;
+			LIMIT ${limit};
 		`;
 
 		} catch (error) {
@@ -73,7 +89,11 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 		}
 	}
 
-	async searchSimilar(ids: string[]): Promise<ToolVector[]> {
+	/**
+	 * @param {string[]} ids
+	 * @description Proporcionando un conjunto de ids devuelve tools similares
+	 */
+	async searchSimilarByIds(ids: string[]): Promise<ToolVector[]> {
 		try {
 			const coursesToSearchSimilar = await this.searchByIds(ids);
 			
@@ -97,7 +117,7 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 		const plainIds = ids.map((id) => id);
 
 		return await this.searchMany`
-			SELECT id, name, excerpt
+			SELECT id, name, excerpt, description
 			FROM classtools.tools
 			WHERE id = ANY(${plainIds}::text[]);
 		`;
@@ -115,8 +135,10 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 
 	private serializeToolVectorForEmbedding(tool): string {
 		return [
-			`Tool: ${tool.name}`,
-			`Excerpt: ${tool.excerpt}`
+			`Id: ${tool.id}`,
+			`Name: ${tool.name}`,
+			`Excerpt: ${tool.excerpt}`,
+			`Description: ${tool.description}`
 		].join("|");
 	}
 
@@ -125,7 +147,7 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 	): Promise<string> {
 		const vectorEmbedding = await this.embeddingsGenerator.embedQuery(
 			tools
-				.map((course) => this.serializeToolVectorForEmbedding(course))
+				.map((tool) => this.serializeToolVectorForEmbedding(tool))
 				.join("\n"),
 		);
 

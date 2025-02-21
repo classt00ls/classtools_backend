@@ -14,7 +14,7 @@ export class GetAllFuturpediaPageLinksQueryHandler {
     async execute(command: GetAllFuturpediaPageLinksQuery) {
 
         const links = await this.futurpediaPageLinks.execute(command.route);
-
+        
         return links;
     }
 }

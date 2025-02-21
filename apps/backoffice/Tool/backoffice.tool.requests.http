@@ -13,5 +13,4 @@ Content-Type: application/json
 }
 
 ### Generate json
-
 GET http://localhost:3000/backoffice/tool/generate

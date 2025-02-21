@@ -3,7 +3,8 @@ import { AggregateRoot } from "../../../Shared/Domain/Model/AggregateRoot";
 export type ToolVectorPrimitives = {
 	id: string;
 	excerpt: string,
-	name: string
+	name: string,
+	description: string
 }
 
 export class ToolVector extends AggregateRoot{
@@ -38,7 +39,8 @@ export class ToolVector extends AggregateRoot{
 		return {
 			id: this.id,
 			name: this.name,
-			excerpt: this.excerpt
+			excerpt: this.excerpt,
+			description: this.description
 		};
 	}
 

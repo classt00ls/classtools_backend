@@ -1,11 +1,9 @@
-import { StructuredOutputParser } from "@langchain/core/output_parsers";
-import { ChatPromptTemplate, HumanMessagePromptTemplate, PromptTemplate, SystemMessagePromptTemplate } from "@langchain/core/prompts";
+import { PromptTemplate, SystemMessagePromptTemplate } from "@langchain/core/prompts";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { Ollama } from "@langchain/ollama";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { ToolVector } from "@Web/Tool/Domain/tool.vector";
-import { ToolVectorRepository } from "@Web/Tool/Domain/tool.vector.repository";
 import { CannotConnectToOllamaException } from "@Web/Infrastructure/exception/CannotConnectToOllamaException";
 
 import { UserToolSuggestions } from "src/web/Domain/Model/UserToolSuggestions/UserToolSuggestions";
