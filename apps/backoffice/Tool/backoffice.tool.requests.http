@@ -14,3 +14,6 @@ Content-Type: application/json
 
 ### Generate json
 GET http://localhost:3000/backoffice/tool/generate
+
+### Gemini
+GET http://localhost:3000/backoffice/tool/gemini?text='podrias resumirme como funciona la IA Claude 3 ?'

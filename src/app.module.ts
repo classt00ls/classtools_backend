@@ -50,30 +50,31 @@ switch (process.env.NODE_ENV) {
       password: 'eurega',
       database: 'classtools',
       autoLoadEntities: true
-    },
-    {
-      name        : "pgvector",
-      type        : 'postgres',
-      host        : 'localhost',
-      port        : 5431,
-      synchronize : false,
-      username: 'classtools',
-      password: 'classtools',
-      database: 'classtools',
-      autoLoadEntities: false
-    }];
+    }
+    // {
+    //   name        : "pgvector",
+    //   type        : 'postgres',
+    //   host        : 'localhost',
+    //   port        : 5431,
+    //   synchronize : false,
+    //   username: 'classtools',
+    //   password: 'classtools',
+    //   database: 'classtools',
+    //   autoLoadEntities: false
+    // }
+  ];
   break;
   default:
-    databaseConfig = [{
-      type        : 'postgres',
-      host        : 'postgres_pgvector',
-      port        : 5432,
-      synchronize : true,
-      username: 'classtools',
-      password: 'classtools',
-      database: 'classtools',
-      autoLoadEntities: true
-    }];
+    // databaseConfig = [{
+    //   type        : 'postgres',
+    //   host        : 'postgres_pgvector',
+    //   port        : 5432,
+    //   synchronize : true,
+    //   username: 'classtools',
+    //   password: 'classtools',
+    //   database: 'classtools',
+    //   autoLoadEntities: true
+    // }];
   break;
 }
 

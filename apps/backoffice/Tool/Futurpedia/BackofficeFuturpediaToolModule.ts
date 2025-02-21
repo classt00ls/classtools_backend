@@ -25,7 +25,6 @@ import { BackofficeToolController } from '../BackofficeToolcontroller';
         CqrsModule
     ],
     controllers: [
-        BackofficeToolController,
         FuturpediaController
     ],
     providers: [

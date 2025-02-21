@@ -8,6 +8,7 @@ import { BackofficeToolController } from './BackofficeToolcontroller';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
 import { ToolExportCommandHandler } from '@Web/Application/Command/Tool/ToolExportCommandHandler';
+import { GoogleGeminiProvider } from '@Shared/Infrastructure/IA/GoogleGeminiProvider';
 
 
 @Module({
@@ -22,6 +23,7 @@ import { ToolExportCommandHandler } from '@Web/Application/Command/Tool/ToolExpo
         BackofficeToolController
     ],
     providers: [
+        GoogleGeminiProvider,
         ToolExportCommandHandler,
         {
             provide: ToolRepository,

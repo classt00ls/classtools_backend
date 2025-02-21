@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { GoogleGeminiProvider } from '@Shared/Infrastructure/IA/GoogleGeminiProvider';
 
 import { ToolSchema } from '@Shared/Infrastructure/Persistence/typeorm/tool.schema';
 import { ToolExportCommand } from '@Web/Application/Command/Tool/ToolExportCommand';
@@ -10,6 +11,7 @@ import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interce
 @Controller('backoffice/tool')
 export class BackofficeToolController {
   constructor(
+    private readonly geminiProvider: GoogleGeminiProvider,
     private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus
   ) {}
@@ -40,6 +42,18 @@ export class BackofficeToolController {
     await this.queryBus.execute(
       new ToolExportCommand(  )
     );
+    
+  }
+
+  @Get('gemini')
+  async gemini(
+    @Query('text') text?: string,
+  ) {
+
+    const provider = await this.geminiProvider.provide();
+    const result = await provider.generateContent(text);
+
+    return result.response.text();
     
   }
 

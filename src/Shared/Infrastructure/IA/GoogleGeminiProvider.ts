@@ -1,7 +1,9 @@
 import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
 
+@Injectable()
 export class GoogleGeminiProvider {
 
     private model: GenerativeModel ;

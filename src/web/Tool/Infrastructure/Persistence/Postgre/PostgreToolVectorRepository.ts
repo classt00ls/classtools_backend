@@ -41,6 +41,11 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 	  }
 	
 
+	/**
+	 * @description Un toolvector creado normalmente a partir de las primitivas de un tool
+	 * @description se guarda con su embedding en la pgvectordatabase
+	 * @param {ToolVector} tool 
+	 */
 	async save(tool: ToolVector): Promise<void> {
 		const ToolVectorPrimitives = tool.toPrimitives();
 
@@ -66,7 +71,6 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 	}	
 
 	/**
-	 * 
 	 * @param query Texto que ha de permitir realizar la búsqueda
 	 * @param limit Limite de resultados, por defecto es 5
 	 * @description Realizamos una busqueda vectorial a partir de un texto cualquiera (query) 
@@ -122,6 +126,7 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 			WHERE id = ANY(${plainIds}::text[]);
 		`;
 	}
+	
 
 	private async generateToolVectorDocumentEmbedding(
 		ToolVector,
@@ -133,14 +138,6 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 		return JSON.stringify(vectorEmbedding);
 	}
 
-	private serializeToolVectorForEmbedding(tool): string {
-		return [
-			`Id: ${tool.id}`,
-			`Name: ${tool.name}`,
-			`Excerpt: ${tool.excerpt}`,
-			`Description: ${tool.description}`
-		].join("|");
-	}
 
 	private async generateToolVectorQueryEmbeddings(
 		tools
@@ -153,6 +150,18 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 
 		return JSON.stringify(vectorEmbedding);
 	}
+
+
+	private serializeToolVectorForEmbedding(tool): string {
+		return [
+			`Id: ${tool.id}`,
+			`Name: ${tool.name}`,
+			`Excerpt: ${tool.excerpt}`,
+			`Description: ${tool.description}`
+		].join("|");
+	}
+
+	
 
 	protected toAggregate(row: DatabaseToolWeb): ToolVector {
 		return ToolVector.fromPrimitives({
