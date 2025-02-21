@@ -13,8 +13,23 @@ services:
   #   networks:
   #     - app_network
 
+  # postgres_pgvector:
+  #   image: pgvector/pgvector:0.7.4-pg16
+  #   restart: always
+
+  #   environment:
+  #     POSTGRES_DB: classtools
+  #     POSTGRES_USER: classtools
+  #     POSTGRES_PASSWORD: classtools
+  #   ports:
+  #     - "5431:5432"
+  #   volumes:
+  #     - db_data:/var/lib/postgresql/data
+  #     - ./databases:/docker-entrypoint-initdb.d
+  #   command: ["postgres"]
+
   postgres_pgvector:
-    image: pgvector/pgvector:0.7.4-pg16
+    image: timescale/timescaledb-ha:pg16
     restart: always
 
     environment:
@@ -26,8 +41,14 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./databases:/docker-entrypoint-initdb.d
-    command: ["postgres"]
   
+  pgai-vectorizer_worker:
+    image: timescale/pgai-vectorizer-worker:v0.2.1
+    environment:
+      PGAI_VECTORIZER_WORKER_DB_URL: postgres://classtools:Andromed4_@postgres_pgai:5432/postgres
+      OLLAMA_HOST: http://host.docker.internal:11434
+    command: [ "--poll-interval", "5s" ]
+
   # ollama:
   #   image: ollama/ollama
   #   container_name: ollama

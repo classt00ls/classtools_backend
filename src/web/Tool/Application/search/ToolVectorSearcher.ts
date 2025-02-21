@@ -30,15 +30,15 @@ export class ToolVectorSearcher {
 
     private format = async (result) => {
 
-        const tool = await this.toolRepository.getOneByIdOrFail(result.id);
+        return await this.toolRepository.getOne(result.id);
         
-        return {
-            id: result.id,
-            name: tool.name,
-            url: tool.url,
-            // reason: result.reason,
-            excerpt: tool.excerpt
-        };
+        // return {
+        //     id: result.id,
+        //     name: tool.name,
+        //     url: tool.url,
+        //     // reason: result.reason,
+        //     excerpt: tool.excerpt
+        // };
         
     }
 }

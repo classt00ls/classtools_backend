@@ -5,5 +5,6 @@ CREATE TABLE classtools.tools (
 	name VARCHAR(155) NOT NULL,
 	excerpt VARCHAR(355) NOT NULL,
 	description TEXT NULL,
-    categories jsonb NULL
+    -- 768 dimensiones
+	embedding vector(768)
 );

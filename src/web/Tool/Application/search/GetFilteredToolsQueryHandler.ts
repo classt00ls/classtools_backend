@@ -15,8 +15,7 @@ export class GetFilteredToolsQueryHandler {
     
     async execute(query: GetFilteredToolsQuery) {
 
-        if(query.filter.prompt) {
-
+        if(typeof query.filter?.prompt === 'string' && query.filter.prompt.trim() !== '') {
             return await this.toolVectorSearcher.search(query.filter.prompt);
 
         }

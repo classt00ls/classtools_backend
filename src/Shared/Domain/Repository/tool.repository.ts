@@ -11,8 +11,9 @@ export abstract class ToolRepository {
   abstract insert(model: ToolModel): Promise<InsertResult>;
   abstract getAll(filter: GenericFilter): Promise<ToolModel[]>;
   abstract getAll(filter: GenericFilter): Promise<ToolModel[]>;
-  abstract count(tags: Array<string>,stars: number, title: string): Promise<number>;
+  abstract count(tags: Array<string>): Promise<number>; // ,stars: number, title: string
   abstract getOneByNameAndFail(name: string): Promise<void>;
+  abstract getOne(id: string): Promise<ToolModel>;
   abstract getOneByNameOrFail(name: string): Promise<ToolModel>;
   abstract getOneByLinkAndFail(name: string): Promise<void>;
   abstract getOneByLinkOrFail(name: string): Promise<ToolModel>;

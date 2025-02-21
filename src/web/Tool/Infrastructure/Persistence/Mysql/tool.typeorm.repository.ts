@@ -22,14 +22,31 @@ export class ToolTypeormRepository extends ToolRepository {
     filter: ToolFilter
   ): Promise<ToolModel[]> {
 
+// console.log(filter)
+
     return this.repository.find({
       skip: filter.getPage(),
       take: filter.getPageSize(),
       relations: ['tags'],
       where: {
-        ...(filter.getTitle() != '' && {name: Like(`%${filter.getTitle()}%`)}),
+        // ...(filter.getTitle() != '' && {name: Like(`%${filter.getTitle()}%`)}),
         ...(filter.getTags()?.length > 0 && {tags: {name: In(filter.getTags())}}),
-        ...(filter.getStars() && {stars: MoreThan(filter.getStars()) })
+        // ...(filter.getStars() && {stars: MoreThan(filter.getStars()) })
+      }
+    });
+
+  }
+
+  async getOne(
+    id: string
+  ): Promise<ToolModel> {
+
+// console.log(filter)
+
+    return this.repository.findOne({
+      relations: ['tags'],
+      where: {
+        id: id
       }
     });
 
@@ -60,14 +77,14 @@ export class ToolTypeormRepository extends ToolRepository {
 
   async count( 
     tags: Array<string>,
-    stars: number,
-    title: string
+    // stars: number,
+    // title: string
   ): Promise<number> {
     const response = await this.repository.count({
         where: {
-          ...(title != '' && {name: Like(`%${title}%`)}),
+          // ...(title != '' && {name: Like(`%${title}%`)}),
           ...(tags?.length > 0 && {tags: {name: In(tags)}}),
-          ...(stars && {stars: MoreThan(stars) })
+          // ...(stars && {stars: MoreThan(stars) })
         }  
     });
     return response;

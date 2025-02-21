@@ -15,8 +15,8 @@ export class CountToolsQueryHandler {
 
         return await this.toolRepository.count( 
             query.filter.selectedCategories,
-            query.filter.stars,
-            query.filter.title
+            // query.filter.stars,
+            // query.filter.title
         );
         
     }

@@ -3,7 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ToolSchema } from 'src/Shared/Infrastructure/Persistence/typeorm/tool.schema';
 import { ToolRepository } from 'src/Shared/Domain/Repository/tool.repository';
-import { ToolTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
+import { ToolTypeormRepository } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
 import { DialogFlowcontroller } from './DialogFlowcontroller';

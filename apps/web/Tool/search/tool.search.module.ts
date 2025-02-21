@@ -3,7 +3,7 @@ import { CqrsModule } from                                  '@nestjs/cqrs';
 import { TypeOrmModule } from                               '@nestjs/typeorm';
 import { ToolSchema } from                                  'src/Shared/Infrastructure/Persistence/typeorm/tool.schema';
 import { ToolRepository } from                              'src/Shared/Domain/Repository/tool.repository';
-import { ToolTypeormRepository } from                       'src/Infrastructure/Repository/typeorm/tool.typeorm.repository';
+import { ToolTypeormRepository } from                       '@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository';
 
 import { GetDetailToolQueryHandler } from                           '@Web/Application/Query/Tool/GetDetailToolQueryHandler';
 import { UserWebRepository } from                                   '@Web/Domain/Repository/UserWeb/UserWebRepository';

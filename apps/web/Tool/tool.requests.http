@@ -19,7 +19,7 @@ GET http://localhost:3000/tool/suggestions?userId=5cc02058-3e2b-4682-a6d2-982379
 GET http://localhost:3000/tool/suggestions/prompt?prompt='soy profesor de ingles, quiero mejorar mis clases'
 
 ### search tools
-GET http://localhost:3000/tool/search/?page=1&pageSize=2&filters[selectedCategories]=cat1&filters[selectedCategories]=cat2&filters[stars]=1&filters[title]=lolrelol&filters[propmt]=para programar
+GET http://localhost:3000/tool/search/?page=2&pageSize=2&filters[prompt]='programador'
 
 ### get detail
 GET http://localhost:3000/tool/detail?id=21a63400-4dff-4d48-bb7c-ddf266abae20

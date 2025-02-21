@@ -7,6 +7,7 @@ import { PublicGuard } from 'src/Shared/Infrastructure/guards/public.guard';
 import { GetFilteredToolsQuery } from '@Web/Tool/Application/search/GetFilteredToolsQuery';
 import { ToolSearchRequest } from './tool.search.request';
 import { ToolsSearchResponse } from './tool.search.response';
+import { CountToolsQuery } from '@Web/Application/Query/Tool/CountToolsQuery';
 
 @Controller('tool/search')
 export class ToolSearchController {
@@ -22,8 +23,6 @@ export class ToolSearchController {
   async getByFilter(
     @Query() searchQRquest: ToolSearchRequest
   ) {
-
-    console.log('searchQRquest: ', searchQRquest.filters);
     
     const data = await this.queryBus.execute(
         new GetFilteredToolsQuery(
@@ -33,16 +32,18 @@ export class ToolSearchController {
         )
     );
 
-    // const count = await this.queryBus.execute(
-    //   new CountToolsQuery(
-    //     requestGetToolDto.params.filters
-    //   )
-    // );
+    const total = await this.queryBus.execute(
+      new CountToolsQuery(
+        searchQRquest.filters
+      )
+    );
+    
+    const count = !searchQRquest.filters.prompt ? total : 0;
 
-    // return {
-    //   data,
-    //   count
-    // }
+    return {
+      data,
+      count
+    }
 
   }
   
