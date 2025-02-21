@@ -31,6 +31,7 @@ import { UserWebModule } from             '@web/UserWeb/UserWeb.module';
 import { webRoutes } from                 '@web/web.routes';
 import { WebAuthModule } from             '@web/auth/web-auth.module';
 import { ToolSearchModule } from '@web/Tool/search/tool.search.module';
+import { GoogleGeminiProvider } from '@Shared/Infrastructure/IA/GoogleGeminiProvider';
 
 const cookieSession = require('cookie-session');
 
@@ -114,7 +115,7 @@ const databaseModules = databaseConfig.map((config) =>
     }),
     
     ConfigModule.forRoot(
-      {isGlobal: true,  envFilePath: process.env.NODE_ENV == 'dev' ? '.env.development' : '.env'}
+      {isGlobal: true,  envFilePath: process.env.NODE_ENV == 'dev' ? '.env.development' : '.env'} // aquí se decide todo el entorno
     ),
     ...databaseModules,
     MailerModule.forRoot({
@@ -145,6 +146,7 @@ const databaseModules = databaseConfig.map((config) =>
 ],
   controllers: [AppController],
   providers: [
+    GoogleGeminiProvider,
     AppService,
     QueryBus,
     CommandBus,
