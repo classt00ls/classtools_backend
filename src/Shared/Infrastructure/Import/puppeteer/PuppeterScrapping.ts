@@ -1,5 +1,5 @@
 import { Browser, Page } from "puppeteer-core";
-import { PuppeterScrapConnectionProvider } from "src/Shared/Infrastructure/Import/puppeteer/PuppeterScrapConnectionProvider";
+import { PuppeterScrapConnectionProvider } from "@Shared/Infrastructure/Scrap/PuppeterScrapConnectionProvider";
 
 
 export class PuppeterScrapping {

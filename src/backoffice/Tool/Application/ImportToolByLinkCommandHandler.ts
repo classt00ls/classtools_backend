@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { ImportToolByLinkCommand } from "./ImportToolByLinkCommand";
-import { ImportToolInterface } from "src/backoffice/Domain/Tool/ImportToolInterface";
+import { ImportToolInterface } from "src/backoffice/Tool/Domain/ImportToolInterface";
 
 
 @CommandHandler(ImportToolByLinkCommand)

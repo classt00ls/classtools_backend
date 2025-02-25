@@ -53,7 +53,7 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 			await this.generateToolVectorDocumentEmbedding(ToolVectorPrimitives);
 
 		await this.execute`
-			INSERT INTO classtools.tools (id, name, excerpt, description, embedding)
+			INSERT INTO classtools.tool_vector (id, name, excerpt, description, embedding)
 			VALUES (
 				${ToolVectorPrimitives.id},
 				${ToolVectorPrimitives.name},
@@ -83,7 +83,7 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 
 		return await this.connection.sql`
 			SELECT id,name, description, excerpt
-			FROM classtools.tools
+			FROM classtools.tool_vector
 			ORDER BY (embedding <=> ${embedding})
 			LIMIT ${limit};
 		`;
@@ -107,7 +107,7 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 
 		return await this.searchMany`
 			SELECT id, name, excerpt, description
-			FROM classtools.tools
+			FROM classtools.tool_vector
 			WHERE id != ALL(${ids}::text[])
 			ORDER BY (embedding <=> ${embeddings}) 
 			LIMIT 4;
@@ -122,7 +122,7 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 
 		return await this.searchMany`
 			SELECT id, name, excerpt, description
-			FROM classtools.tools
+			FROM classtools.tool_vector
 			WHERE id = ANY(${plainIds}::text[]);
 		`;
 	}

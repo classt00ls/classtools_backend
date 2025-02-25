@@ -16,7 +16,7 @@ async function main(
 
 	const results = await connection.sql`
 		SELECT name
-		FROM classtools.tools
+		FROM classtools.tool_vector
 		ORDER BY (embedding <=> ${embedding})
 		LIMIT 3;
 	`;
@@ -36,13 +36,13 @@ const embeddingsGenerator = new OllamaEmbeddings({
 	baseUrl: "http://localhost:11434",
 });
 
-export async function executePrompt(prompt) {
-	main(prompt, pgConnection, embeddingsGenerator)
-	.catch(console.error)
-	.finally(async () => {
-		await pgConnection.end();
 
-		process.exit(0);
-	});
-}
+main(process.argv[2], pgConnection, embeddingsGenerator)
+.catch(console.error)
+.finally(async () => {
+	await pgConnection.end();
+
+	process.exit(0);
+});
+
 

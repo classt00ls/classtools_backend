@@ -44,7 +44,7 @@ export class ToolVector extends AggregateRoot{
 		};
 	}
 
-	static fromPrimitives(primitives): ToolVector {
+	static fromPrimitives(primitives: ToolVectorPrimitives): ToolVector {
 		return new ToolVector(
 			primitives.id,
 			primitives.name,

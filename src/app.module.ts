@@ -42,12 +42,12 @@ switch (process.env.NODE_ENV) {
   case 'test':
   case 'development':
     databaseConfig = [{
-      type        : 'postgres',
+      type        : 'postgres', 
       host        : 'localhost',
-      port        : 5432,
+      port        : 5431,
       synchronize : true,
-      username: 'postgres', 
-      password: 'eurega',
+      username: 'classtools', 
+      password: 'classtools',
       database: 'classtools',
       autoLoadEntities: true
     }
@@ -65,6 +65,16 @@ switch (process.env.NODE_ENV) {
   ];
   break;
   default:
+    databaseConfig = [{
+      type        : 'postgres',
+      host        : 'postgres_pgvector',
+      port        : 5431,
+      synchronize : true,
+      username: 'classtools', 
+      password: 'classtools',
+      database: 'classtools',
+      autoLoadEntities: true
+    }]
     // databaseConfig = [{
     //   type        : 'postgres',
     //   host        : 'postgres_pgvector',

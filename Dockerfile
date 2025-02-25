@@ -6,6 +6,8 @@ COPY package*.json ./
 RUN npm install --save --force
 RUN  npm install pg --save --legacy-peer-deps
 
+RUN chmod -R 755 /docker-entrypoint-initdb.d/
+
 COPY . .
 
 RUN npm run build

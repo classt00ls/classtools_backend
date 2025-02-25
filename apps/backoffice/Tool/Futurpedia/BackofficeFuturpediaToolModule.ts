@@ -6,12 +6,11 @@ import { ToolRepository } from 'src/Shared/Domain/Repository/tool.repository';
 import { ToolTypeormRepository } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
-import { ImportToolByLinkCommandHandler } from 'src/backoffice/Application/Command/Tool/ImportToolByLinkCommandHandler';
-import { GetFuturpediaPageLinks } from 'src/backoffice/Infrastructure/Import/Tool/Futurpedia/GetFuturpediaPageLinks';
-import { GetAllFuturpediaPageLinksQueryHandler } from 'src/backoffice/Application/Query/Tool/Futurpedia/GetAllFuturpediaPageLinksQueryHandler';
-import { UpdateFuturpediaTool } from 'src/backoffice/Infrastructure/Import/Tool/Futurpedia/UpdateFuturpediaTool';
-import { UpdateToolByLinkCommandHandler } from 'src/backoffice/Application/Command/Tool/UpdateToolByLinkCommandHandler';
-import { ImportFuturpediaTool } from 'src/backoffice/Infrastructure/Import/Tool/Futurpedia/ImportFuturpediaTool';
+import { ImportToolByLinkCommandHandler } from 'src/backoffice/Tool/Application/ImportToolByLinkCommandHandler';
+import { GetAllFuturpediaPageLinksQueryHandler } from 'src/backoffice/Tool/Application/GetAllFuturpediaPageLinksQueryHandler';
+import { UpdateFuturpediaTool } from 'src/backoffice/Tool/Infrastructure/UpdateFuturpediaTool';
+import { UpdateToolByLinkCommandHandler } from 'src/backoffice/Tool/Application/UpdateToolByLinkCommandHandler';
+import { ImportFuturpediaTool } from 'src/backoffice/Tool/Infrastructure/ImportFuturpediaTool';
 import { FuturpediaController } from './futurpedia.controller';
 import { BackofficeToolController } from '../BackofficeToolcontroller';
 
@@ -46,10 +45,6 @@ import { BackofficeToolController } from '../BackofficeToolcontroller';
         {
             provide: 'UpdateToolInterface',
             useClass: UpdateFuturpediaTool,
-        },
-        {
-            provide: 'GetFuturpediaPageLinksInterface', 
-            useClass: GetFuturpediaPageLinks
         }
     ]
  })

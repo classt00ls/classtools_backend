@@ -1,26 +1,29 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { ToolRepository } from "src/Shared/Domain/Repository/tool.repository";
-import { EventEmitter2 } from "@nestjs/event-emitter";
-import { TagRepository } from "src/Shared/Domain/Repository/tag.repository";
-import { ToolCreatedEvent } from "src/Shared/Domain/Event/Tool/ToolCreatedEvent";
-import { TagModel } from "src/Shared/Domain/Model/Tag/Tag.model";
-import { PuppeterScrapping } from "../../../../../Shared/Infrastructure/Import/puppeteer/PuppeterScrapping";
-import { GetToolTitle } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolTitle";
-import { GetToolTags } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolTags";
-import { GetToolPricing } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolPricing";
-import { GetToolStars } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolStars";
-import { GetToolFeatures } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolFeatures";
-import { GetToolDescription } from "src/backoffice/Domain/Service/Tool/Futurpedia/GetToolDescription";
+import { EventEmitter2 } from       "@nestjs/event-emitter";
+
+import { ToolRepository } from      "@Shared/Domain/Repository/tool.repository";
+import { TagRepository } from       "@Shared/Domain/Repository/tag.repository";
+import { ToolCreatedEvent } from    "@Shared/Domain/Event/Tool/ToolCreatedEvent";
+import { TagModel } from            "@Shared/Domain/Model/Tag/Tag.model";
+import { PuppeterScrapping } from   "@Shared/Infrastructure/Import/puppeteer/PuppeterScrapping";
+
+import { GetToolTitle } from        "src/backoffice/Tool/Domain/GetToolTitle";
+import { GetToolTags } from         "src/backoffice/Tool/Domain/GetToolTags";
+import { GetToolPricing } from      "src/backoffice/Tool/Domain/GetToolPricing";
+import { GetToolStars } from        "src/backoffice/Tool/Domain/GetToolStars";
+import { GetToolFeatures } from     "src/backoffice/Tool/Domain/GetToolFeatures";
+import { GetToolDescription } from  "src/backoffice/Tool/Domain/GetToolDescription";
 
 import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
 
-@Injectable()
+// Implementacio de ToolCreator
+// @TODO Ahora mismo aquí es donde se hace todo, intentar llevar lógica al dominio
 
+@Injectable()
 export class ImportFuturpediaTool extends PuppeterScrapping {
 
     constructor(
-        private readonly configService: ConfigService,
         private toolRepository: ToolRepository,
         private eventEmitter: EventEmitter2,
         private tagRepository: TagRepository
@@ -28,7 +31,40 @@ export class ImportFuturpediaTool extends PuppeterScrapping {
         super();
     }
 
-    async execute(link: string) {
+    async execute(url: string) {
+
+        let page = '';
+    
+        for(let i of [1,2,3,4,5,6]) {
+    
+          page = i==1 ? '' : '?page='+i;  
+    
+          const routeToscrap = url + page; 
+
+          let page_to_scrap = await this.getPage(routeToscrap);
+ 
+        // Recuperamos los links a la pagina de las tools en futurpedia de la ruta especificada
+        const links = await page_to_scrap.$$eval("div.items-start", (resultItems) => {
+            const urls = [];
+            resultItems.map(async resultItem => {
+                const url = resultItem.querySelector('a').href;
+                if(!urls.includes(url)) urls.push(url);
+            });
+            return urls;
+        })
+
+        await this.browser.close();
+
+    
+          for (let link of links) {
+
+            await this.importFromLink(link);
+
+          }
+        }
+    }
+
+    private async importFromLink(link: string) {
         let tool;
 
         try {
