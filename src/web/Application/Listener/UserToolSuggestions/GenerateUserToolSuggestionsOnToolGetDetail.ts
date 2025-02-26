@@ -3,7 +3,7 @@ import { OnEvent } from "@nestjs/event-emitter";
 import { UserToolSuggestionsSearcher } from "@Web/Application/Service/UserToolSuggestion/UserToolSuggestionsSearcher";
 import { ToolVisitedEvent } from "src/Shared/Application/Event/Tool/ToolVisitedEvent";
 import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
-import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
+import { UserWebId } from "@Web/UserWeb/Domain/UserWebId";
 
 @Injectable()
 export class GenerateUserToolSuggestionsOnToolGetDetail {

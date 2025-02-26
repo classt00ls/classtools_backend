@@ -8,8 +8,8 @@ import { CannotConnectToOllamaException } from "@Web/Infrastructure/exception/Ca
 
 import { UserToolSuggestions } from "src/web/Domain/Model/UserToolSuggestions/UserToolSuggestions";
 import { UserToolSuggestionsRepository } from "src/web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository";
-import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
-import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
+import { UserWebId } from "@Web/UserWeb/Domain/UserWebId";
+import { UserWebRepository } from "@Web/UserWeb/Domain/UserWebRepository";
 
 
 @Injectable()

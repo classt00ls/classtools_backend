@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
+import { UserWebCreatorRequest } from "@Web/UserWeb/Domain/UserWebCreatorRequest";
+import { UserWebCreator } from "@Web/UserWeb/Domain/UserWebCreator";
 import { SignupUserEvent } from "src/Shared/Domain/Event/User/SignupUserEvent";
-import { UserWebCreatorRequest } from "../../Request/UserWeb/UserWebCreatorRequest";
 import {v4} from 'uuid';
-import { UserWebCreator } from "../../Service/UserWeb/UserWebCreator";
 
 @Injectable()
 export class CreateUserWebOnSharedUserCreated {

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { UserToolSuggestions } from "src/web/Domain/Model/UserToolSuggestions/UserToolSuggestions";
 import { UserToolSuggestionsRepository } from "src/web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository";
-import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
+import { UserWebId } from "@Web/UserWeb/Domain/UserWebId";
 
 
 @Injectable()

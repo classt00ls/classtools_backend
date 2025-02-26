@@ -1,5 +1,5 @@
 import { UserWeb } from "@Web/UserWeb/Domain/UserWeb";
-import { UserWebExtractor } from "@Web/Domain/Service/UserWeb/UserWebExtractor";
+import { UserWebExtractor } from "@Web/UserWeb/Domain/UserWebExtractor";
 import { UserWebExtractorFromFirebase } from "./UserWebExtractorFromFirebase";
 import { UserWebExtractorFromJwt } from "./UserWebExtractorFromJwt";
 import { Injectable } from "@nestjs/common";

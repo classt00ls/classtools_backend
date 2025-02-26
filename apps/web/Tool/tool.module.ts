@@ -13,10 +13,10 @@ import { UserWebRepository } from                                   '@Web/Domain
 import { TypeormUserWebRepository } from                            '@Web/UserWeb/Infrastructure/Persistence/TypeOrm/TypeormUserWebRepository';
 import { GenerateUserToolSuggestionsOnToolGetDetail } from          '@Web/Application/Listener/UserToolSuggestions/GenerateUserToolSuggestionsOnToolGetDetail';
 
-import { UserWebExtractor } from                                    '@Web/Domain/Service/UserWeb/UserWebExtractor';
-import { UserWebExtractorFromFirebaseOrJwt } from                   '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromFirebaseOrJwt';
-import { UserWebExtractorFromFirebase } from                        '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromFirebase';
-import { UserWebExtractorFromJwt } from                             '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromJwt';
+import { UserWebExtractor } from                                    '@Web/UserWeb/Domain/UserWebExtractor';
+import { UserWebExtractorFromFirebaseOrJwt } from                   '@Web/UserWeb/Infrastructure/UserWebExtractorFromFirebaseOrJwt';
+import { UserWebExtractorFromFirebase } from                        '@Web/UserWeb/Infrastructure/UserWebExtractorFromFirebase';
+import { UserWebExtractorFromJwt } from                             '@Web/UserWeb/Infrastructure/UserWebExtractorFromJwt';
 import { ToolWebSchema } from                                       '@Web/Infrastructure/Persistence/typeorm/ToolWeb.schema';
 import { UserToolSuggestionsSearcher } from '@Web/Application/Service/UserToolSuggestion/UserToolSuggestionsSearcher';
 import { UserToolSuggestionsRepository } from '@Web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository';

@@ -5,7 +5,7 @@ import { GetUsuarioFromTokenQuery } from "./GetUsuarioFromTokenQuery";
 
 import { GetUsuarioFromTokenQueryResponse } from "./GetUsuarioFromTokenQueryResponse";
 
-import { UserWebExtractor } from "@Web/Domain/Service/UserWeb/UserWebExtractor";
+import { UserWebExtractor } from "@Web/UserWeb/Domain/UserWebExtractor";
 
 @Injectable()
 @QueryHandler(GetUsuarioFromTokenQuery)

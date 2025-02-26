@@ -11,6 +11,7 @@ import { GetDetailToolQuery } from 'src/web/Application/Query/Tool/GetDetailTool
 import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';
 import { FilterDto } from 'src/web/Application/Dto/Tool/filterTools.dto';
 import { PublicGuard } from 'src/Shared/Infrastructure/guards/public.guard';
+import { AuthGuard } from '@Shared/Infrastructure/guards/auth.guard';
 
 @Controller('tool')
 export class ToolController {
@@ -65,6 +66,26 @@ export class ToolController {
 
     return data;
   }
+  
+
+  @Get('favorite')
+  @UseGuards(AuthGuard)
+  @Serialize(getDetailToolDto)
+  async favorite(
+    @Request() request,
+    @Query('id') id: string
+  ) {
+
+    const userId = request.userId;
+    console.log('userId: ', userId);
+
+    const data = await this.queryBus.execute(
+      
+    );
+
+    return data;
+  }
+
 
   @Get('')
   async getJson() {

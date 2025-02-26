@@ -17,10 +17,10 @@ import { TypeormUserWebRepository } from  '@Web/UserWeb/Infrastructure/Persisten
 import { WebAuthController } from         '@web/auth/web-auth.controller';
 import { GetAuthTokenFromEmailQueryHandler } from '@Web/Application/Query/Auth/GetAuthTokenFromEmailQueryHandler';
 import { GetUsuarioFromTokenQueryHandler } from '@Web/Application/Query/Auth/GetUsuarioFromTokenQueryHandler';
-import { UserWebExtractor } from '@Web/Domain/Service/UserWeb/UserWebExtractor';
-import { UserWebExtractorFromFirebaseOrJwt } from '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromFirebaseOrJwt';
-import { UserWebExtractorFromFirebase } from '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromFirebase';
-import { UserWebExtractorFromJwt } from '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromJwt';
+import { UserWebExtractor } from '@Web/UserWeb/Domain/UserWebExtractor';
+import { UserWebExtractorFromFirebaseOrJwt } from '@Web/UserWeb/Infrastructure/UserWebExtractorFromFirebaseOrJwt';
+import { UserWebExtractorFromFirebase } from '@Web/UserWeb/Infrastructure/UserWebExtractorFromFirebase';
+import { UserWebExtractorFromJwt } from '@Web/UserWeb/Infrastructure/UserWebExtractorFromJwt';
 
 @Module({
   imports: [

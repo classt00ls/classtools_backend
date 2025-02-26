@@ -1,5 +1,5 @@
 import { AggregateRoot } from "../../../Shared/Domain/Model/AggregateRoot";
-import { UserWebId } from "../../Domain/ValueObject/UserWebId";
+import { UserWebId } from "./UserWebId";
 
 export type UserWebPrimitives = {
 	id: string;
@@ -49,38 +49,19 @@ export class UserWeb extends AggregateRoot{
         );
 	}
 
-	addvisitedTool(visitedTool: string): void {
-		let tools = JSON.parse(this.visitedTools);
-		const index = tools.findIndex(item => item['id'] == visitedTool);
-		// si no la teniamos la añadimos
-		if(index == -1) {
-			const new_element = {
-				id: visitedTool,
-				visited: 1
-			};
-			tools.push(new_element);
-			this.visitedTools = JSON.stringify(tools);
-			return;
-		}
-		
-		tools[index].visited = tools[index].visited + 1;
-		this.visitedTools = JSON.stringify(tools);
-	}
-
-	addFavorite(favoriteTool: string): void {
+	toggleFavorite(favoriteTool: string): void {
 		let favorites = JSON.parse(this.favorites);
 		const index = favorites.findIndex(item => item['id'] == favoriteTool);
-
-		// si no la teniamos la añadimos
-		if(index == -1) {
-			const new_element = {
-				id: favoriteTool,
-				visited: 1
-			};
-			favorites.push(new_element);
-			this.favorites = JSON.stringify(favorites);
-			return;
+	
+		if (index === -1) {
+			// Si no existe, lo añadimos
+			favorites.push({ id: favoriteTool, visited: 1 });
+		} else {
+			// Si existe, lo eliminamos
+			favorites.splice(index, 1);
 		}
+	
+		this.favorites = JSON.stringify(favorites);
 	}
 
 

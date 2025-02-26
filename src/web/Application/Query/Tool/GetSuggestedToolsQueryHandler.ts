@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { GetSuggestedToolsQuery } from "./GetSuggestedToolsQuery";
 import { ToolRepository } from "src/Shared/Domain/Repository/tool.repository";
 import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
-import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
+import { UserWebId } from "@Web/UserWeb/Domain/UserWebId";
 
 
 @QueryHandler(GetSuggestedToolsQuery)

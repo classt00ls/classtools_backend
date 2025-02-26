@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Request } from 'express';
-import { UserWebExtractor } from "@Web/Domain/Service/UserWeb/UserWebExtractor";
+import { UserWebExtractor } from "@Web/UserWeb/Domain/UserWebExtractor";
 
 @Injectable()
 export class TokenAuthGuard implements CanActivate {

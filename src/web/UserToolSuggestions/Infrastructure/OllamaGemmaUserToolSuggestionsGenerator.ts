@@ -4,7 +4,7 @@ import { RunnableSequence } from "@langchain/core/runnables";
 import { Ollama } from "@langchain/ollama";
 import { ConfigService } from "@nestjs/config";
 import { UserToolSuggestions } from "@Web/Domain/Model/UserToolSuggestions/UserToolSuggestions";
-import { UserWebId } from "@Web/Domain/ValueObject/UserWebId";
+import { UserWebId } from "@Web/UserWeb/Domain/UserWebId";
 
 export class OllamaGemmaUserToolSuggestionsGenerator {
 

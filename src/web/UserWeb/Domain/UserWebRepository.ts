@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { UserWeb } from "../../../UserWeb/Domain/UserWeb";
+import { UserWeb } from "@Web/UserWeb/Domain/UserWeb";
 import { InsertResult } from "typeorm";
 import { DatabaseWebUser } from "@Web/UserWeb/Infrastructure/Persistence/TypeOrm/DatabaseWebUser.schema";
-import { UserWebId } from "../../ValueObject/UserWebId";
+import { UserWebId } from "@Web/UserWeb/Domain/UserWebId";
 
 @Injectable()
 export abstract class UserWebRepository {
