@@ -8,11 +8,13 @@ import { GetFilteredToolsQuery } from '@Web/Tool/Application/search/GetFilteredT
 import { ToolSearchRequest } from './tool.search.request';
 import { ToolsSearchResponse } from './tool.search.response';
 import { CountToolsQuery } from '@Web/Application/Query/Tool/CountToolsQuery';
+import { ScrapeFromUrls } from '@Web/Tool/Infrastructure/ScrapeFromUrls';
 
 @Controller('tool/search')
 export class ToolSearchController {
   constructor(
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
+    private readonly scrapper: ScrapeFromUrls,
   ) {}
   
 
@@ -44,6 +46,17 @@ export class ToolSearchController {
       data,
       count
     }
+
+  }
+  
+
+  @Get('scrap')
+  async scrapPruebas(
+  ) {
+    
+    await this.scrapper.excecute();
+
+    return 'OK';
 
   }
   

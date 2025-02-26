@@ -18,7 +18,7 @@ export const UserWebSchema = new EntitySchema<DatabaseWebUser>({
     },
     favorites: {
       type: String,
-      nullable: false
+      nullable: true
     },
     visited_tools: {
       type: String,

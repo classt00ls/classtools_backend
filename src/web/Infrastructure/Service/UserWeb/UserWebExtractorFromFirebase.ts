@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { EventEmitter2, EventEmitterReadinessWatcher } from "@nestjs/event-emitter";
 import { DomainEvent } from "@Shared/Domain/Event/DomainEvent";
-import { UserWeb } from "@Web/Domain/Model/UserWeb/UserWeb";
+import { UserWeb } from "@Web/UserWeb/Domain/UserWeb";
 import { UserWebRepository } from "@Web/Domain/Repository/UserWeb/UserWebRepository";
 import { UserWebId } from "@Web/Domain/ValueObject/UserWebId";
 import * as admin from 'firebase-admin';

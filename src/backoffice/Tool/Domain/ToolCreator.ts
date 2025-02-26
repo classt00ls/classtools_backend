@@ -1,7 +1,6 @@
 
 interface ToolCreator {
     
-    // @TODO esto debe ser create
-	execute(url: string);
+	create(url: string);
 
 }

@@ -7,7 +7,7 @@ import { ToolTypeormRepository } from                       '@Web/Tool/Infrastru
 
 import { GetDetailToolQueryHandler } from                           '@Web/Application/Query/Tool/GetDetailToolQueryHandler';
 import { UserWebRepository } from                                   '@Web/Domain/Repository/UserWeb/UserWebRepository';
-import { TypeormUserWebRepository } from                            '@Web/Infrastructure/Repository/UserWeb/TypeormUserWebRepository';
+import { TypeormUserWebRepository } from                            '@Web/UserWeb/Infrastructure/Persistence/TypeOrm/TypeormUserWebRepository';
 import { GenerateUserToolSuggestionsOnToolGetDetail } from          '@Web/Application/Listener/UserToolSuggestions/GenerateUserToolSuggestionsOnToolGetDetail';
 import { UserWebExtractor } from                                    '@Web/Domain/Service/UserWeb/UserWebExtractor';
 import { UserWebExtractorFromFirebaseOrJwt } from                   '@Web/Infrastructure/Service/UserWeb/UserWebExtractorFromFirebaseOrJwt';
@@ -25,6 +25,7 @@ import { ToolSearcher } from '@Web/Tool/Application/search/ToolSearcher';
 import { UserToolSuggestionsSearcher } from '@Web/Application/Service/UserToolSuggestion/UserToolSuggestionsSearcher';
 import { UserToolSuggestionsRepository } from '@Web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository';
 import { OllamaLangchainUserToolSuggestionsRepository } from '@Web/UserToolSuggestions/Infrastructure/OllamaLangchainUserToolSuggestionsRepository';
+import { ScrapeFromUrls } from '@Web/Tool/Infrastructure/ScrapeFromUrls';
 
 @Module({
     imports: [
@@ -42,6 +43,7 @@ import { OllamaLangchainUserToolSuggestionsRepository } from '@Web/UserToolSugge
         GetDetailToolQueryHandler,
         ToolSearcher,
         GetFilteredToolsQueryHandler,
+        ScrapeFromUrls,
         UserToolSuggestionsSearcher,
         GenerateUserToolSuggestionsOnToolGetDetail,
         UserWebExtractorFromFirebase,

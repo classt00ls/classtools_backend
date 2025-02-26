@@ -1,4 +1,4 @@
-import { UserWeb } from "@Web/Domain/Model/UserWeb/UserWeb";
+import { UserWeb } from "@Web/UserWeb/Domain/UserWeb";
 
 
 export abstract class UserWebExtractor {

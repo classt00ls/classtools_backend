@@ -12,7 +12,7 @@ import { SignupUserCommandHandler } from  '@Shared/Application/Command/User/Sign
 import { jwtConstants } from              '@Shared/Infrastructure/jwt/constants';
 
 import { UserWebRepository } from         '@Web/Domain/Repository/UserWeb/UserWebRepository';
-import { TypeormUserWebRepository } from  '@Web/Infrastructure/Repository/UserWeb/TypeormUserWebRepository';
+import { TypeormUserWebRepository } from  '@Web/UserWeb/Infrastructure/Persistence/TypeOrm/TypeormUserWebRepository';
 
 import { WebAuthController } from         '@web/auth/web-auth.controller';
 import { GetAuthTokenFromEmailQueryHandler } from '@Web/Application/Query/Auth/GetAuthTokenFromEmailQueryHandler';

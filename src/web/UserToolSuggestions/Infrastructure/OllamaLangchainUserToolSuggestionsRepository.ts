@@ -91,8 +91,6 @@ export class OllamaLangchainUserToolSuggestionsRepository
 				visitedTools: ['chatgpt']
 			});
 
-			console.log('las suggestions:', suggestions);
-
 			return UserToolSuggestions.fromPrimitives({
 				userId: userId.value,
 				visitedTools: ['chatgpt'],

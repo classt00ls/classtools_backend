@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware } from "@nestjs/common";
 import { NextFunction, Request, Response } from "express";
 import { UserModel } from "src/Shared/Domain/Model/User/user.model";
-import { UserWeb } from "src/web/Domain/Model/UserWeb/UserWeb";
+import { UserWeb } from "@Web/UserWeb/Domain/UserWeb";
 
 
 

@@ -1,7 +1,5 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { GetAllFuturpediaPageLinksQuery } from 'src/backoffice/Tool/Application/GetAllFuturpediaPageLinksQuery';
-import { ImportToolInterface } from 'src/backoffice/Tool/Domain/ImportToolInterface';
 import { UpdateToolInterface } from 'src/backoffice/Tool/Domain/UpdateToolInterface';
 
 @Controller('backoffice/futurpedia')

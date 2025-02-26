@@ -1,8 +1,8 @@
-import { UserWeb } from "src/web/Domain/Model/UserWeb/UserWeb";
+import { UserWeb } from "@Web/UserWeb/Domain/UserWeb";
 import { UserWebId } from "src/web/Domain/ValueObject/UserWebId";
 import { DataSource, InsertResult, Repository } from "typeorm";
-import { DatabaseWebUser } from "../../Persistence/typeorm/DatabaseWebUser.schema";
-import { UserWebSchema } from "src/web/Infrastructure/Persistence/typeorm/DatabaseWebUser.schema";
+import { DatabaseWebUser } from "./DatabaseWebUser.schema";
+import { UserWebSchema } from "@Web/UserWeb/Infrastructure/Persistence/TypeOrm/DatabaseWebUser.schema";
 import { Injectable } from "@nestjs/common";
 import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
 

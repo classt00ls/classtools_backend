@@ -21,7 +21,7 @@ import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
 // @TODO Ahora mismo aquí es donde se hace todo, intentar llevar lógica al dominio
 
 @Injectable()
-export class ImportFuturpediaTool extends PuppeterScrapping {
+export class ImportFuturpediaToolVectorizer extends PuppeterScrapping {
 
     constructor(
         private toolRepository: ToolRepository,

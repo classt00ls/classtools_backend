@@ -14,6 +14,7 @@ export class CreateToolsCommandHandler {
 
     async execute(command: CreateToolsCommand) {
 
+        this.creator.create(command.url);
         
     }
 }

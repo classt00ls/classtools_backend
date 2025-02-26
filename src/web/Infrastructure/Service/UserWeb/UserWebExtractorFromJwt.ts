@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { jwtConstants } from "@Shared/Infrastructure/jwt/constants";
-import { UserWeb } from "@Web/Domain/Model/UserWeb/UserWeb";
+import { UserWeb } from "@Web/UserWeb/Domain/UserWeb";
 
 @Injectable()
 export class UserWebExtractorFromJwt {

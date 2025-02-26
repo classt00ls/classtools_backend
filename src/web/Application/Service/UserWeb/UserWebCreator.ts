@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { UserWebCreatorRequest } from "../../Request/UserWeb/UserWebCreatorRequest";
 import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
-import { UserWeb } from "src/web/Domain/Model/UserWeb/UserWeb";
+import { UserWeb } from "@Web/UserWeb/Domain/UserWeb";
 
 @Injectable()
 export class UserWebCreator {

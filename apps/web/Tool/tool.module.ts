@@ -10,7 +10,7 @@ import { CountToolsQueryHandler } from 'src/web/Application/Query/Tool/CountTool
 import { GetDetailToolQueryHandler } from 'src/web/Application/Query/Tool/GetDetailToolQueryHandler';
 
 import { UserWebRepository } from                                   '@Web/Domain/Repository/UserWeb/UserWebRepository';
-import { TypeormUserWebRepository } from                            '@Web/Infrastructure/Repository/UserWeb/TypeormUserWebRepository';
+import { TypeormUserWebRepository } from                            '@Web/UserWeb/Infrastructure/Persistence/TypeOrm/TypeormUserWebRepository';
 import { GenerateUserToolSuggestionsOnToolGetDetail } from          '@Web/Application/Listener/UserToolSuggestions/GenerateUserToolSuggestionsOnToolGetDetail';
 
 import { UserWebExtractor } from                                    '@Web/Domain/Service/UserWeb/UserWebExtractor';

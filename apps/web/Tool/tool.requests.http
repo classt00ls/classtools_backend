@@ -21,6 +21,9 @@ GET http://localhost:3000/tool/suggestions/prompt?prompt='soy profesor de ingles
 ### search tools
 GET http://localhost:3000/tool/search/?page=2&pageSize=2&filters[prompt]='programador'
 
+### scrap tools
+GET http://localhost:3000/tool/search/scrap
+
 ### get detail
 GET http://localhost:3000/tool/detail?id=21a63400-4dff-4d48-bb7c-ddf266abae20
 ###  get tags

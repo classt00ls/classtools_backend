@@ -1,4 +1,4 @@
-import { UserWeb } from "@Web/Domain/Model/UserWeb/UserWeb";
+import { UserWeb } from "@Web/UserWeb/Domain/UserWeb";
 import { UserWebExtractor } from "@Web/Domain/Service/UserWeb/UserWebExtractor";
 import { UserWebExtractorFromFirebase } from "./UserWebExtractorFromFirebase";
 import { UserWebExtractorFromJwt } from "./UserWebExtractorFromJwt";

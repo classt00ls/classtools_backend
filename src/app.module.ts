@@ -44,10 +44,10 @@ switch (process.env.NODE_ENV) {
     databaseConfig = [{
       type        : 'postgres', 
       host        : 'localhost',
-      port        : 5431,
-      synchronize : true,
-      username: 'classtools', 
-      password: 'classtools',
+      port        : 5432,
+      synchronize : false,
+      username: 'postgres', 
+      password: 'eurega',
       database: 'classtools',
       autoLoadEntities: true
     }

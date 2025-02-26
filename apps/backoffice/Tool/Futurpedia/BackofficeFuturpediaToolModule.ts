@@ -7,7 +7,6 @@ import { ToolTypeormRepository } from '@Web/Tool/Infrastructure/Persistence/Mysq
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
 import { ImportToolByLinkCommandHandler } from 'src/backoffice/Tool/Application/ImportToolByLinkCommandHandler';
-import { GetAllFuturpediaPageLinksQueryHandler } from 'src/backoffice/Tool/Application/GetAllFuturpediaPageLinksQueryHandler';
 import { UpdateFuturpediaTool } from 'src/backoffice/Tool/Infrastructure/UpdateFuturpediaTool';
 import { UpdateToolByLinkCommandHandler } from 'src/backoffice/Tool/Application/UpdateToolByLinkCommandHandler';
 import { ImportFuturpediaTool } from 'src/backoffice/Tool/Infrastructure/ImportFuturpediaTool';
@@ -28,7 +27,6 @@ import { BackofficeToolController } from '../BackofficeToolcontroller';
     ],
     providers: [
         ImportToolByLinkCommandHandler,
-        GetAllFuturpediaPageLinksQueryHandler,
         UpdateToolByLinkCommandHandler,
         {
             provide: ToolRepository,
