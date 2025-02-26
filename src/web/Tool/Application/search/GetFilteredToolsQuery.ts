@@ -1,4 +1,5 @@
-import { FilterDto } from "../../../Application/Dto/Tool/filterTools.dto";
+import { FilterDto } from "@Web/Tool/Domain/filterTools.dto";
+
 
 /**
  * @description Filtra las tools por los parámetros genéricos (page, pagesize, ...) y además por los parámetros de busqueda propios de las tools:

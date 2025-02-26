@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
 import { UserToolSuggestionsSearcher } from "@Web/Application/Service/UserToolSuggestion/UserToolSuggestionsSearcher";
 import { ToolVisitedEvent } from "src/Shared/Application/Event/Tool/ToolVisitedEvent";
-import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
+import { UserWebRepository } from "@Web/UserWeb/Domain/UserWebRepository";
 import { UserWebId } from "@Web/UserWeb/Domain/UserWebId";
 
 @Injectable()

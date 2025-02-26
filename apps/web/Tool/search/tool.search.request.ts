@@ -1,6 +1,6 @@
+import { FilterDto } from "@Web/Tool/Domain/filterTools.dto";
 import { Expose, Type } from "class-transformer";
 import { ValidateNested } from "class-validator";
-import { FilterDto } from "@Web/Application/Dto/Tool/filterTools.dto";
 
 export class ToolSearchRequest {
 

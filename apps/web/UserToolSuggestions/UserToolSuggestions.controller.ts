@@ -2,7 +2,6 @@ import { Body, Controller, Get, Inject, Query } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { getSuggestionsDto } from 'src/web/Application/Dto/Suggestions/getSuggestions.dto';
 // web application DTO
-import { getAllToolsDto } from 'src/web/Application/Dto/Tool/getAllTools.dto';
 import { UserToolSuggestionsSearcher } from 'src/web/Application/Service/UserToolSuggestion/UserToolSuggestionsSearcher';
 
 import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';

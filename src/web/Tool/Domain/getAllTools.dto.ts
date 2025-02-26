@@ -1,6 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import { ValidateNested } from "class-validator";
-import { ToolResponse } from "../../../Tool/Domain/tool.response";
+import { ToolResponse } from "./tool.response";
+
 
 export class getAllToolsDto {
 

@@ -49,6 +49,24 @@ export class UserWeb extends AggregateRoot{
         );
 	}
 
+	addvisitedTool(visitedTool: string): void {
+		let tools = JSON.parse(this.visitedTools);
+		const index = tools.findIndex(item => item['id'] == visitedTool);
+		// si no la teniamos la añadimos
+		if(index == -1) {
+			const new_element = {
+				id: visitedTool,
+				visited: 1
+			};
+			tools.push(new_element);
+			this.visitedTools = JSON.stringify(tools);
+			return;
+		}
+		
+		tools[index].visited = tools[index].visited + 1;
+		this.visitedTools = JSON.stringify(tools);
+	}
+
 	toggleFavorite(favoriteTool: string): void {
 		let favorites = JSON.parse(this.favorites);
 		const index = favorites.findIndex(item => item['id'] == favoriteTool);
@@ -62,18 +80,6 @@ export class UserWeb extends AggregateRoot{
 		}
 	
 		this.favorites = JSON.stringify(favorites);
-	}
-
-
-	removeFavorite(favoriteTool: string): void {
-		let favorites = JSON.parse(this.favorites);
-		const index = favorites.findIndex(item => item['id'] == favoriteTool);
-		
-		// Si lo encontramos, lo eliminamos
-		if (index !== -1) {
-			favorites.splice(index, 1);
-			this.favorites = JSON.stringify(favorites);
-		}
 	}
 
 	setSuggestions(suggestions: string) {

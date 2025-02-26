@@ -1,5 +1,4 @@
 import { UserWebId } from "@Web/UserWeb/Domain/UserWebId";
-import { UserWeb } from "@Web/UserWeb/Domain/UserWeb";
 import { UserWebRepository } from "@Web/UserWeb/Domain/UserWebRepository";
 
 
@@ -10,11 +9,15 @@ export class ToogleFavorite {
     ) {}
 
     public async execute(
-        userId: string,
+        userId: UserWebId,
         toolId: string
     ): Promise<void> 
     {
-        const user = await this.repository.search(new UserWebId(userId));
+        const user = await this.repository.search(userId);
+
+        user.toggleFavorite(toolId);
+
+        await this.repository.save(user);
 
     }
 

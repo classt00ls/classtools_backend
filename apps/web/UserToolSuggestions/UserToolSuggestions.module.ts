@@ -5,7 +5,7 @@ import { UserToolSuggestionsSearcher } from 'src/web/Application/Service/UserToo
 import { UserToolSuggestionsRepository } from "src/web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository";
 import { UserToolSuggestionsController } from './UserToolSuggestions.controller';
 import { TypeormUserWebRepository } from '@Web/UserWeb/Infrastructure/Persistence/TypeOrm/TypeormUserWebRepository';
-import { UserWebRepository } from 'src/web/Domain/Repository/UserWeb/UserWebRepository';
+import { UserWebRepository } from '@Web/UserWeb/Domain/UserWebRepository';
 import { UserWebSchema } from '@Web/UserWeb/Infrastructure/Persistence/TypeOrm/DatabaseWebUser.schema';
 import { OllamaLangchainUserToolSuggestionsRepository } from '@Web/UserToolSuggestions/Infrastructure/OllamaLangchainUserToolSuggestionsRepository';
 import { ToolWebSchema } from '@Web/Infrastructure/Persistence/typeorm/ToolWeb.schema';

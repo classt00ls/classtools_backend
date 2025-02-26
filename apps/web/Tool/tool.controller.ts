@@ -1,17 +1,18 @@
 import { Controller, Get, Query, Request, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 // web application DTO
-import { getAllToolsDto } from 'src/web/Application/Dto/Tool/getAllTools.dto';
-import { getDetailToolDto } from 'src/web/Application/Dto/Tool/getDetailTool.dto';
 // web application Queries
 import { CountToolsQuery } from 'src/web/Application/Query/Tool/CountToolsQuery';
 import { GetAllToolsQuery } from 'src/web/Application/Query/Tool/GetAllToolsQuery';
 import { GetDetailToolQuery } from 'src/web/Application/Query/Tool/GetDetailToolQuery';
 
 import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';
-import { FilterDto } from 'src/web/Application/Dto/Tool/filterTools.dto';
 import { PublicGuard } from 'src/Shared/Infrastructure/guards/public.guard';
 import { AuthGuard } from '@Shared/Infrastructure/guards/auth.guard';
+import { FilterDto } from '@Web/Tool/Domain/filterTools.dto';
+import { getDetailToolDto } from '@Web/Tool/Domain/getDetailTool.dto';
+import { getAllToolsDto } from '@Web/Tool/Domain/getAllTools.dto';
+import { ToggleFavoriteCommand } from '@Web/UserWeb/Application/ToggleFavoriteCommand';
 
 @Controller('tool')
 export class ToolController {
@@ -77,10 +78,12 @@ export class ToolController {
   ) {
 
     const userId = request.userId;
-    console.log('userId: ', userId);
 
     const data = await this.queryBus.execute(
-      
+       new ToggleFavoriteCommand(
+        userId,
+        id
+       )
     );
 
     return data;

@@ -2,7 +2,7 @@ import { QueryHandler } from "@nestjs/cqrs";
 import { Injectable } from "@nestjs/common";
 import { GetSuggestedToolsQuery } from "./GetSuggestedToolsQuery";
 import { ToolRepository } from "src/Shared/Domain/Repository/tool.repository";
-import { UserWebRepository } from "src/web/Domain/Repository/UserWeb/UserWebRepository";
+import { UserWebRepository } from "@Web/UserWeb/Domain/UserWebRepository";
 import { UserWebId } from "@Web/UserWeb/Domain/UserWebId";
 
 

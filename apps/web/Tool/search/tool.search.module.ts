@@ -6,7 +6,7 @@ import { ToolRepository } from                              'src/Shared/Domain/R
 import { ToolTypeormRepository } from                       '@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository';
 
 import { GetDetailToolQueryHandler } from                           '@Web/Application/Query/Tool/GetDetailToolQueryHandler';
-import { UserWebRepository } from                                   '@Web/Domain/Repository/UserWeb/UserWebRepository';
+
 import { TypeormUserWebRepository } from                            '@Web/UserWeb/Infrastructure/Persistence/TypeOrm/TypeormUserWebRepository';
 import { GenerateUserToolSuggestionsOnToolGetDetail } from          '@Web/Application/Listener/UserToolSuggestions/GenerateUserToolSuggestionsOnToolGetDetail';
 import { UserWebExtractor } from                                    '@Web/UserWeb/Domain/UserWebExtractor';
@@ -26,6 +26,7 @@ import { UserToolSuggestionsSearcher } from '@Web/Application/Service/UserToolSu
 import { UserToolSuggestionsRepository } from '@Web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository';
 import { OllamaLangchainUserToolSuggestionsRepository } from '@Web/UserToolSuggestions/Infrastructure/OllamaLangchainUserToolSuggestionsRepository';
 import { ScrapeFromUrls } from '@Web/Tool/Infrastructure/ScrapeFromUrls';
+import { UserWebRepository } from '@Web/UserWeb/Domain/UserWebRepository';
 
 @Module({
     imports: [

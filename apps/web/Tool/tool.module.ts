@@ -9,7 +9,6 @@ import { GetAllToolsQueryHandler } from 'src/web/Application/Query/Tool/GetAllTo
 import { CountToolsQueryHandler } from 'src/web/Application/Query/Tool/CountToolsQueryHandler';
 import { GetDetailToolQueryHandler } from 'src/web/Application/Query/Tool/GetDetailToolQueryHandler';
 
-import { UserWebRepository } from                                   '@Web/Domain/Repository/UserWeb/UserWebRepository';
 import { TypeormUserWebRepository } from                            '@Web/UserWeb/Infrastructure/Persistence/TypeOrm/TypeormUserWebRepository';
 import { GenerateUserToolSuggestionsOnToolGetDetail } from          '@Web/Application/Listener/UserToolSuggestions/GenerateUserToolSuggestionsOnToolGetDetail';
 
@@ -21,6 +20,7 @@ import { ToolWebSchema } from                                       '@Web/Infras
 import { UserToolSuggestionsSearcher } from '@Web/Application/Service/UserToolSuggestion/UserToolSuggestionsSearcher';
 import { UserToolSuggestionsRepository } from '@Web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository';
 import { OllamaLangchainUserToolSuggestionsRepository } from '@Web/UserToolSuggestions/Infrastructure/OllamaLangchainUserToolSuggestionsRepository';
+import { UserWebRepository } from '@Web/UserWeb/Domain/UserWebRepository';
 
 @Module({
     imports: [

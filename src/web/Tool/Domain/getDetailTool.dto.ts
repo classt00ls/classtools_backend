@@ -1,5 +1,6 @@
+import { TagDto } from "@Web/Application/Dto/Tag/tag.dto";
 import { Expose, Type } from "class-transformer";
-import { TagDto } from "../Tag/tag.dto";
+
 import { ValidateNested } from "class-validator";
 
 // Dto que se enviará al front de un lead

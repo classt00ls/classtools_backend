@@ -1,5 +1,8 @@
 
 
 export class ToggleFavoriteCommand {
-    constructor(){}
+    constructor(
+        public userId: string,
+        public toolId: string
+    ){}
 }

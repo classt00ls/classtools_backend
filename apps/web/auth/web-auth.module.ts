@@ -11,7 +11,6 @@ import { LoginUserCommandHandler } from   '@Shared/Application/Command/User/Logi
 import { SignupUserCommandHandler } from  '@Shared/Application/Command/User/SignupUserCommandHandler';
 import { jwtConstants } from              '@Shared/Infrastructure/jwt/constants';
 
-import { UserWebRepository } from         '@Web/Domain/Repository/UserWeb/UserWebRepository';
 import { TypeormUserWebRepository } from  '@Web/UserWeb/Infrastructure/Persistence/TypeOrm/TypeormUserWebRepository';
 
 import { WebAuthController } from         '@web/auth/web-auth.controller';
@@ -21,6 +20,7 @@ import { UserWebExtractor } from '@Web/UserWeb/Domain/UserWebExtractor';
 import { UserWebExtractorFromFirebaseOrJwt } from '@Web/UserWeb/Infrastructure/UserWebExtractorFromFirebaseOrJwt';
 import { UserWebExtractorFromFirebase } from '@Web/UserWeb/Infrastructure/UserWebExtractorFromFirebase';
 import { UserWebExtractorFromJwt } from '@Web/UserWeb/Infrastructure/UserWebExtractorFromJwt';
+import { UserWebRepository } from '@Web/UserWeb/Domain/UserWebRepository';
 
 @Module({
   imports: [

@@ -19,7 +19,7 @@ export class UserWebExtractorFromFirebase {
         if (!admin.apps.length) {
           admin.initializeApp({
             credential: admin.credential.cert(
-              path.resolve(__dirname, '../../../../../../misc/firebase.json') // Ruta a tu archivo JSON
+              path.resolve(__dirname, '../../../../../misc/firebase.json') // Ruta a tu archivo JSON
             ),
           });
         }

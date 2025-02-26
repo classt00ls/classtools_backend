@@ -2,9 +2,8 @@ import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GoogleGeminiProvider } from '@Shared/Infrastructure/IA/GoogleGeminiProvider';
 
-import { ToolSchema } from '@Shared/Infrastructure/Persistence/typeorm/tool.schema';
-import { ToolExportCommand } from '@Web/Application/Command/Tool/ToolExportCommand';
-import { getAllToolsDto } from 'src/web/Application/Dto/Tool/getAllTools.dto';
+import { ToolExportCommand } from '@Web/Tool/Application/ToolExportCommand';
+import { getAllToolsDto } from '@Web/Tool/Domain/getAllTools.dto';
 import { GetAllToolsQuery } from 'src/web/Application/Query/Tool/GetAllToolsQuery';
 import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';
 
