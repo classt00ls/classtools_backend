@@ -71,10 +71,10 @@ export class ToolController {
 
   @Get('favorite')
   @UseGuards(AuthGuard)
-  @Serialize(getDetailToolDto)
   async favorite(
     @Request() request,
-    @Query('id') id: string
+    @Query('id') id: string,
+    // @Query('user_id') user_id: string
   ) {
 
     const userId = request.userId;

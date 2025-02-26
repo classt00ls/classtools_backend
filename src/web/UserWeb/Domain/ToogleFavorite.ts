@@ -1,7 +1,8 @@
+import { Injectable } from "@nestjs/common";
 import { UserWebId } from "@Web/UserWeb/Domain/UserWebId";
 import { UserWebRepository } from "@Web/UserWeb/Domain/UserWebRepository";
 
-
+@Injectable()
 export class ToogleFavorite {
 
     constructor(

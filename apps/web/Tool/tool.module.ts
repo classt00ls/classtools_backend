@@ -21,6 +21,8 @@ import { UserToolSuggestionsSearcher } from '@Web/Application/Service/UserToolSu
 import { UserToolSuggestionsRepository } from '@Web/Domain/Repository/UserToolSuggestions/UserToolSuggestionsRepository';
 import { OllamaLangchainUserToolSuggestionsRepository } from '@Web/UserToolSuggestions/Infrastructure/OllamaLangchainUserToolSuggestionsRepository';
 import { UserWebRepository } from '@Web/UserWeb/Domain/UserWebRepository';
+import { ToggleFavoriteCommandHandler } from '@Web/UserWeb/Application/ToggleFavoriteCommandHandler';
+import { ToogleFavorite } from '@Web/UserWeb/Domain/ToogleFavorite';
 
 @Module({
     imports: [
@@ -36,8 +38,10 @@ import { UserWebRepository } from '@Web/UserWeb/Domain/UserWebRepository';
     providers: [
         CountToolsQueryHandler,
         GetAllToolsQueryHandler,
+        ToggleFavoriteCommandHandler,
         GetDetailToolQueryHandler,
         UserToolSuggestionsSearcher,
+        ToogleFavorite,
         GenerateUserToolSuggestionsOnToolGetDetail,
         UserWebExtractorFromFirebase,
         UserWebExtractorFromJwt,

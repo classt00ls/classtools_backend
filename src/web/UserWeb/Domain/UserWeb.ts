@@ -68,7 +68,17 @@ export class UserWeb extends AggregateRoot{
 	}
 
 	toggleFavorite(favoriteTool: string): void {
-		let favorites = JSON.parse(this.favorites);
+		let favorites = [];
+		
+		if (this.favorites) {
+			try {
+				favorites = JSON.parse(this.favorites);
+			} catch (error) {
+				console.error("Error al parsear favorites:", error);
+				favorites = [];
+			}
+		}
+		
 		const index = favorites.findIndex(item => item['id'] == favoriteTool);
 	
 		if (index === -1) {

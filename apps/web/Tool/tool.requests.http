@@ -28,3 +28,7 @@ GET http://localhost:3000/tool/search/scrap
 GET http://localhost:3000/tool/detail?id=21a63400-4dff-4d48-bb7c-ddf266abae20
 ###  get tags
 GET http://localhost:3000
+
+###  get Favorite
+GET http://localhost:3000/tool/favorite?id=028d0a1c-b347-48c6-a699-bd20639a4922&user_id=6kBhLnkAJPOxDMYEYQiA0NAP9iD3
+#GET http://localhost:3000/tool/favorite?id=028d0a1c-b347-48c6-a699-bd20639a4922&user_id=6kBhLnkAJPOxDMYEYQiA0NAP9iD3
