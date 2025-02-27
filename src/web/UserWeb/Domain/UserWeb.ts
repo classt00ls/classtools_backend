@@ -83,7 +83,7 @@ export class UserWeb extends AggregateRoot{
 	
 		if (index === -1) {
 			// Si no existe, lo añadimos
-			favorites.push({ id: favoriteTool, visited: 1 });
+			favorites.push(favoriteTool);
 		} else {
 			// Si existe, lo eliminamos
 			favorites.splice(index, 1);

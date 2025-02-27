@@ -13,6 +13,7 @@ import { FilterDto } from '@Web/Tool/Domain/filterTools.dto';
 import { getDetailToolDto } from '@Web/Tool/Domain/getDetailTool.dto';
 import { getAllToolsDto } from '@Web/Tool/Domain/getAllTools.dto';
 import { ToggleFavoriteCommand } from '@Web/UserWeb/Application/ToggleFavoriteCommand';
+import { TokenAuthGuard } from '@Web/Infrastructure/guard/token.auth.guard';
 
 @Controller('tool')
 export class ToolController {
@@ -70,7 +71,7 @@ export class ToolController {
   
 
   @Get('favorite')
-  @UseGuards(AuthGuard)
+  @UseGuards(TokenAuthGuard)
   async favorite(
     @Request() request,
     @Query('id') id: string,
