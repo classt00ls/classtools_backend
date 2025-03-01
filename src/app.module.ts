@@ -32,6 +32,7 @@ import { webRoutes } from                 '@web/web.routes';
 import { WebAuthModule } from             '@web/auth/web-auth.module';
 import { ToolSearchModule } from '@web/Tool/search/tool.search.module';
 import { GoogleGeminiProvider } from '@Shared/Infrastructure/IA/GoogleGeminiProvider';
+import { AgentModule } from 'apps/discover/Agent/AgentModule';
 
 const cookieSession = require('cookie-session');
 
@@ -102,6 +103,7 @@ const databaseModules = databaseConfig.map((config) =>
     ToolSearchModule,
     DiscoverToolModule,
     DiscoverAuthModule,
+    AgentModule,
     TagModule,
     BackofficeTagModule,
     BackofficeToolModule,
