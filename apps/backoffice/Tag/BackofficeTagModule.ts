@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ToolSchema } from 'src/Shared/Infrastructure/Persistence/typeorm/tool.schema';
+import { ToolSchema } from 'src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.schema';
 import { ToolRepository } from 'src/Shared/Domain/Repository/tool.repository';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
