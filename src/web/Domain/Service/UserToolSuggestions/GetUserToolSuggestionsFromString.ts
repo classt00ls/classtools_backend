@@ -1,4 +1,4 @@
-import { ToolRepository } from "src/Shared/Domain/Repository/tool.repository";
+import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
 
 
 export class GetUserToolSuggestionsFromString {

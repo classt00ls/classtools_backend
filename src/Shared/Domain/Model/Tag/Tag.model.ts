@@ -1,5 +1,5 @@
 import { BaseModel } from "../base.model";
-import { ToolModel } from "../Tool/tool.model";
+import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
 
 export class TagModel extends BaseModel {
   

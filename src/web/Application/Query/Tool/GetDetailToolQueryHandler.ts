@@ -1,6 +1,6 @@
 import { QueryHandler } from "@nestjs/cqrs";
 import { Injectable } from "@nestjs/common";
-import { ToolRepository } from "src/Shared/Domain/Repository/tool.repository";
+import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
 import { GetDetailToolQuery } from "./GetDetailToolQuery";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { ToolVisitedEvent } from "src/Shared/Application/Event/Tool/ToolVisitedEvent";

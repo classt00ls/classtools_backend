@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { UpdateToolByLinkCommand } from "./UpdateToolByLinkCommand";
-import { UpdateToolInterface } from "src/backoffice/Tool/Domain/UpdateToolInterface";
+import { UpdateToolInterface } from "@Backoffice//Tool/Domain/UpdateToolInterface";
 
 
 @CommandHandler(UpdateToolByLinkCommand)

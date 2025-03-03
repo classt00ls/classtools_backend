@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 
 import { DataSource, In, InsertResult, Like, MoreThan, Repository } from 'typeorm';
-import { ToolRepository } from "src/Shared/Domain/Repository/tool.repository";
-import { ToolSchema } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.schema";
-import { ToolModel } from "src/Shared/Domain/Model/Tool/tool.model";
+import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
+import { ToolSchema } from "@Backoffice//Tool/Infrastructure/Persistence/TypeOrm/tool.schema";
+import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
 import { ToolFilter } from "@Web/Tool/Domain/tool.filter";
 
 import * as fs from 'fs/promises';

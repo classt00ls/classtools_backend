@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 
-import { ToolRepository } from "src/Shared/Domain/Repository/tool.repository";
-import { GetToolPricing } from "src/backoffice/Tool/Domain/GetToolPricing";
+import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
+import { GetToolPricing } from "@Backoffice//Tool/Domain/GetToolPricing";
 import { PuppeterScrapping } from "../../../Shared/Infrastructure/Import/puppeteer/PuppeterScrapping";
-import { GetToolDescription } from "src/backoffice/Tool/Domain/GetToolDescription";
-import { GetToolFeatures } from "src/backoffice/Tool/Domain/GetToolFeatures";
-import { GetToolStars } from "src/backoffice/Tool/Domain/GetToolStars";
+import { GetToolDescription } from "@Backoffice//Tool/Domain/GetToolDescription";
+import { GetToolFeatures } from "@Backoffice//Tool/Domain/GetToolFeatures";
+import { GetToolStars } from "@Backoffice//Tool/Domain/GetToolStars";
 import { CannotUpdateToolException } from "src/Shared/Domain/Exception/Tool/CannotUpdateToolException";
 
 

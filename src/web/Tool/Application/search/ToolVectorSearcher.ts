@@ -1,6 +1,6 @@
 
 import { Injectable } from "@nestjs/common";
-import { ToolRepository } from "src/Shared/Domain/Repository/tool.repository";
+import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
 import { ToolVectorRepository } from "@Web/Tool/Domain/tool.vector.repository";
 
 

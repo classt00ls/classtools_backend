@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { EventEmitter2 } from       "@nestjs/event-emitter";
 
-import { ToolRepository } from      "@Shared/Domain/Repository/tool.repository";
+import { ToolRepository } from      "src/backoffice/Tool/Domain/tool.repository";
 import { TagRepository } from       "@Shared/Domain/Repository/tag.repository";
 import { ToolCreatedEvent } from    "@Shared/Domain/Event/Tool/ToolCreatedEvent";
 import { TagModel } from            "@Shared/Domain/Model/Tag/Tag.model";

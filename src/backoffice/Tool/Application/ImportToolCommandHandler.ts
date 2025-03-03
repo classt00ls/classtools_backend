@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { ImportToolInterface } from "src/backoffice/Tool/Domain/ImportToolInterface";
+import { ImportToolInterface } from "@Backoffice//Tool/Domain/ImportToolInterface";
 import { ImportToolCommand } from "./ImportToolCommand";
 
 
