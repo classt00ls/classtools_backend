@@ -1,8 +1,8 @@
 import { Module } from                                      '@nestjs/common';
 import { CqrsModule } from                                  '@nestjs/cqrs';
 import { TypeOrmModule } from                               '@nestjs/typeorm';
-import { ToolSchema } from                                  'src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.schema';
-import { ToolRepository } from                              'src/backoffice/Tool/Domain/tool.repository';
+import { ToolSchema } from                                  '@Backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.schema';
+import { ToolRepository } from                              '@Backoffice/Tool/Domain/tool.repository';
 import { ToolTypeormRepository } from                       '@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository';
 
 import { GetDetailToolQueryHandler } from                           '@Web/Application/Query/Tool/GetDetailToolQueryHandler';

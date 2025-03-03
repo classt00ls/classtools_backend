@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { UpgradeTagToCategoryCommand } from 'src/backoffice/Application/Command/Tag/UpgradeTagToCategoryCommand';
-import { UpgradeTagRequest } from 'src/backoffice/Application/Request/Tag/UpgradeTagRequest';
+import { UpgradeTagToCategoryCommand } from '@Backoffice/Application/Command/Tag/UpgradeTagToCategoryCommand';
+import { UpgradeTagRequest } from '@Backoffice/Application/Request/Tag/UpgradeTagRequest';
 
 @Controller('backoffice/category')
 export class BackofficeCategoryController {

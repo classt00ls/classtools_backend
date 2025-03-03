@@ -1,6 +1,6 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { UpdateToolInterface } from 'src/backoffice/Tool/Domain/UpdateToolInterface';
+import { UpdateToolInterface } from '@Backoffice/Tool/Domain/UpdateToolInterface';
 
 @Controller('backoffice/futurpedia')
 export class FuturpediaController {

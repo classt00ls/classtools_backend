@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Put, Query } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { UpdateTagCommand } from 'src/backoffice/Application/Command/Tag/UpdateTagCommand';
-import { UpdateTagRequest } from 'src/backoffice/Application/Request/Tag/UpdateTagRequest';
+import { UpdateTagCommand } from '@Backoffice/Application/Command/Tag/UpdateTagCommand';
+import { UpdateTagRequest } from '@Backoffice/Application/Request/Tag/UpdateTagRequest';
 
 @Controller('backoffice/tag')
 export class BackofficeTagController {
