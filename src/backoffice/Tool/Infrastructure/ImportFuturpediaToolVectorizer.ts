@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { EventEmitter2 } from       "@nestjs/event-emitter";
 
 import { ToolRepository } from      "@Shared/Domain/Repository/tool.repository";
@@ -7,8 +6,6 @@ import { TagRepository } from       "@Shared/Domain/Repository/tag.repository";
 import { ToolCreatedEvent } from    "@Shared/Domain/Event/Tool/ToolCreatedEvent";
 import { TagModel } from            "@Shared/Domain/Model/Tag/Tag.model";
 import { PuppeterScrapping } from   "@Shared/Infrastructure/Import/puppeteer/PuppeterScrapping";
-
-import { GetToolTitle } from        "src/backoffice/Tool/Domain/GetToolTitle";
 import { GetToolTags } from         "src/backoffice/Tool/Domain/GetToolTags";
 import { GetToolPricing } from      "src/backoffice/Tool/Domain/GetToolPricing";
 import { GetToolStars } from        "src/backoffice/Tool/Domain/GetToolStars";
@@ -16,6 +13,7 @@ import { GetToolFeatures } from     "src/backoffice/Tool/Domain/GetToolFeatures"
 import { GetToolDescription } from  "src/backoffice/Tool/Domain/GetToolDescription";
 
 import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
+import { GetToolFuturpediaTitle } from "../Domain/Futurpedia/GetToolFuturpediaTitle";
 
 // Implementacio de ToolCreator
 // @TODO Ahora mismo aquí es donde se hace todo, intentar llevar lógica al dominio
@@ -77,7 +75,7 @@ export class ImportFuturpediaToolVectorizer extends PuppeterScrapping {
         let page = await this.getPage(link);
 
         try {
-            const title = await GetToolTitle.execute(page);
+            const title = await GetToolFuturpediaTitle.execute(page);
             
             try {
                 await this.toolRepository.getOneByNameAndFail(title);

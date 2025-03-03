@@ -1,11 +1,11 @@
 
 ### Get futurpedia items
 
-POST http://localhost:3000/backoffice/futurpedia
+POST http://localhost:3000/backoffice/futurpedia/test
 Content-Type: application/json
 
 {
-    "link": "https://www.futurepedia.io/ai-tools/video-editing"
+    "link": "https://www.futurepedia.io/tool/capcut"
 }
 
 ### Update futurpedia items

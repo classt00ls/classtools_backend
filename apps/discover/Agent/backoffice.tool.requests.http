@@ -1,4 +1,4 @@
 
 ### Get futurpedia items
 
-GET http://localhost:3000/agent/ask
+GET http://localhost:3000/agent/ask?ask='dime algo de gatos'

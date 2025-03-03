@@ -2,5 +2,5 @@
 
 export interface ImportToolInterface {
 
-    execute(link: string);
+    import(link: string);
 }

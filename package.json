@@ -50,6 +50,8 @@
     "firebase-admin": "^13.0.2",
     "genkit": "^1.0.5",
     "genkitx-ollama": "^1.0.5",
+    "google-auth-library": "^9.15.1",
+    "googleapis": "^146.0.0",
     "langchain": "^0.3.8",
     "mysql2": "^3.11.4",
     "nestjs-modules": "^1.0.9",

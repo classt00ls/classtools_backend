@@ -9,9 +9,11 @@ export class AgentController {
   ) {}
 
   @Get('ask')
-  async ask() {
+  async ask(
+    @Query('ask') question: string
+  ) {
 
-    const response = this.respond.respond('Hi hola hallo ...  que mas idiomas sabes ?');
+    const response = this.respond.respond(question);
 
     return response;
     

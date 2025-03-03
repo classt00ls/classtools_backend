@@ -1,15 +1,30 @@
 import { ScrapConnectionProvider } from "src/Shared/Domain/Service/Tool/ScrapConnectionProvider";
 import { chromium } from "playwright";
 
-export class PlaywrightScrapProvider {
+export class PlaywrightScrapProvider extends ScrapConnectionProvider {
 
-    constructor() {
-    }
+    browser;
 
     async getConnection(): Promise<any> {
 
-        const browser = await chromium.launch({ headless: true });
-
-        return browser;
+        return chromium.launch({ headless: true });
     }
+
+    public async setBrowser() {
+
+        this.browser = await chromium.launch({ headless: true });
+
+    }
+
+    async getPage(url: string): Promise<any> {
+        
+        if(!this.browser) await this.setBrowser();
+        const page = await this.browser.newPage();
+    }
+
+    async closeBrowser(): Promise<any> {
+        await this.browser.close();
+        this.browser = null;
+    }
+
 }

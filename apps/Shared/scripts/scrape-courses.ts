@@ -37,6 +37,7 @@ async function scrapeCourse(url: string): Promise<Document> {
 		await page.goto(url);
 
 		const content = await page.evaluate(() => {
+			
 			const description =
 				document.querySelector("[class^='course_course__description']")
 					?.textContent ?? "";

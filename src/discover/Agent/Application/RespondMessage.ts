@@ -70,7 +70,8 @@ export class RespondMessage {
         const finalState = await graph.invoke({
             messages: [new HumanMessage($message)],
           });
-          console.log(finalState.messages[finalState.messages.length - 1].content);
+        
+          return finalState.messages[finalState.messages.length - 1].content;
     }
 
 

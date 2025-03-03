@@ -10,9 +10,10 @@ import { ImportToolByLinkCommandHandler } from 'src/backoffice/Tool/Application/
 import { UpdateFuturpediaTool } from 'src/backoffice/Tool/Infrastructure/UpdateFuturpediaTool';
 import { UpdateToolByLinkCommandHandler } from 'src/backoffice/Tool/Application/UpdateToolByLinkCommandHandler';
 import { ImportFuturpediaTool } from 'src/backoffice/Tool/Infrastructure/ImportFuturpediaTool';
-import { FuturpediaController } from './futurpedia.controller';
+import { FuturpediaTestController } from './futurpedia.test.controller';
 import { ScrapConnectionProvider } from '@Shared/Domain/Service/Tool/ScrapConnectionProvider';
 import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/PuppeterScrapConnectionProvider';
+import { PlaywrightScrapProvider } from '@Shared/Infrastructure/Scrap/PlaywrightScrapProvider';
 
 
 @Module({
@@ -24,7 +25,7 @@ import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/Pu
         CqrsModule
     ],
     controllers: [
-        FuturpediaController
+        FuturpediaTestController
     ],
     providers: [
         ImportToolByLinkCommandHandler,
@@ -32,7 +33,7 @@ import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/Pu
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,
-        },
+        }, 
         {
             provide: TagRepository,
             useClass: TagTypeormRepository,
@@ -47,8 +48,9 @@ import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/Pu
         },
         {
             provide: ScrapConnectionProvider,
-            useClass: PuppeterScrapConnectionProvider,
+            useClass: PuppeterScrapConnectionProvider
+            // useClass: PlaywrightScrapProvider,
         }
     ]
  })
-export class BackofficeFuturpediaToolModule {}
+export class BackofficeFuturpediaToolTestModule {}

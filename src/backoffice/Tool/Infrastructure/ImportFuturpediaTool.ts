@@ -1,14 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { EventEmitter2 } from       "@nestjs/event-emitter";
 
 import { ToolRepository } from      "@Shared/Domain/Repository/tool.repository";
 import { TagRepository } from       "@Shared/Domain/Repository/tag.repository";
 import { ToolCreatedEvent } from    "@Shared/Domain/Event/Tool/ToolCreatedEvent";
 import { TagModel } from            "@Shared/Domain/Model/Tag/Tag.model";
-import { PuppeterScrapping } from   "@Shared/Infrastructure/Import/puppeteer/PuppeterScrapping";
 
-import { GetToolTitle } from        "src/backoffice/Tool/Domain/GetToolTitle";
+import { GetToolFuturpediaTitle } from        "src/backoffice/Tool/Domain/Futurpedia/GetToolFuturpediaTitle";
 import { GetToolTags } from         "src/backoffice/Tool/Domain/GetToolTags";
 import { GetToolPricing } from      "src/backoffice/Tool/Domain/GetToolPricing";
 import { GetToolStars } from        "src/backoffice/Tool/Domain/GetToolStars";
@@ -16,76 +14,36 @@ import { GetToolFeatures } from     "src/backoffice/Tool/Domain/GetToolFeatures"
 import { GetToolDescription } from  "src/backoffice/Tool/Domain/GetToolDescription";
 
 import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
+import { ScrapConnectionProvider } from "@Shared/Domain/Service/Tool/ScrapConnectionProvider";
 
 // Implementacio de ToolCreator
 // @TODO Ahora mismo aquí es donde se hace todo, intentar llevar lógica al dominio
 
 @Injectable()
-export class ImportFuturpediaTool extends PuppeterScrapping {
+export class ImportFuturpediaTool {
 
     constructor(
         private toolRepository: ToolRepository,
         private eventEmitter: EventEmitter2,
-        private tagRepository: TagRepository
-    ) {
-        super();
-    }
+        private tagRepository: TagRepository,
+        private scrapProvider: ScrapConnectionProvider
+    ) {  }
 
-    async create(url: string) {
-
-        let page = '';
+    public async import(link: string) {
     
-        for(let i of [1,2,3,4,5,6]) {
-    
-          page = i==1 ? '' : '?page='+i;  
-    
-          const routeToscrap = url + page; 
-
-          let page_to_scrap = await this.getPage(routeToscrap);
- 
-        // Recuperamos los links a la pagina de las tools en futurpedia de la ruta especificada
-        const links = await page_to_scrap.$$eval("div.items-start", (resultItems) => {
-            const urls = [];
-            resultItems.map(async resultItem => {
-                const url = resultItem.querySelector('a').href;
-                if(!urls.includes(url)) urls.push(url);
-            });
-            return urls;
-        })
-
-        await this.browser.close();
-
-    
-          for (let link of links) {
-
-            await this.importFromLink(link);
-
-          }
-        }
-    }
-
-    private async importFromLink(link: string) {
         let tool;
 
         try {
             await this.toolRepository.getOneByLinkAndFail(link);
         } catch (error) {
-            console.log('Ja el tenim ...  continuem.')
-            return;
+            console.log('Ja el tenim ... <'+link+'>  continuem.')
+            // return;
         }
 
-        let page = await this.getPage(link);
+        let page = await this.scrapProvider.getPage(link);
 
         try {
-            const title = await GetToolTitle.execute(page);
-            
-            try {
-                await this.toolRepository.getOneByNameAndFail(title);
-            } catch(error) {
-                await this.browser.close();
-                return;
-            }
-
+            const title = await GetToolFuturpediaTitle.execute(page);
             const tags = await GetToolTags.execute(page);
             const pricing = await GetToolPricing.execute(page);
             const features = await GetToolFeatures.execute(page);
@@ -100,7 +58,7 @@ export class ImportFuturpediaTool extends PuppeterScrapping {
             tool = await this.toolRepository.create(
                 {
                     id: uuidv6(),
-                    name: title,
+                    name: title, 
                     excerpt,
                     link:link,
                     url,
@@ -126,7 +84,7 @@ export class ImportFuturpediaTool extends PuppeterScrapping {
         } catch (error) {
             console.log('error al scrapejar: ', error);
         }
-        await this.browser.close();
+        await this.scrapProvider.closeBrowser();
     }
 
 

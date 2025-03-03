@@ -7,10 +7,9 @@ export class PuppeterScrapping {
     connection_provider: PuppeterScrapConnectionProvider;
     browser: Browser;
 
-    constructor( ) {
-        this.connection_provider = new PuppeterScrapConnectionProvider(
-            'wss://brd-customer-hl_4b0402b9-zone-scraping_browser4:3qzhznkob4x4@brd.superproxy.io:9222'
-        );
+    constructor( 
+        
+    ) {
     }
 
     protected async getPage(url: string): Promise<Page> {

@@ -15,7 +15,6 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 
 import { BackofficeToolModule } from 'apps/backoffice/Tool/BackofficeToolModule';
 import { BackofficeTagModule } from 'apps/backoffice/Tag/BackofficeTagModule';
-import { BackofficeFuturpediaToolModule } from 'apps/backoffice/Tool/Futurpedia/BackofficeFuturpediaToolModule';
 import { OpenAIModule } from 'apps/discover/Tool/openAI/OpenAIModule';
 
 import { CurrentUserMiddleware } from '@Shared/Infrastructure/middlewares/current-user.middleware';
@@ -46,7 +45,7 @@ switch (process.env.NODE_ENV) {
       type        : 'postgres', 
       host        : 'localhost',
       port        : 5432,
-      synchronize : false,
+      synchronize : true,
       username: 'postgres', 
       password: 'eurega',
       database: 'classtools',
@@ -107,7 +106,6 @@ const databaseModules = databaseConfig.map((config) =>
     TagModule,
     BackofficeTagModule,
     BackofficeToolModule,
-    BackofficeFuturpediaToolModule,
     OpenAIModule,
     LangChainModule, 
     UsersModule,

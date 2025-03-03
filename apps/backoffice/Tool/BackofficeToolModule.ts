@@ -9,10 +9,14 @@ import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.
 import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
 import { ToolExportCommandHandler } from '@Web/Tool/Application/ToolExportCommandHandler';
 import { GoogleGeminiProvider } from '@Shared/Infrastructure/IA/GoogleGeminiProvider';
+import { BackofficeFuturpediaToolModule } from './Futurpedia/BackofficeFuturpediaToolModule';
+import { BackofficeFuturpediaToolTestModule } from './Futurpedia/BackofficeFuturpediaToolTestModule';
 
 
 @Module({
     imports: [
+        BackofficeFuturpediaToolModule,
+        BackofficeFuturpediaToolTestModule,
         TypeOrmModule.forFeature([
             ToolSchema,
             ToolRepository
