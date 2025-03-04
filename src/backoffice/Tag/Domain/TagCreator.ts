@@ -1,19 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { TagRepository } from '@Backoffice/Tag/Domain/tag.repository';
+import { Injectable } from "@nestjs/common";
+import { TagRepository } from "@Backoffice/Tag/Domain/tag.repository";
+import { v6 as uuidv6 } from 'uuid';
+import { TagModel } from "./Tag.model";
 
 @Injectable()
-export class CreateOnlyNewTagsService {
+export class TagCreator {
 
-    constructor(
-        private tagRepository: TagRepository
-        ) {}
-    
-    async execute(
-        tags: Array<string>
-    ) {
-        const allTagsAdded = [];
+    constructor(private tagRepository: TagRepository) {}
 
-        try {
+    public async extract(tags: string[]): Promise<TagModel[]> {
+
+        const allTagsToAdd = [];
+                
             for(let tag of tags) {
                 let new_tag;
                 // Evitem els duplicats
@@ -23,24 +21,20 @@ export class CreateOnlyNewTagsService {
 
                     new_tag = await this.tagRepository.create(
                         {
+                            id: uuidv6(),
                             name: tag
                         }
                     );
 
                     await this.tagRepository.insert(new_tag);
-                    allTagsAdded.push(new_tag);
                     
                 } catch (error) {
+                    new_tag = await this.tagRepository.getOneByNameOrFail(tag);
                 }
 
-                
+                allTagsToAdd.push(new_tag);
             }
 
-            return allTagsAdded;
-
-        } catch (error) {
-            // En este caso si el tool ya existe no hacemos nada
-        }
-        
+            return allTagsToAdd;
     }
 }

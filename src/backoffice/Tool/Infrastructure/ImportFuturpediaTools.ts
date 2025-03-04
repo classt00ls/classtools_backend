@@ -8,12 +8,12 @@
 // import { TagModel } from            "@Shared/Domain/Model/Tag/Tag.model";
 // import { PuppeterScrapping } from   "@Shared/Infrastructure/Import/puppeteer/PuppeterScrapping";
 
-// import { GetToolTitle } from        "src/backoffice/Tool/Domain/Futurpedia/GetToolFuturpediaTitle";
-// import { GetToolTags } from         "src/backoffice/Tool/Domain/GetToolTags";
-// import { GetToolPricing } from      "src/backoffice/Tool/Domain/GetToolPricing";
-// import { GetToolStars } from        "src/backoffice/Tool/Domain/GetToolStars";
-// import { GetToolFeatures } from     "src/backoffice/Tool/Domain/GetToolFeatures";
-// import { GetToolDescription } from  "src/backoffice/Tool/Domain/GetToolDescription";
+// import { GetToolTitle } from        "@Backoffice/Tool/Domain/Futurpedia/GetToolFuturpediaTitle";
+// import { GetToolTags } from         "@Backoffice/Tool/Domain/GetToolTags";
+// import { GetToolPricing } from      "@Backoffice/Tool/Domain/GetToolPricing";
+// import { GetToolStars } from        "@Backoffice/Tool/Domain/GetToolStars";
+// import { GetToolFeatures } from     "@Backoffice/Tool/Domain/GetToolFeatures";
+// import { GetToolDescription } from  "@Backoffice/Tool/Domain/GetToolDescription";
 
 // import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
 

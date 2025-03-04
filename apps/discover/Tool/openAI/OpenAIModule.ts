@@ -5,7 +5,7 @@ import { ToolSchema } from '@Backoffice/Tool/Infrastructure/Persistence/TypeOrm/
 import { ToolRepository } from '@Backoffice/Tool/Domain/tool.repository';
 import { ToolTypeormRepository } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
-import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
+import { TagRepository } from '@Backoffice/Tag/Domain/tag.repository';
 import { OpenAIcontroller } from './OpenAIcontroller';
 import { OpenAITextGenerator } from 'src/discover/Infrastructure/openAI/OpenAITextGenerator';
 import { OpenAIImageFromPromptGenerator } from 'src/discover/Infrastructure/openAI/OpenAIImageFromPromptGenerator';

@@ -6,7 +6,7 @@ import { ToolRepository } from '@Backoffice/Tool/Domain/tool.repository';
 import { ToolTypeormRepository } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository';
 import { BackofficeToolController } from './BackofficeToolcontroller';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
-import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
+import { TagRepository } from '@Backoffice/Tag/Domain/tag.repository';
 import { ToolExportCommandHandler } from '@Web/Tool/Application/ToolExportCommandHandler';
 import { GoogleGeminiProvider } from '@Shared/Infrastructure/IA/GoogleGeminiProvider';
 import { BackofficeFuturpediaToolModule } from './Futurpedia/BackofficeFuturpediaToolModule';

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TagRepository } from 'src/Shared/Domain/Repository/tag.repository';
+import { TagRepository } from '@Backoffice/Tag/Domain/tag.repository';
 import { ToolRepository } from '@Backoffice/Tool/Domain/tool.repository';
 
 @Injectable()

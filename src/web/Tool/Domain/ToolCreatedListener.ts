@@ -2,7 +2,7 @@ import { DistanceStrategy, PGVectorStore } from "@langchain/community/vectorstor
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { Injectable } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
-import { ToolCreatedEvent } from "src/Shared/Domain/Event/Tool/ToolCreatedEvent";
+import { ToolCreatedEvent } from "@Backoffice/Tool/Domain/ToolCreatedEvent";
 import { PoolConfig } from "pg";
 import { Document } from "@langchain/core/documents";
 import { Annotation, MessagesAnnotation, NodeInterrupt, StateGraph } from "@langchain/langgraph";

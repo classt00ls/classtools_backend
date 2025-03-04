@@ -1,65 +1,37 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { ImportToolInterface } from "@Backoffice//Tool/Domain/ImportToolInterface";
-import { EventEmitter2 } from "@nestjs/event-emitter";
-import { ToolCreatedEvent } from "@Shared/Domain/Event/Tool/ToolCreatedEvent";
+import { ScrapTool } from "@Backoffice/Tool/Domain/ScrapTool";
 import { ToolRepository } from "@Backoffice/Tool/Domain/tool.repository";
 import { ImportToolCommand } from "@Backoffice/Tool/Application/ImportToolCommand";
+import { ToolCreator } from "../Domain/ToolCreator";
+import { TagCreator } from "@Backoffice/Tag/Domain/TagCreator";
 
 
 @CommandHandler(ImportToolCommand)
 @Injectable()
 export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToolCommand>{
     constructor(
-        @Inject('ImportToolInterface') private readonly importTool: ImportToolInterface,
+        @Inject('ScrapTool') private readonly scrapTool: ScrapTool,
         private toolRepository: ToolRepository,
-        private eventEmitter: EventEmitter2
+        private creator: ToolCreator,
+        private tagCreator: TagCreator
     ) {}
 
     async execute(command: ImportToolCommand) {
 
         try {
+            // A este nivel el link donde escrapeamos es el identificador único
             await this.toolRepository.getOneByLinkAndFail(command.link);
         } catch (error) {
             console.log('Ja el tenim ... <'+command.link+'>  continuem.')
             // return;
         }
 
-        const tool = await this.importTool.import(command.link);
+        const tool = await this.scrapTool.scrap(command.link);
 
-// console.log(' --- ',tool.toPrimitives())
+        const tags_created = await this.tagCreator.extract(tool.tags);
 
-        // tool = await this.toolRepository.create(
-        //     {
-        //         id: uuidv6(),
-        //         name: title, 
-        //         excerpt,
-        //         link:link,
-        //         url,
-        //         pricing,
-        //         description,
-        //         features,
-        //         stars,
-        //         html
-        //     }
-        // );
-    
-
-        // const toolSaved = await this.toolRepository.save(tool);
-
-        this.eventEmitter.emit(
-            'backoffice.tool.created',
-            new ToolCreatedEvent(
-                tool.id,
-                tool.name,
-                tool.getTagsPrimitivesAsString(),
-                tool.description,
-                tool.price,
-                tool.url,
-                tool.html,
-                tool.video_html
-            ),
-        );
+        await this.creator.create(tool, tags_created);
 
     }
 }

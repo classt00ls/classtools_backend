@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { UpgradeTagToCategoryCommand } from "./UpgradeTagToCategoryCommand";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { TagUpgradedEvent } from "src/Shared/Domain/Event/Tag/TagUpgradedEvent";
-import { TagRepository } from "src/Shared/Domain/Repository/tag.repository";
+import { TagUpgradedEvent } from "@Backoffice/Tag/Domain/TagUpgradedEvent";
+import { TagRepository } from "@Backoffice/Tag/Domain/tag.repository";
 
 
 @CommandHandler(UpgradeTagToCategoryCommand)
