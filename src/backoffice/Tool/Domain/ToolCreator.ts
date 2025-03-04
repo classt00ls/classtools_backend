@@ -4,7 +4,9 @@ import { ScrapToolResponse } from "./ScrapResponse";
 import { ToolRepository } from "./tool.repository";
 import { v6 as uuidv6 } from 'uuid';
 import { TagModel } from "@Backoffice/Tag/Domain/Tag.model";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class ToolCreator {
 
 	constructor(
@@ -35,14 +37,14 @@ export class ToolCreator {
 		tool.tags = tags;
     
 
-        // await this.toolRepository.save(tool);
+        await this.toolRepository.save(tool);
 
         this.eventEmitter.emit(
             'backoffice.tool.created',
             new ToolCreatedEvent(
                 tool.id,
                 tool.name,
-                tool.getTagsPrimitivesAsString(),
+                tool.tags.join("\n"),
                 tool.description,
                 tool.pricing,
                 tool.url,

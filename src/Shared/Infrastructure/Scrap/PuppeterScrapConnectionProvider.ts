@@ -17,7 +17,7 @@ export class PuppeterScrapConnectionProvider extends ScrapConnectionProvider {
     ) {
         
         super()
-        this.provider_key = configService.getOrThrow('SBR_WS_ENDPOINT')
+        this.provider_key = configService.getOrThrow('SBR_WS_ENDPOINT');
         
     }
 

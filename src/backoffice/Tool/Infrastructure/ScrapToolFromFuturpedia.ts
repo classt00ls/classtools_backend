@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { TagRepository } from       "@Backoffice/Tag/Domain/tag.repository";
 
 import { GetToolFuturpediaTitle } from        "@Backoffice/Tool/Domain/Futurpedia/GetToolFuturpediaTitle";
 import { GetToolTags } from         "@Backoffice/Tool/Domain/GetToolTags";
@@ -18,15 +17,16 @@ import { ScrapToolResponse } from "../Domain/ScrapResponse";
 export class ScrapToolFromFuturpedia {
 
     constructor(
-        private tagRepository: TagRepository,
         private scrapProvider: ScrapConnectionProvider
     ) {  }
 
-    public async import(link: string) {
-    
-        let tool;
-
-        let page = await this.scrapProvider.getPage(link);
+    public async scrap(link: string) {
+        let page;
+        try {
+            page = await this.scrapProvider.getPage(link);
+        } catch (error) {
+            console.log('Falla el crap provider');
+        }
 
         try {
             const title = await GetToolFuturpediaTitle.execute(page);

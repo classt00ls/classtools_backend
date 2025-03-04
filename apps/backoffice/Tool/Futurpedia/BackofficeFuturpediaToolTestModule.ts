@@ -16,6 +16,7 @@ import { ChatTogetherModelProvider } from 'src/discover/Agent/Infrastructure/Cha
 import { ScrapToolFromFuturpedia } from '@Backoffice/Tool/Infrastructure/ScrapToolFromFuturpedia';
 import { TagCreator } from '@Backoffice/Tag/Domain/TagCreator';
 import { ToolCreator } from '@Backoffice/Tool/Domain/ToolCreator';
+import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/PuppeterScrapConnectionProvider';
 
 
 @Module({
@@ -53,8 +54,8 @@ import { ToolCreator } from '@Backoffice/Tool/Domain/ToolCreator';
         },
         {
             provide: ScrapConnectionProvider,
-            // useClass: PuppeterScrapConnectionProvider
-            useClass: PlaywrightScrapProvider
+            useClass: PuppeterScrapConnectionProvider
+            // useClass: PlaywrightScrapProvider
         }
     ]
  })

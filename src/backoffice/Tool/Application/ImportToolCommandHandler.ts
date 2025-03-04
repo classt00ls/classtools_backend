@@ -26,8 +26,10 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
             console.log('Ja el tenim ... <'+command.link+'>  continuem.')
             // return;
         }
-
+        
         const tool = await this.scrapTool.scrap(command.link);
+
+        
 
         const tags_created = await this.tagCreator.extract(tool.tags);
 
