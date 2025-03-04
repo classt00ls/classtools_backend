@@ -43,12 +43,12 @@ export const ToolSchema = new EntitySchema<ToolModel>({
       nullable: true
     },
     deleted: {
-      type: "integer",
-      default: 0
+      type: Boolean,
+      default: false
     },
     uploaded: {
-      type: "integer",
-      default: 0
+      type: Boolean,
+      default: false
     },
     status: {
       type: String,
@@ -66,6 +66,10 @@ export const ToolSchema = new EntitySchema<ToolModel>({
       type: String,
       nullable: true
     },
+    html: {
+      type: String,
+      nullable: true
+    }
   },
   relations: {
     tags: {

@@ -20,6 +20,8 @@ export class PlaywrightScrapProvider extends ScrapConnectionProvider {
         
         if(!this.browser) await this.setBrowser();
         const page = await this.browser.newPage();
+        await page.goto(url);
+        return page;
     }
 
     async closeBrowser(): Promise<any> {

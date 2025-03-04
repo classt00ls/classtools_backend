@@ -11,6 +11,8 @@ export class ToolModel extends BaseModel {
 
   uploaded: boolean;
 
+  status: ToolStatus = 'published';
+
   private constructor(
 		public readonly id: string,
 		public name: string,
@@ -22,9 +24,13 @@ export class ToolModel extends BaseModel {
     public tags: TagModel[],
     public link: string,
     public url: string,
-    public status: ToolStatus
+    public html: string,
+    public video_html: string
     ){
+
+      
 		super();
+    
     this.deleted = false;
     this.uploaded = true;
 	}
@@ -49,7 +55,8 @@ export class ToolModel extends BaseModel {
       id: this.id,
       name: this.name,
       excerpt: this.excerpt,
-      url: this.url
+      url: this.url,
+      stars: this.stars
     }
   }
 
@@ -64,7 +71,8 @@ export class ToolModel extends BaseModel {
     tags: TagModel[],
     link: string,
     url: string,
-    status: ToolStatus
+    html: string,
+    video_html: string
   ) {
     return new ToolModel(
       id,
@@ -77,7 +85,18 @@ export class ToolModel extends BaseModel {
       tags,
       link,
       url,
-      status
+      html,
+      video_html
     )
+  }
+
+  getTagsPrimitives() {
+    return this.tags.map(tag => tag.toPrimitives());
+  }
+
+  getTagsPrimitivesAsString(): string {
+    return this.tags
+      .map(tag => Object.values(tag.toPrimitives()).join(', '))
+      .join(', ');
   }
 }

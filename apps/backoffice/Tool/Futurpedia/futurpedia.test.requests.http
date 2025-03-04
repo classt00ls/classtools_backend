@@ -5,7 +5,7 @@ POST http://localhost:3000/backoffice/futurpedia/test
 Content-Type: application/json
 
 {
-    "link": "https://www.futurepedia.io/tool/capcut"
+    "link": "https://www.futurepedia.io/tool/hubspot"
 }
 
 ### Update futurpedia items

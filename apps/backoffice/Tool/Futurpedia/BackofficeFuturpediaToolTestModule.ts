@@ -14,6 +14,7 @@ import { FuturpediaTestController } from './futurpedia.test.controller';
 import { ScrapConnectionProvider } from '@Shared/Domain/Service/Tool/ScrapConnectionProvider';
 import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/PuppeterScrapConnectionProvider';
 import { PlaywrightScrapProvider } from '@Shared/Infrastructure/Scrap/PlaywrightScrapProvider';
+import { ChatTogetherModelProvider } from 'src/discover/Agent/Infrastructure/ChatTogetherModelProvider';
 
 
 @Module({
@@ -30,6 +31,7 @@ import { PlaywrightScrapProvider } from '@Shared/Infrastructure/Scrap/Playwright
     providers: [
         ImportToolByLinkCommandHandler,
         UpdateToolByLinkCommandHandler,
+        ChatTogetherModelProvider,
         {
             provide: ToolRepository,
             useClass: ToolTypeormRepository,

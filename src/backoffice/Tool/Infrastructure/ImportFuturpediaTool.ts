@@ -1,9 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { EventEmitter2 } from       "@nestjs/event-emitter";
-
-import { ToolRepository } from      "src/backoffice/Tool/Domain/tool.repository";
 import { TagRepository } from       "@Shared/Domain/Repository/tag.repository";
-import { ToolCreatedEvent } from    "@Shared/Domain/Event/Tool/ToolCreatedEvent";
 import { TagModel } from            "@Shared/Domain/Model/Tag/Tag.model";
 
 import { GetToolFuturpediaTitle } from        "src/backoffice/Tool/Domain/Futurpedia/GetToolFuturpediaTitle";
@@ -15,6 +11,7 @@ import { GetToolDescription } from  "src/backoffice/Tool/Domain/GetToolDescripti
 
 import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
 import { ScrapConnectionProvider } from "@Shared/Domain/Service/Tool/ScrapConnectionProvider";
+import { ToolModel } from "../Domain/tool.model";
 
 // Implementacio de ToolCreator
 // @TODO Ahora mismo aquí es donde se hace todo, intentar llevar lógica al dominio
@@ -23,8 +20,6 @@ import { ScrapConnectionProvider } from "@Shared/Domain/Service/Tool/ScrapConnec
 export class ImportFuturpediaTool {
 
     constructor(
-        private toolRepository: ToolRepository,
-        private eventEmitter: EventEmitter2,
         private tagRepository: TagRepository,
         private scrapProvider: ScrapConnectionProvider
     ) {  }
@@ -32,13 +27,6 @@ export class ImportFuturpediaTool {
     public async import(link: string) {
     
         let tool;
-
-        try {
-            await this.toolRepository.getOneByLinkAndFail(link);
-        } catch (error) {
-            console.log('Ja el tenim ... <'+link+'>  continuem.')
-            // return;
-        }
 
         let page = await this.scrapProvider.getPage(link);
 
@@ -52,39 +40,41 @@ export class ImportFuturpediaTool {
             
             const url = await page.$eval('div.mt-4.flex.flex-wrap.gap-4 > a', reference => reference.href);
             const excerpt = await page.$eval('p.my-2', desc => desc.innerText);
+
+            const bodyContent = await page.$eval(
+                'div.mx-auto.mt-4.grid.max-w-7xl.grid-cols-1.gap-8.px-4.md\\:grid-cols-\\[3fr_1fr\\].xl\\:px-0',
+                (element) => element.innerHTML
+              );
             
+              const video_content = await page.$eval(
+                '.react-player.aspect-video.max-w-full.rounded-lg.shadow-lg', // Usando clases como selector
+                (element) => element.innerHTML
+              );
+
             const allTagsToAdd: TagModel[] = await this.getAllTagsToAddAndSaveNew(tags);
+
+            await this.scrapProvider.closeBrowser();
             
-            tool = await this.toolRepository.create(
-                {
-                    id: uuidv6(),
-                    name: title, 
-                    excerpt,
-                    link:link,
-                    url,
-                    pricing,
-                    description,
-                    features,
-                    stars
-                }
-            );
-
-            tool.tags = allTagsToAdd;
-
-            const toolSaved = await this.toolRepository.save(tool);
-
-            this.eventEmitter.emit(
-                'backoffice.tool.created',
-                new ToolCreatedEvent(
-                    toolSaved.id,
-                    toolSaved.name,
-                    tags
-                ),
-            );
+            // @TODO esto es una guarrada, lo de los tags pff ...
+            return ToolModel.fromPrimitives(
+                uuidv6(),
+                title,
+                pricing,
+                stars,
+                description,
+                features,
+                excerpt,
+                allTagsToAdd,
+                link,
+                url,
+                bodyContent,
+                video_content
+            )
+            
         } catch (error) {
             console.log('error al scrapejar: ', error);
         }
-        await this.scrapProvider.closeBrowser();
+        
     }
 
 

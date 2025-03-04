@@ -133,7 +133,8 @@ export class ToolTypeormRepository extends ToolRepository {
       response.tags,
       response.link,
       response.url,
-      response.status
+      response.html,
+      ''
     );
   }
 

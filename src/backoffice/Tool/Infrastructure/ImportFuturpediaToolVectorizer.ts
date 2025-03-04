@@ -113,14 +113,14 @@ export class ImportFuturpediaToolVectorizer extends PuppeterScrapping {
 
             const toolSaved = await this.toolRepository.save(tool);
 
-            this.eventEmitter.emit(
-                'backoffice.tool.created',
-                new ToolCreatedEvent(
-                    toolSaved.id,
-                    toolSaved.name,
-                    tags
-                ),
-            );
+            // this.eventEmitter.emit(
+            //     'backoffice.tool.created',
+            //     new ToolCreatedEvent(
+            //         toolSaved.id,
+            //         toolSaved.name,
+            //         tags
+            //     ),
+            // );
         } catch (error) {
             console.log('error al scrapejar: ', error);
         }

@@ -32,6 +32,8 @@ import { WebAuthModule } from             '@web/auth/web-auth.module';
 import { ToolSearchModule } from '@web/Tool/search/tool.search.module';
 import { GoogleGeminiProvider } from '@Shared/Infrastructure/IA/GoogleGeminiProvider';
 import { AgentModule } from 'apps/discover/Agent/AgentModule';
+import { ToolCreatedListener } from '@Web/Tool/Domain/ToolCreatedListener';
+import { ChatTogetherModelProvider } from './discover/Agent/Infrastructure/ChatTogetherModelProvider';
 
 const cookieSession = require('cookie-session');
 
@@ -157,6 +159,8 @@ const databaseModules = databaseConfig.map((config) =>
 ],
   controllers: [AppController],
   providers: [
+    ChatTogetherModelProvider,
+    ToolCreatedListener,
     GoogleGeminiProvider,
     AppService,
     QueryBus,
