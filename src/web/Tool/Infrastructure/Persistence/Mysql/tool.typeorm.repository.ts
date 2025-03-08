@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 
 import { DataSource, In, InsertResult, Like, MoreThan, Repository } from 'typeorm';
 import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
@@ -10,7 +10,7 @@ import * as fs from 'fs/promises';
 
 @Injectable()
 export class ToolTypeormRepository extends ToolRepository {
-  
+  private readonly logger = new Logger(ToolTypeormRepository.name);
   private repository : Repository<ToolModel>;
 
   constructor(
@@ -24,35 +24,25 @@ export class ToolTypeormRepository extends ToolRepository {
   async getAll(
     filter: ToolFilter
   ): Promise<ToolModel[]> {
-
-// console.log(filter)
-
     return this.repository.find({
       skip: filter.getPage(),
       take: filter.getPageSize(),
       relations: ['tags'],
       where: {
-        // ...(filter.getTitle() != '' && {name: Like(`%${filter.getTitle()}%`)}),
-        ...(filter.getTags()?.length > 0 && {tags: {name: In(filter.getTags())}}),
-        // ...(filter.getStars() && {stars: MoreThan(filter.getStars()) })
+        ...(filter.getTags()?.length > 0 && {tags: {name: In(filter.getTags())}})
       }
     });
-
   }
 
   async getOne(
     id: string
   ): Promise<ToolModel> {
-
-// console.log(filter)
-
     return this.repository.findOne({
       relations: ['tags'],
       where: {
         id: id
       }
     });
-
   }
 
   async create(
@@ -68,7 +58,14 @@ export class ToolTypeormRepository extends ToolRepository {
   }
 
   async save(model: ToolModel): Promise<ToolModel> {
-    return this.repository.save(model);
+    try {
+      const result = await this.repository.save(model);
+      this.logger.debug(`Tool guardada correctamente: ${model.name} (${model.id})`);
+      return result;
+    } catch (error) {
+      this.logger.error(`Error al guardar tool ${model.name} (${model.id}): ${error.message}`);
+      throw error;
+    }
   }
 
   async getOneByIdOrFail(
@@ -79,15 +76,11 @@ export class ToolTypeormRepository extends ToolRepository {
   }
 
   async count( 
-    tags: Array<string>,
-    // stars: number,
-    // title: string
+    tags: Array<string>
   ): Promise<number> {
     const response = await this.repository.count({
         where: {
-          // ...(title != '' && {name: Like(`%${title}%`)}),
-          ...(tags?.length > 0 && {tags: {name: In(tags)}}),
-          // ...(stars && {stars: MoreThan(stars) })
+          ...(tags?.length > 0 && {tags: {name: In(tags)}})
         }  
     });
     return response;
@@ -96,56 +89,64 @@ export class ToolTypeormRepository extends ToolRepository {
   async getOneByNameAndFail(name: string) {
     try {
       await this.repository.findOneByOrFail({name});
-      
     } catch (error) {
-      console.log("El tool " + name + " NO existe")
+
       return;
     }
-    console.log("El tool " + name + " SI existe")
-    throw new Error("La tool " + name + " ya existe");
+    throw new Error(`La tool ${name} ya existe`);
   }
 
   async getOneByLinkAndFail(link: string) {
     try {
       await this.repository.findOneByOrFail({link});
-      
     } catch (error) {
-      console.log("El tool " + link + " NO existe")
+      this.logger.debug(`Tool con link ${link} no existe`);
       return;
     }
-    console.log("El tool " + link + " SI existe")
-    throw new Error("La tool " + link + " ya existe");
+    this.logger.debug(`Tool con link ${link} ya existe`);
+    throw new Error(`La tool con link ${link} ya existe`);
   }
 
   async getOneByLinkOrFail(link: string): Promise<ToolModel> {
-    
     return await this.repository.findOneByOrFail({link});
   }
 
   async getOneByNameOrFail(name: string): Promise<ToolModel> {
-    const response = await this.repository.findOneByOrFail({name});
+    try {
+      const response = await this.repository.findOneByOrFail({name});
 
-    return ToolModel.fromPrimitives(
-      response.id,
-      response.name,
-      response.pricing,
-      response.stars,
-      response.description,
-      response.features,
-      response.excerpt,
-      response.tags,
-      response.link,
-      response.url,
-      response.html,
-      response.video_html,
-      response.video_url,
-      response.prosAndCons
-    );
+      return ToolModel.fromPrimitives(
+        response.id,
+        response.name,
+        response.pricing,
+        response.stars,
+        response.description,
+        response.features,
+        response.excerpt,
+        response.tags,
+        response.link,
+        response.url,
+        response.html,
+        response.video_html,
+        response.video_url,
+        response.prosAndCons,
+        response.ratings
+      );
+    } catch (error) {
+      this.logger.error(`Error al obtener tool por nombre ${name}: ${error.message}`);
+      throw error;
+    }
   }
 
   async export(): Promise<void> {
-    const tools = await this.repository.find();
-    const jsonContent = JSON.stringify(tools, null, 2);
-    await fs.writeFile('tools.json', jsonContent);
+    try {
+      const tools = await this.repository.find();
+      const jsonContent = JSON.stringify(tools, null, 2);
+      await fs.writeFile('tools.json', jsonContent);
+      this.logger.log('Exportación de tools completada exitosamente');
+    } catch (error) {
+      this.logger.error(`Error al exportar tools: ${error.message}`);
+      throw error;
+    }
   }
 }

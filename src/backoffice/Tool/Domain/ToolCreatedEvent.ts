@@ -10,6 +10,7 @@ export class ToolCreatedEvent {
   video_content: string;
   video_url: string;
   prosAndCons: string;
+  ratings: string;
 
   constructor(
     id: string,
@@ -21,7 +22,8 @@ export class ToolCreatedEvent {
     html: string,
     video_content: string,
     video_url: string,
-    prosAndCons: string
+    prosAndCons: string,
+    ratings: string
   ) {
     
     this.id = id;
@@ -34,6 +36,7 @@ export class ToolCreatedEvent {
     this.video_content = video_content;
     this.video_url = video_url;
     this.prosAndCons = prosAndCons;
+    this.ratings = ratings;
   }
   
 }

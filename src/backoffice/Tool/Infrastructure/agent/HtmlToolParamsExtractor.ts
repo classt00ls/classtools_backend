@@ -1,16 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ChatTogetherModelProvider } from '@Shared/Infrastructure/IA/ChatTogetherModelProvider';
 import { HumanMessage } from '@langchain/core/messages';
 import zodToJsonSchema from 'zod-to-json-schema';
 import { z } from 'zod';
 import { ToolParamsExtractor } from '../../Domain/ToolParamsExtractor';
 
+type MultiLanguageResponse<T> = {
+    es: T;
+    en: T;
+};
+
 @Injectable()
 export class HtmlToolParamsExtractor implements ToolParamsExtractor {
+    private readonly logger = new Logger(HtmlToolParamsExtractor.name);
     private model;
 
     constructor(
-        private modelProvider: ChatTogetherModelProvider
+        private readonly modelProvider: ChatTogetherModelProvider
     ) {
         this.model = modelProvider.provide();
     }
@@ -78,121 +84,37 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
         }
     }
 
-    async extractProsAndCons(html: string): Promise<{ analysis: string, structuredData: { pros: string[], cons: string[] } }> {
-        const SYSTEM_TEMPLATE =
-            `You are an expert web content analyst specialized in artificial intelligence (AI) products.
-        Your task is to analyze a webpage and extract key information about the AI described.
-        Focus specifically on identifying the explicitly mentioned advantages (pros) and disadvantages (cons) of this AI tool.
-        You can infer information—extract, not only what is explicitly stated.
-        The response must be in spanish.
-        Format the pros and cons using HTML list items (<li>) instead of asterisks or numbers.
-        The response should follow this format:
-
-        <h2>Análisis de Ventajas y Desventajas de [Tool Name]</h2>
-
-        <h3>Ventajas (Pros)</h3>
-        <ul>
-            <li><strong>First advantage</strong>: description</li>
-            <li><strong>Second advantage</strong>: description</li>
-        </ul>
-
-        <h3>Desventajas (Cons)</h3>
-        <ul>
-            <li><strong>First disadvantage</strong>: description</li>
-            <li><strong>Second disadvantage</strong>: description</li>
-        </ul>
-
-        <h3>Conclusión</h3>
-        <p>Brief conclusion about the tool.</p>`;
-
-        const analysisResponse = await this.model.invoke([
-            {
-                role: "system",
-                content: SYSTEM_TEMPLATE,
-            },
-            new HumanMessage(html)
-        ]);
-
-        const CATEGORIZATION_SYSTEM_TEMPLATE =
-            `Your job is to extract structured information about the AI tool's advantages and disadvantages from a webpage.`;
-
-        const CATEGORIZATION_HUMAN_TEMPLATE =
-            `The following text is extracted from a webpage describing an artificial intelligence (AI) tool.  
-        Your task is to identify the pros and cons explicitly stated in the content.  
-        Provide your response as a JSON object with the following structure:  
-
-        {
-            "pros": [
-                "First explicitly stated pro",
-                "Second explicitly stated pro",
-                ...
-            ],
-            "cons": [
-                "First explicitly stated con",
-                "Second explicitly stated con",
-                ...
-            ]
+    async extractProsAndCons(html: string): Promise<MultiLanguageResponse<{
+        analysis: string,
+        structuredData: {
+            pros: string[],
+            cons: string[]
         }
+    }>> {
+        const SYSTEM_TEMPLATE = `You are an expert web content analyst specialized in artificial intelligence (AI) products.
+            Your task is to analyze a webpage and extract key information about the AI described.
+            Focus specifically on identifying the explicitly mentioned advantages (pros) and disadvantages (cons) of this AI tool.
+            You can infer information—extract, not only what is explicitly stated.
+            You must provide the analysis in both Spanish and English.
+            Format the pros and cons using HTML list items (<li>) instead of asterisks or numbers.
+            The response should follow this format for BOTH languages:
 
-        If no pros or cons are mentioned, return an empty list for that category.  
-        Do not infer information—extract only what is explicitly stated in the content. 
-        
-        It's very very important that the response are in spanish.
+            <h2>Análisis de Ventajas y Desventajas de [Tool Name]</h2>
 
-        Here is the text:  
-
-        <text>
-        ${analysisResponse.content}
-        </text>`;
-
-        const categorizationResponse = await this.model.invoke([
-            {
-                role: "system",
-                content: CATEGORIZATION_SYSTEM_TEMPLATE,
-            },
-            {
-                role: "user",
-                content: CATEGORIZATION_HUMAN_TEMPLATE,
-            }
-        ], {
-            response_format: {
-                type: "json_object",
-                schema: zodToJsonSchema(
-                    z.object({
-                        pros: z.array(z.string()),
-                        cons: z.array(z.string()),
-                    })
-                )
-            }
-        });
-
-        const categorizationOutput = JSON.parse(categorizationResponse.content as string);
-
-        return {
-            analysis: analysisResponse.content,
-            structuredData: categorizationOutput
-        };
-    }
-
-    async extractRatings(html: string): Promise<{ analysis: string, structuredData: { ratings: Array<{ category: string, score: number, description: string }> } }> {
-        const SYSTEM_TEMPLATE =
-            `Eres un experto analista de contenido web especializado en productos de inteligencia artificial (IA).
-            Tu tarea es analizar una página web y extraer las puntuaciones o calificaciones mencionadas sobre la herramienta de IA.
-            Busca específicamente menciones de puntuaciones numéricas (por ejemplo: 4.5/5, 9/10, 85%, etc.) y sus categorías asociadas.
-            Puedes inferir información a partir del contexto.
-            La respuesta debe ser en español.
-            Formatea las puntuaciones usando este formato HTML:
-
-            <h2>Análisis de Puntuaciones de [Nombre de la Herramienta]</h2>
-
-            <h3>Puntuaciones Detalladas</h3>
+            <h3>Ventajas (Pros)</h3>
             <ul>
-                <li><strong>Categoría</strong>: Puntuación/10 - Descripción</li>
-                <li><strong>Otra Categoría</strong>: Puntuación/10 - Descripción</li>
+                <li><strong>First advantage</strong>: description</li>
+                <li><strong>Second advantage</strong>: description</li>
+            </ul>
+
+            <h3>Desventajas (Cons)</h3>
+            <ul>
+                <li><strong>First disadvantage</strong>: description</li>
+                <li><strong>Second disadvantage</strong>: description</li>
             </ul>
 
             <h3>Conclusión</h3>
-            <p>Breve conclusión sobre las puntuaciones de la herramienta.</p>`;
+            <p>Brief conclusion about the tool.</p>`;
 
         const analysisResponse = await this.model.invoke([
             {
@@ -202,32 +124,41 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             new HumanMessage(html)
         ]);
 
-        const CATEGORIZATION_SYSTEM_TEMPLATE =
-            `Tu trabajo es extraer información estructurada sobre las puntuaciones de la herramienta de IA de una página web.`;
+        const CATEGORIZATION_SYSTEM_TEMPLATE = `Your job is to extract structured information about the AI tool's advantages and disadvantages from a webpage.
+            You must provide the response in both Spanish and English.`;
 
-        const CATEGORIZATION_HUMAN_TEMPLATE =
-            `El siguiente texto contiene información sobre puntuaciones de una herramienta de IA.
-            Tu tarea es identificar las categorías evaluadas y sus puntuaciones.
-            Proporciona tu respuesta como un objeto JSON con la siguiente estructura:
+        const CATEGORIZATION_HUMAN_TEMPLATE = `The following text contains analyses in both Spanish and English.
+            Your task is to identify the pros and cons from both versions.
+            Provide your response as a JSON object with the following structure:
 
             {
-                "ratings": [
-                    {
-                        "category": "Nombre de la categoría",
-                        "score": 8.5,
-                        "description": "Descripción de la puntuación"
-                    },
-                    ...
-                ]
+                "es": {
+                    "pros": [
+                        "Primera ventaja",
+                        "Segunda ventaja",
+                        ...
+                    ],
+                    "cons": [
+                        "Primera desventaja",
+                        "Segunda desventaja",
+                        ...
+                    ]
+                },
+                "en": {
+                    "pros": [
+                        "First advantage",
+                        "Second advantage",
+                        ...
+                    ],
+                    "cons": [
+                        "First disadvantage",
+                        "Second disadvantage",
+                        ...
+                    ]
+                }
             }
 
-            Importante:
-            - Todas las puntuaciones deben estar normalizadas a una escala de 0 a 10
-            - Si encuentras porcentajes, conviértelos a la escala de 0-10
-            - La respuesta debe estar en español
-            - Si no hay puntuaciones, devuelve un array vacío
-
-            Aquí está el texto:
+            Here is the text:
 
             <text>
             ${analysisResponse.content}
@@ -247,11 +178,14 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
                 type: "json_object",
                 schema: zodToJsonSchema(
                     z.object({
-                        ratings: z.array(z.object({
-                            category: z.string(),
-                            score: z.number(),
-                            description: z.string()
-                        }))
+                        es: z.object({
+                            pros: z.array(z.string()),
+                            cons: z.array(z.string())
+                        }),
+                        en: z.object({
+                            pros: z.array(z.string()),
+                            cons: z.array(z.string())
+                        })
                     })
                 )
             }
@@ -259,9 +193,156 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
 
         const categorizationOutput = JSON.parse(categorizationResponse.content as string);
 
+        // Separar el análisis en español e inglés
+        const [spanishAnalysis, englishAnalysis] = analysisResponse.content.split('\n\nENGLISH VERSION:\n\n');
+
         return {
-            analysis: analysisResponse.content,
-            structuredData: categorizationOutput
+            es: {
+                analysis: spanishAnalysis,
+                structuredData: categorizationOutput.es
+            },
+            en: {
+                analysis: englishAnalysis,
+                structuredData: categorizationOutput.en
+            }
+        };
+    }
+
+    async extractRatings(html: string): Promise<MultiLanguageResponse<{
+        analysis: string,
+        structuredData: {
+            ratings: Array<{
+                category: string,
+                score: number,
+                description: string
+            }>
+        }
+    }>> {
+        const SYSTEM_TEMPLATE = `You are an expert web content analyst specialized in artificial intelligence (AI) products.
+            Your task is to analyze a webpage and extract the ratings or scores mentioned about the AI tool.
+            Look specifically for numerical scores (e.g., 4.5/5, 9/10, 85%, etc.) and their associated categories.
+            You can infer information from the context.
+            You must provide the analysis in both Spanish and English.
+            Format the ratings using this HTML format:
+
+            SPANISH VERSION:
+            <h2>Análisis de Puntuaciones de [Nombre de la Herramienta]</h2>
+
+            <h3>Puntuaciones Detalladas</h3>
+            <ul>
+                <li><strong>Categoría</strong>: Puntuación/10 - Descripción</li>
+                <li><strong>Otra Categoría</strong>: Puntuación/10 - Descripción</li>
+            </ul>
+
+            <h3>Conclusión</h3>
+            <p>Breve conclusión sobre las puntuaciones de la herramienta.</p>
+
+            ENGLISH VERSION:
+            <h2>Rating Analysis of [Tool Name]</h2>
+
+            <h3>Detailed Ratings</h3>
+            <ul>
+                <li><strong>Category</strong>: Score/10 - Description</li>
+                <li><strong>Other Category</strong>: Score/10 - Description</li>
+            </ul>
+
+            <h3>Conclusion</h3>
+            <p>Brief conclusion about the tool's ratings.</p>`;
+
+        const analysisResponse = await this.model.invoke([
+            {
+                role: "system",
+                content: SYSTEM_TEMPLATE,
+            },
+            new HumanMessage(html)
+        ]);
+
+        const CATEGORIZATION_SYSTEM_TEMPLATE = `Your job is to extract structured information about the AI tool's ratings from a webpage.
+            You must provide the response in both Spanish and English.`;
+
+        const CATEGORIZATION_HUMAN_TEMPLATE = `The following text contains rating analyses in both Spanish and English.
+            Your task is to identify the categories evaluated and their scores.
+            Provide your response as a JSON object with the following structure:
+
+            {
+                "es": {
+                    "ratings": [
+                        {
+                            "category": "Nombre de la categoría",
+                            "score": 8.5,
+                            "description": "Descripción de la puntuación"
+                        }
+                    ]
+                },
+                "en": {
+                    "ratings": [
+                        {
+                            "category": "Category name",
+                            "score": 8.5,
+                            "description": "Score description"
+                        }
+                    ]
+                }
+            }
+
+            Important:
+            - All scores should be normalized to a 0-10 scale
+            - Convert percentages to the 0-10 scale
+            - If no ratings are found, return empty arrays
+
+            Here is the text:
+
+            <text>
+            ${analysisResponse.content}
+            </text>`;
+
+        const categorizationResponse = await this.model.invoke([
+            {
+                role: "system",
+                content: CATEGORIZATION_SYSTEM_TEMPLATE,
+            },
+            {
+                role: "user",
+                content: CATEGORIZATION_HUMAN_TEMPLATE,
+            }
+        ], {
+            response_format: {
+                type: "json_object",
+                schema: zodToJsonSchema(
+                    z.object({
+                        es: z.object({
+                            ratings: z.array(z.object({
+                                category: z.string(),
+                                score: z.number(),
+                                description: z.string()
+                            }))
+                        }),
+                        en: z.object({
+                            ratings: z.array(z.object({
+                                category: z.string(),
+                                score: z.number(),
+                                description: z.string()
+                            }))
+                        })
+                    })
+                )
+            }
+        });
+
+        const categorizationOutput = JSON.parse(categorizationResponse.content as string);
+
+        // Separar el análisis en español e inglés
+        const [spanishAnalysis, englishAnalysis] = analysisResponse.content.split('\n\nENGLISH VERSION:\n\n');
+
+        return {
+            es: {
+                analysis: spanishAnalysis,
+                structuredData: categorizationOutput.es
+            },
+            en: {
+                analysis: englishAnalysis,
+                structuredData: categorizationOutput.en
+            }
         };
     }
 } 

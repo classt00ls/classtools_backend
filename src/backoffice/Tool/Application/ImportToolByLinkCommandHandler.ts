@@ -42,7 +42,7 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
             this.logger.debug('Pros y contras extraídos correctamente', structuredData);
         } catch (error) {
             this.logger.warn(`Error al extraer pros y contras para ${command.link}: ${error.message}`);
-            prosAndConsAnalysis = '<h2>Error al extraer pros y contras</h2><p>No se pudieron procesar los pros y contras de esta herramienta.</p>';
+            prosAndConsAnalysis = '';
         }
         
         // Extraer video del contenido específico de video
@@ -61,7 +61,7 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
             this.logger.debug('Ratings extraídos correctamente', structuredData);
         } catch (error) {
             this.logger.warn(`Error al extraer ratings para ${command.link}: ${error.message}`);
-            ratingsAnalysis = '<h2>Error al extraer puntuaciones</h2><p>No se pudieron procesar las puntuaciones de esta herramienta.</p>';
+            ratingsAnalysis = '';
         }
 
         // Añadir los parámetros extraídos al objeto que se pasará al creator
