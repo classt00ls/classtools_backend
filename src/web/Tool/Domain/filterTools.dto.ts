@@ -22,4 +22,10 @@ export class FilterDto {
     @Expose()
     @IsOptional()
     title: string;
+
+    @Expose()
+    @IsString()
+    @IsOptional()
+    @Transform(({ value }) => (value === 'undefined' || value === undefined ? undefined : String(value).trim()))
+    lang?: string;
 }

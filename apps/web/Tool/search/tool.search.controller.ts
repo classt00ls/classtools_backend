@@ -50,6 +50,40 @@ export class ToolSearchController {
   }
   
 
+  @UseGuards(PublicGuard)
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @Get('lang')
+  @Serialize(ToolsSearchResponse)
+  async getByFilterWithLang(
+    @Query() searchRequest: ToolSearchRequest
+  ) {
+    // Añadimos el sufijo del idioma a la tabla
+    const suffix = searchRequest.filters.lang ? `_${searchRequest.filters.lang}` : '';
+    
+    const data = await this.queryBus.execute(
+        new GetFilteredToolsQuery(
+          searchRequest.page,
+          searchRequest.pageSize,
+          searchRequest.filters,
+          suffix
+        )
+    );
+
+    const total = await this.queryBus.execute(
+      new CountToolsQuery(
+        searchRequest.filters,
+        suffix
+      )
+    );
+    
+    const count = !searchRequest.filters.prompt ? total : 0;
+
+    return {
+      data,
+      count
+    }
+  }
+
   @Get('scrap')
   async scrapPruebas(
   ) {
