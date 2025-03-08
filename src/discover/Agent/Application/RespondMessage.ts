@@ -1,6 +1,6 @@
 import { Annotation, MemorySaver, MessagesAnnotation, NodeInterrupt, StateGraph } from "@langchain/langgraph";
 import { Injectable } from "@nestjs/common";
-import { ChatTogetherModelProvider } from "../Infrastructure/ChatTogetherModelProvider";
+import { ChatTogetherModelProvider } from '@Shared/Infrastructure/IA/ChatTogetherModelProvider';
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 import { HumanMessage } from "@langchain/core/messages";

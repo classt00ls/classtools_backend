@@ -11,7 +11,7 @@ import { UpdateFuturpediaTool } from '@Backoffice/Tool/Infrastructure/UpdateFutu
 import { UpdateToolByLinkCommandHandler } from '@Backoffice/Tool/Application/UpdateToolByLinkCommandHandler';
 
 import { ScrapConnectionProvider } from '@Shared/Domain/Service/Tool/ScrapConnectionProvider';
-import { ChatTogetherModelProvider } from 'src/discover/Agent/Infrastructure/ChatTogetherModelProvider';
+import { ChatTogetherModelProvider } from '@Shared/Infrastructure/IA/ChatTogetherModelProvider';
 import { ScrapToolFromFuturpedia } from '@Backoffice/Tool/Infrastructure/ScrapToolFromFuturpedia';
 import { TagCreator } from '@Backoffice/Tag/Domain/TagCreator';
 import { ToolCreator } from '@Backoffice/Tool/Domain/ToolCreator';

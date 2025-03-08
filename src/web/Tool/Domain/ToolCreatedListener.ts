@@ -6,7 +6,7 @@ import { ToolCreatedEvent } from "@Backoffice/Tool/Domain/ToolCreatedEvent";
 import { PoolConfig } from "pg";
 import { Document } from "@langchain/core/documents";
 import { Annotation, MessagesAnnotation, NodeInterrupt, StateGraph } from "@langchain/langgraph";
-import { ChatTogetherModelProvider } from "src/discover/Agent/Infrastructure/ChatTogetherModelProvider";
+import { ChatTogetherModelProvider } from "@Shared/Infrastructure/IA/ChatTogetherModelProvider";
 import { HumanMessage } from "@langchain/core/messages";
 import zodToJsonSchema from "zod-to-json-schema";
 import { z } from "zod";
@@ -34,7 +34,7 @@ export class ToolCreatedListener {
 
   @OnEvent('backoffice.tool.created', { async: true }) 
   async handleToolCreatedEvent(event: ToolCreatedEvent) {
-
+    
   //   const vectorStore = await PGVectorStore.initialize(
   //     new OllamaEmbeddings({
   //       model: "nomic-embed-text",
@@ -248,7 +248,26 @@ private async initialSupport (state: typeof this.StateAnnotation.State) {
     Your task is to analyze a webpage and extract key information about the AI described.
     Focus specifically on identifying the explicitly mentioned advantages (pros) and disadvantages (cons) of this AI tool.
     You can infer information—extract, not only what is explicitly stated.
-    The response must be in spanish.`;    
+    The response must be in spanish.
+    Format the pros and cons using HTML list items (<li>) instead of asterisks or numbers.
+    The response should follow this format:
+
+    <h2>Análisis de Ventajas y Desventajas de [Tool Name]</h2>
+
+    <h3>Ventajas (Pros)</h3>
+    <ul>
+        <li><strong>First advantage</strong>: description</li>
+        <li><strong>Second advantage</strong>: description</li>
+    </ul>
+
+    <h3>Desventajas (Cons)</h3>
+    <ul>
+        <li><strong>First disadvantage</strong>: description</li>
+        <li><strong>Second disadvantage</strong>: description</li>
+    </ul>
+
+    <h3>Conclusión</h3>
+    <p>Brief conclusion about the tool.</p>`;    
     
     let trimmedHistory = state.messages;
     
@@ -266,8 +285,6 @@ private async initialSupport (state: typeof this.StateAnnotation.State) {
         },
         ...trimmedHistory,
     ]);
-
-    
 
     const CATEGORIZATION_HUMAN_TEMPLATE =
         `The following text is extracted from a webpage describing an artificial intelligence (AI) tool.  

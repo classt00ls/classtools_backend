@@ -10,7 +10,6 @@ export class ChatTogetherModelProvider {
     constructor(
         private readonly configService: ConfigService
     ) {
-
         const API_KEY = this.configService.getOrThrow('TOGETHER_AI_API_KEY');
 
         this.model = new ChatTogetherAI({
@@ -18,13 +17,10 @@ export class ChatTogetherModelProvider {
             // CHAT SIN CREATIVIDAD     
             temperature: 0,
             apiKey: API_KEY
-          });
-
+        });
     }
 
-
-    public provide () {
+    public provide() {
         return this.model;
     }
-
-}
+} 

@@ -4,7 +4,7 @@ import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
 import { GetToolPricing } from "@Backoffice//Tool/Domain/GetToolPricing";
 import { PuppeterScrapping } from "../../../Shared/Infrastructure/Import/puppeteer/PuppeterScrapping";
 import { GetToolDescription } from "@Backoffice//Tool/Domain/GetToolDescription";
-import { GetToolFeatures } from "@Backoffice//Tool/Domain/GetToolFeatures";
+import { GetToolFeatures } from "src/backoffice/Tool/Domain/Futurpedia/GetToolFeatures";
 import { GetToolStars } from "@Backoffice//Tool/Domain/GetToolStars";
 import { CannotUpdateToolException } from "src/Shared/Domain/Exception/Tool/CannotUpdateToolException";
 

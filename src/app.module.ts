@@ -33,7 +33,7 @@ import { ToolSearchModule } from '@web/Tool/search/tool.search.module';
 import { GoogleGeminiProvider } from '@Shared/Infrastructure/IA/GoogleGeminiProvider';
 import { AgentModule } from 'apps/discover/Agent/AgentModule';
 import { ToolCreatedListener } from '@Web/Tool/Domain/ToolCreatedListener';
-import { ChatTogetherModelProvider } from './discover/Agent/Infrastructure/ChatTogetherModelProvider';
+import { ChatTogetherModelProvider } from '@Shared/Infrastructure/IA/ChatTogetherModelProvider';
 
 const cookieSession = require('cookie-session');
 
@@ -128,7 +128,7 @@ const databaseModules = databaseConfig.map((config) =>
     }),
     
     ConfigModule.forRoot(
-      {isGlobal: true,  envFilePath: process.env.NODE_ENV == 'dev' ? '.env.development' : '.env'} // aquí se decide todo el entorno
+      {isGlobal: true,  envFilePath: process.env.NODE_ENV == 'dev' ? '.env.development' : '.env'}
     ),
     ...databaseModules,
     MailerModule.forRoot({

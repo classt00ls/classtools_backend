@@ -4,7 +4,7 @@ import { GetToolFuturpediaTitle } from        "@Backoffice/Tool/Domain/Futurpedi
 import { GetToolTags } from         "@Backoffice/Tool/Domain/GetToolTags";
 import { GetToolPricing } from      "@Backoffice/Tool/Domain/GetToolPricing";
 import { GetToolStars } from        "@Backoffice/Tool/Domain/GetToolStars";
-import { GetToolFeatures } from     "@Backoffice/Tool/Domain/GetToolFeatures";
+import { GetToolFeatures } from     "@Backoffice/Tool/Domain/Futurpedia/GetToolFeatures";
 import { GetToolDescription } from  "@Backoffice/Tool/Domain/GetToolDescription";
 
 import { ScrapConnectionProvider } from "@Shared/Domain/Service/Tool/ScrapConnectionProvider";
@@ -25,7 +25,7 @@ export class ScrapToolFromFuturpedia {
         try {
             page = await this.scrapProvider.getPage(link);
         } catch (error) {
-            console.log('Falla el crap provider');
+            throw new Error('No se pudo obtener la página desde el proveedor de scrap.');
         }
 
         try {

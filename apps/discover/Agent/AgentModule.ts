@@ -5,7 +5,7 @@ import { ToolSchema } from '@Backoffice/Tool/Infrastructure/Persistence/TypeOrm/
 import { ToolRepository } from '@Backoffice/Tool/Domain/tool.repository';
 import { AgentController } from './AgentController';
 import { RespondMessage } from 'src/discover/Agent/Application/RespondMessage';
-import { ChatTogetherModelProvider } from 'src/discover/Agent/Infrastructure/ChatTogetherModelProvider';
+import { ChatTogetherModelProvider } from '@Shared/Infrastructure/IA/ChatTogetherModelProvider';
 
 
 @Module({
