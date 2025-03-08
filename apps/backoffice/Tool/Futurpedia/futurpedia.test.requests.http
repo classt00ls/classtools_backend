@@ -1,7 +1,7 @@
 
 ### Get futurpedia items
 
-POST http://localhost:3000/backoffice/futurpedia/test
+POST http://localhost:3000/backoffice/futurpedia/test/update
 Content-Type: application/json
 
 {

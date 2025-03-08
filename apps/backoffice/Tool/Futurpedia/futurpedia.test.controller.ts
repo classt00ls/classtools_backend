@@ -2,6 +2,7 @@ import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { UpdateToolInterface } from '@Backoffice/Tool/Domain/UpdateToolInterface';
 import { ImportToolCommand } from '@Backoffice/Tool/Application/ImportToolCommand';
+import { UpdateToolByLinkCommand } from '@Backoffice/Tool/Application/UpdateToolByLinkCommand';
 
 @Controller('backoffice/futurpedia/test')
 export class FuturpediaTestController {
@@ -28,9 +29,11 @@ export class FuturpediaTestController {
 
   @Post('update')
   async updateToolInfo(
-    @Body('route') route: string
+    @Body('link') link: string
   ) {
-
+    await this.commandBus.execute(
+      new UpdateToolByLinkCommand(link)
+    );
 //     const response = [];
 //     let page = '';
 

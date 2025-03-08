@@ -17,6 +17,7 @@ import { ChatTogetherModelProvider } from '@Shared/Infrastructure/IA/ChatTogethe
 import { ScrapToolFromFuturpedia } from '@Backoffice/Tool/Infrastructure/ScrapToolFromFuturpedia';
 import { TagCreator } from '@Backoffice/Tag/Domain/TagCreator';
 import { ToolCreator } from '@Backoffice/Tool/Domain/ToolCreator';
+import { ToolUpdater } from '@Backoffice/Tool/Domain/ToolUpdater';
 import { FuturpediaController } from './futurpedia.controller';
 import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/PuppeterScrapConnectionProvider';
 import { HtmlToolParamsExtractor } from '@Backoffice/Tool/Infrastructure/agent/HtmlToolParamsExtractor';
@@ -39,6 +40,7 @@ const ToolSchemaEn = createToolSchema('_en');
     providers: [
         TagCreator,
         ToolCreator,
+        ToolUpdater,
         ImportToolByLinkCommandHandler,
         UpdateToolByLinkCommandHandler,
         ChatTogetherModelProvider,

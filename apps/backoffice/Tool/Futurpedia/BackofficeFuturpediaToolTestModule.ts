@@ -18,6 +18,7 @@ import { ChatTogetherModelProvider } from '@Shared/Infrastructure/IA/ChatTogethe
 import { ScrapToolFromFuturpedia } from '@Backoffice/Tool/Infrastructure/ScrapToolFromFuturpedia';
 import { TagCreator } from '@Backoffice/Tag/Domain/TagCreator';
 import { ToolCreator } from '@Backoffice/Tool/Domain/ToolCreator';
+import { ToolUpdater } from '@Backoffice/Tool/Domain/ToolUpdater';
 import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/PuppeterScrapConnectionProvider';
 import { HtmlToolParamsExtractor } from '@Backoffice/Tool/Infrastructure/agent/HtmlToolParamsExtractor';
 
@@ -34,6 +35,7 @@ import { HtmlToolParamsExtractor } from '@Backoffice/Tool/Infrastructure/agent/H
     providers: [
         TagCreator,
         ToolCreator,
+        ToolUpdater,
         ImportToolByLinkCommandHandler,
         UpdateToolByLinkCommandHandler,
         ChatTogetherModelProvider,
