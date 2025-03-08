@@ -8,6 +8,7 @@ import { ToolTypeormRepository } from                       '@Web/Tool/Infrastru
 import { TOOL_TABLE_SUFFIX } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.repository.module';
 
 import { GetDetailToolQueryHandler } from                           '@Web/Application/Query/Tool/GetDetailToolQueryHandler';
+import { CountToolsByLangQueryHandler } from                       '@Web/Application/Query/Tool/CountToolsByLangQueryHandler';
 
 import { TypeormUserWebRepository } from                            '@Web/UserWeb/Infrastructure/Persistence/TypeOrm/TypeormUserWebRepository';
 import { GenerateUserToolSuggestionsOnToolGetDetail } from          '@Web/Application/Listener/UserToolSuggestions/GenerateUserToolSuggestionsOnToolGetDetail';
@@ -18,6 +19,7 @@ import { UserWebExtractorFromJwt } from                             '@Web/UserWe
 import { ToolWebSchema } from                                       '@Web/Infrastructure/Persistence/typeorm/ToolWeb.schema';
 
 import { GetFilteredToolsQueryHandler } from                        '@Web/Tool/Application/search/GetFilteredToolsQueryHandler';
+import { GetFilteredToolsByLangQueryHandler } from                  '@Web/Tool/Application/search/GetFilteredToolsByLangQueryHandler';
 
 import { ToolSearchController } from                                './tool.search.controller';
 import { ToolVectorSearcher } from '@Web/Tool/Application/search/ToolVectorSearcher';
@@ -46,6 +48,8 @@ import { UserWebRepository } from '@Web/UserWeb/Domain/UserWebRepository';
         GetDetailToolQueryHandler,
         ToolSearcher,
         GetFilteredToolsQueryHandler,
+        GetFilteredToolsByLangQueryHandler,
+        CountToolsByLangQueryHandler,
         ScrapeFromUrls,
         UserToolSuggestionsSearcher,
         GenerateUserToolSuggestionsOnToolGetDetail,

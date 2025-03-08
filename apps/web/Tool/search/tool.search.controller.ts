@@ -5,27 +5,27 @@ import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interce
 import { PublicGuard } from 'src/Shared/Infrastructure/guards/public.guard';
 
 import { GetFilteredToolsQuery } from '@Web/Tool/Application/search/GetFilteredToolsQuery';
+import { GetFilteredToolsByLangQuery } from '@Web/Tool/Application/search/GetFilteredToolsByLangQuery';
 import { ToolSearchRequest } from './tool.search.request';
 import { ToolsSearchResponse } from './tool.search.response';
 import { CountToolsQuery } from '@Web/Application/Query/Tool/CountToolsQuery';
+import { CountToolsByLangQuery } from '@Web/Application/Query/Tool/CountToolsByLangQuery';
 import { ScrapeFromUrls } from '@Web/Tool/Infrastructure/ScrapeFromUrls';
 
 @Controller('tool/search')
 export class ToolSearchController {
   constructor(
-    private readonly queryBus: QueryBus,
+    private readonly queryBus: QueryBus, 
     private readonly scrapper: ScrapeFromUrls,
   ) {}
-  
 
   @UseGuards(PublicGuard)
-  @UsePipes(new ValidationPipe({ transform: true })) // Activa validaciones y transforma los datos
+  @UsePipes(new ValidationPipe({ transform: true }))
   @Get('')
   @Serialize(ToolsSearchResponse)
   async getByFilter(
     @Query() searchRequest: ToolSearchRequest
   ) {
-    
     const data = await this.queryBus.execute(
         new GetFilteredToolsQuery(
           searchRequest.page,
@@ -46,9 +46,7 @@ export class ToolSearchController {
       data,
       count
     }
-
   }
-  
 
   @UseGuards(PublicGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
@@ -57,22 +55,17 @@ export class ToolSearchController {
   async getByFilterWithLang(
     @Query() searchRequest: ToolSearchRequest
   ) {
-    // Añadimos el sufijo del idioma a la tabla
-    const suffix = searchRequest.filters.lang ? `_${searchRequest.filters.lang}` : '';
-    
     const data = await this.queryBus.execute(
-        new GetFilteredToolsQuery(
+        new GetFilteredToolsByLangQuery(
           searchRequest.page,
           searchRequest.pageSize,
-          searchRequest.filters,
-          suffix
+          searchRequest.filters
         )
     );
 
     const total = await this.queryBus.execute(
-      new CountToolsQuery(
-        searchRequest.filters,
-        suffix
+      new CountToolsByLangQuery(
+        searchRequest.filters
       )
     );
     
@@ -85,13 +78,8 @@ export class ToolSearchController {
   }
 
   @Get('scrap')
-  async scrapPruebas(
-  ) {
-    
+  async scrapPruebas() {
     await this.scrapper.excecute();
-
     return 'OK';
-
   }
-  
 }
