@@ -5,6 +5,7 @@ import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
 
 @Injectable()
 export abstract class ToolRepository {
+  constructor(protected readonly suffix: string = '') {}
 
   abstract save(model: ToolModel): Promise<ToolModel>;
   abstract create(model: Partial<ToolModel>): Promise<ToolModel>;

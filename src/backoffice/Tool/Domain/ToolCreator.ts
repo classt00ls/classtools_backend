@@ -6,6 +6,11 @@ import { v6 as uuidv6 } from 'uuid';
 import { TagModel } from "@Backoffice/Tag/Domain/Tag.model";
 import { Injectable } from "@nestjs/common";
 
+type ExtendedScrapToolResponse = ScrapToolResponse & {
+    prosAndCons?: string;
+    videoUrl?: string;
+};
+
 @Injectable()
 export class ToolCreator {
 
@@ -15,7 +20,7 @@ export class ToolCreator {
 	) {}
     
 	async create(
-		scrappedTool: ScrapToolResponse,
+		scrappedTool: ExtendedScrapToolResponse,
 		tags: TagModel[]
 	){
 
@@ -24,18 +29,20 @@ export class ToolCreator {
                 id: uuidv6(),
                 name: scrappedTool.title, 
                 excerpt: scrappedTool.excerpt,
-                link:scrappedTool.link,
+                link: scrappedTool.link,
                 url: scrappedTool.url,
                 pricing: scrappedTool.pricing,
                 description: scrappedTool.description,
                 features: scrappedTool.features,
                 stars: scrappedTool.stars,
-                html: scrappedTool.body_content
+                html: scrappedTool.body_content,
+                video_html: scrappedTool.video_content,
+                video_url: scrappedTool.videoUrl || '',
+                prosAndCons: scrappedTool.prosAndCons || ''
             }
         );
 
 		tool.tags = tags;
-    
 
         await this.toolRepository.save(tool);
 
@@ -49,7 +56,9 @@ export class ToolCreator {
                 tool.pricing,
                 tool.url,
                 tool.html,
-                tool.video_html
+                tool.video_html,
+                tool.video_url,
+                tool.prosAndCons
             ),
         );
 	};

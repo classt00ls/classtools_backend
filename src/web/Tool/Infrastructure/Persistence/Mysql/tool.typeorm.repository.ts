@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 
 import { DataSource, In, InsertResult, Like, MoreThan, Repository } from 'typeorm';
 import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
-import { ToolSchema } from "@Backoffice//Tool/Infrastructure/Persistence/TypeOrm/tool.schema";
+import { createToolSchema } from "@Backoffice//Tool/Infrastructure/Persistence/TypeOrm/tool.schema";
 import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
 import { ToolFilter } from "@Web/Tool/Domain/tool.filter";
 
@@ -13,9 +13,12 @@ export class ToolTypeormRepository extends ToolRepository {
   
   private repository : Repository<ToolModel>;
 
-  constructor(datasource: DataSource) {
-    super();
-    this.repository = datasource.getRepository(ToolSchema);
+  constructor(
+    datasource: DataSource,
+    suffix: string = ''
+  ) {
+    super(suffix);
+    this.repository = datasource.getRepository(createToolSchema(this.suffix));
   }
   
   async getAll(
@@ -134,20 +137,15 @@ export class ToolTypeormRepository extends ToolRepository {
       response.link,
       response.url,
       response.html,
-      ''
+      response.video_html,
+      response.video_url,
+      response.prosAndCons
     );
   }
 
-  async export() {
-    const data = await this.repository.find({
-      select: {
-        name: true,
-        description: true,
-        excerpt: true,
-        id: true
-      },
-    });
-    // Escribe en un archivo JSON
-    await fs.writeFile('./output.json', JSON.stringify(data, null, 2));
+  async export(): Promise<void> {
+    const tools = await this.repository.find();
+    const jsonContent = JSON.stringify(tools, null, 2);
+    await fs.writeFile('tools.json', jsonContent);
   }
 }

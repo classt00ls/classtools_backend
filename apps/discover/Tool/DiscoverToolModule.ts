@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import { ToolSchema } from '@Backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.schema';
 import { ToolRepository } from '@Backoffice/Tool/Domain/tool.repository';
 import { ToolTypeormRepository } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository';
+import { TOOL_TABLE_SUFFIX } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.repository.module';
 import { DiscoverToolcontroller } from './DiscoverToolcontroller';
 import { SuggestionsGenerator } from 'src/discover/Domain/Tool/SuggestionsGenerator';
 import { OllamaGemmaToolSuggestionsGenerator } from 'src/discover/Infrastructure/Ollama/OllamaGemmaToolSuggestionsGenerator';
@@ -13,8 +15,7 @@ import { GetSuggestedToolsByUserDescriptionQueryHandler } from 'src/discover/App
 @Module({
     imports: [
         TypeOrmModule.forFeature([
-            ToolSchema,
-            ToolRepository
+            ToolSchema
           ]),
         CqrsModule
     ],
@@ -28,8 +29,15 @@ import { GetSuggestedToolsByUserDescriptionQueryHandler } from 'src/discover/App
             useClass: OllamaGemmaToolSuggestionsGenerator,
         },
         {
+            provide: TOOL_TABLE_SUFFIX,
+            useValue: process.env.TOOL_TABLE_SUFFIX || ''
+        },
+        {
             provide: ToolRepository,
-            useClass: ToolTypeormRepository,
+            useFactory: (dataSource: DataSource, suffix: string) => {
+                return new ToolTypeormRepository(dataSource, suffix);
+            },
+            inject: [DataSource, TOOL_TABLE_SUFFIX]
         }
     ]
  })

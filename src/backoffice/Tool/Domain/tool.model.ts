@@ -25,9 +25,11 @@ export class ToolModel extends BaseModel {
     public link: string,
     public url: string,
     public html: string,
-    public video_html: string
+    public video_html: string,
+    public video_url: string,
+    public prosAndCons: string,
+    public ratings: string
     ){
-
       
 		super();
     
@@ -56,7 +58,10 @@ export class ToolModel extends BaseModel {
       name: this.name,
       excerpt: this.excerpt,
       url: this.url,
-      stars: this.stars
+      stars: this.stars,
+      video_url: this.video_url,
+      prosAndCons: this.prosAndCons,
+      ratings: this.ratings
     }
   }
 
@@ -72,7 +77,10 @@ export class ToolModel extends BaseModel {
     link: string,
     url: string,
     html: string,
-    video_html: string
+    video_html: string,
+    video_url: string,
+    prosAndCons: string,
+    ratings: string = ''
   ) {
     return new ToolModel(
       id,
@@ -86,7 +94,10 @@ export class ToolModel extends BaseModel {
       link,
       url,
       html,
-      video_html
+      video_html,
+      video_url,
+      prosAndCons,
+      ratings
     )
   }
 

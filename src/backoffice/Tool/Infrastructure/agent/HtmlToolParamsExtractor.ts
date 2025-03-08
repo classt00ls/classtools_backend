@@ -173,4 +173,95 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             structuredData: categorizationOutput
         };
     }
+
+    async extractRatings(html: string): Promise<{ analysis: string, structuredData: { ratings: Array<{ category: string, score: number, description: string }> } }> {
+        const SYSTEM_TEMPLATE =
+            `Eres un experto analista de contenido web especializado en productos de inteligencia artificial (IA).
+            Tu tarea es analizar una página web y extraer las puntuaciones o calificaciones mencionadas sobre la herramienta de IA.
+            Busca específicamente menciones de puntuaciones numéricas (por ejemplo: 4.5/5, 9/10, 85%, etc.) y sus categorías asociadas.
+            Puedes inferir información a partir del contexto.
+            La respuesta debe ser en español.
+            Formatea las puntuaciones usando este formato HTML:
+
+            <h2>Análisis de Puntuaciones de [Nombre de la Herramienta]</h2>
+
+            <h3>Puntuaciones Detalladas</h3>
+            <ul>
+                <li><strong>Categoría</strong>: Puntuación/10 - Descripción</li>
+                <li><strong>Otra Categoría</strong>: Puntuación/10 - Descripción</li>
+            </ul>
+
+            <h3>Conclusión</h3>
+            <p>Breve conclusión sobre las puntuaciones de la herramienta.</p>`;
+
+        const analysisResponse = await this.model.invoke([
+            {
+                role: "system",
+                content: SYSTEM_TEMPLATE,
+            },
+            new HumanMessage(html)
+        ]);
+
+        const CATEGORIZATION_SYSTEM_TEMPLATE =
+            `Tu trabajo es extraer información estructurada sobre las puntuaciones de la herramienta de IA de una página web.`;
+
+        const CATEGORIZATION_HUMAN_TEMPLATE =
+            `El siguiente texto contiene información sobre puntuaciones de una herramienta de IA.
+            Tu tarea es identificar las categorías evaluadas y sus puntuaciones.
+            Proporciona tu respuesta como un objeto JSON con la siguiente estructura:
+
+            {
+                "ratings": [
+                    {
+                        "category": "Nombre de la categoría",
+                        "score": 8.5,
+                        "description": "Descripción de la puntuación"
+                    },
+                    ...
+                ]
+            }
+
+            Importante:
+            - Todas las puntuaciones deben estar normalizadas a una escala de 0 a 10
+            - Si encuentras porcentajes, conviértelos a la escala de 0-10
+            - La respuesta debe estar en español
+            - Si no hay puntuaciones, devuelve un array vacío
+
+            Aquí está el texto:
+
+            <text>
+            ${analysisResponse.content}
+            </text>`;
+
+        const categorizationResponse = await this.model.invoke([
+            {
+                role: "system",
+                content: CATEGORIZATION_SYSTEM_TEMPLATE,
+            },
+            {
+                role: "user",
+                content: CATEGORIZATION_HUMAN_TEMPLATE,
+            }
+        ], {
+            response_format: {
+                type: "json_object",
+                schema: zodToJsonSchema(
+                    z.object({
+                        ratings: z.array(z.object({
+                            category: z.string(),
+                            score: z.number(),
+                            description: z.string()
+                        }))
+                    })
+                )
+            }
+        });
+
+        const categorizationOutput = JSON.parse(categorizationResponse.content as string);
+
+        return {
+            analysis: analysisResponse.content,
+            structuredData: categorizationOutput
+        };
+    }
 } 

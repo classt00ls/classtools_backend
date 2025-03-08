@@ -8,4 +8,15 @@ export interface ToolParamsExtractor {
     }>;
 
     extractVideoUrl(html: string): Promise<string>;
+
+    extractRatings(html: string): Promise<{
+        analysis: string,
+        structuredData: {
+            ratings: Array<{
+                category: string,
+                score: number,
+                description: string
+            }>
+        }
+    }>;
 } 

@@ -1,8 +1,8 @@
 import { ToolModel } from "@Backoffice//Tool/Domain/tool.model";
 import { EntitySchema } from "typeorm";
 
-export const ToolSchema = new EntitySchema<ToolModel>({
-  name: 'Tool',
+export const createToolSchema = (suffix: string = '') => new EntitySchema<ToolModel>({
+  name: `Tool${suffix}`,
   columns: {
     id: {
       type: String,
@@ -69,6 +69,18 @@ export const ToolSchema = new EntitySchema<ToolModel>({
     html: {
       type: String,
       nullable: true
+    },
+    video_html: {
+      type: String,
+      nullable: true
+    },
+    video_url: {
+      type: String,
+      nullable: true
+    },
+    prosAndCons: {
+      type: String,
+      nullable: true
     }
   },
   relations: {
@@ -77,7 +89,7 @@ export const ToolSchema = new EntitySchema<ToolModel>({
       target: "Tag",
       cascade: true,
       joinTable: {
-        name: "tool_tag",
+        name: `tool_tag${suffix}`,
         joinColumns: [{
           name: 'tool_id',
           referencedColumnName: 'id',
@@ -89,5 +101,7 @@ export const ToolSchema = new EntitySchema<ToolModel>({
       }
     }
   },
-  
 });
+
+// Exportamos ToolSchema para mantener compatibilidad con código existente
+export const ToolSchema = createToolSchema();

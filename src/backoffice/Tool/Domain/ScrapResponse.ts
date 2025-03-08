@@ -21,6 +21,6 @@ export class ScrapToolResponse {
 
     public readonly body_content: string,
 
-    public readonly video_content: string,
+    public readonly video_content: string
     ){}
 }
