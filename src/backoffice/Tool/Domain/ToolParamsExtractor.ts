@@ -25,4 +25,5 @@ export interface ToolParamsExtractor {
     extractVideoUrl(content: string): Promise<string>;
     extractDescription(content: string): Promise<MultiLanguageResponse<{ analysis: string }>>;
     extractExcerpt(content: string): Promise<MultiLanguageResponse<{ analysis: string }>>;
+    extractFeatures(content: string): Promise<MultiLanguageResponse<{ analysis: string }>>;
 } 

@@ -35,11 +35,8 @@ export class ScrapToolFromFuturpedia {
             let title = 'Sin título';
             let tags: string[] = [];
             let pricing = 'No disponible';
-            let features = 'Sin características';
             let stars = 0;
-            let description = 'Sin descripción';
             let url = link;
-            let excerpt = 'Sin resumen';
             let body_content = '';
             let video_content = '';
 
@@ -63,34 +60,18 @@ export class ScrapToolFromFuturpedia {
             }
 
             try {
-                features = await GetToolFeatures.execute(page);
-            } catch (error) {
-                this.logger.warn(`Error al extraer características para ${link}: ${error.message}`);
-            }
-
-            try {
                 stars = await GetToolStars.execute(page);
             } catch (error) {
                 this.logger.warn(`Error al extraer estrellas para ${link}: ${error.message}`);
             }
 
-            // try {
-            //     description = await GetToolDescription.execute(page);
-            // } catch (error) {
-            //     this.logger.warn(`Error al extraer descripción para ${link}: ${error.message}`);
-            // }
-
             try {
                 url = await page.$eval('div.mt-4.flex.flex-wrap.gap-4 > a', reference => reference.href);
+                // Limpiar la URL de parámetros GET
+                url = url.split('?')[0];
             } catch (error) {
                 this.logger.warn(`Error al extraer URL para ${link}: ${error.message}`);
             }
-
-            // try {
-            //     excerpt = await page.$eval('p.my-2', desc => desc.innerText);
-            // } catch (error) {
-            //     this.logger.warn(`Error al extraer resumen para ${link}: ${error.message}`);
-            // }
 
             try {
                 body_content = await page.$eval(
@@ -116,12 +97,9 @@ export class ScrapToolFromFuturpedia {
                 title,
                 pricing,
                 stars,
-                description,
-                excerpt,
                 tags,
                 link,
                 url,
-                features,
                 body_content,
                 video_content
             );

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { ToolSchema } from '@Backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.schema';
+import { createToolSchema } from '@Backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.schema';
 import { ToolRepository } from '@Backoffice/Tool/Domain/tool.repository';
 import { ToolTypeormRepository } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository';
 import { TOOL_TABLE_SUFFIX } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.repository.module';
@@ -21,12 +21,16 @@ import { FuturpediaController } from './futurpedia.controller';
 import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/PuppeterScrapConnectionProvider';
 import { HtmlToolParamsExtractor } from '@Backoffice/Tool/Infrastructure/agent/HtmlToolParamsExtractor';
 
+// Crear los schemas para cada idioma
+const ToolSchemaEs = createToolSchema('_es');
+const ToolSchemaEn = createToolSchema('_en');
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([
-            ToolSchema
-          ]),
+            ToolSchemaEs,
+            ToolSchemaEn
+        ]),
         CqrsModule
     ],
     controllers: [
@@ -70,5 +74,5 @@ import { HtmlToolParamsExtractor } from '@Backoffice/Tool/Infrastructure/agent/H
             useClass: PuppeterScrapConnectionProvider
         }
     ]
- })
+})
 export class BackofficeFuturpediaToolModule {}

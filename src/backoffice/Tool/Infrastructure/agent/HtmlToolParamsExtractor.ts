@@ -91,25 +91,57 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             Your task is to analyze a webpage and extract key information about the AI described.
             Focus specifically on identifying the explicitly mentioned advantages (pros) and disadvantages (cons) of this AI tool.
             You can infer information—extract, not only what is explicitly stated.
-            You must provide the analysis in both Spanish and English.
-            Format the pros and cons using HTML list items (<li>) instead of asterisks or numbers.
-            The response should follow this format for BOTH languages:
 
+            CRITICAL REQUIREMENTS:
+            1. You MUST provide TWO complete analyses: one in Spanish and one in English
+            2. Both analyses MUST follow the EXACT same structure
+            3. Both analyses MUST be clearly separated by the markers "SPANISH VERSION:" and "ENGLISH VERSION:"
+            4. If you cannot provide BOTH versions, throw an error
+            5. The response is not complete until BOTH versions are provided
+
+            FORMATTING RULES:
+            1. NEVER use asterisks (*) or any other symbols for lists
+            2. ALWAYS use proper HTML tags
+            3. Each point MUST be wrapped in <li> tags inside a <ul>
+            4. Use <strong> tags for emphasis
+            5. Follow the exact HTML structure shown below
+
+            Your response MUST contain these TWO sections with this EXACT format:
+
+            SPANISH VERSION:
             <h2>Análisis de Ventajas y Desventajas de [Tool Name]</h2>
 
             <h3>Ventajas (Pros)</h3>
             <ul>
-                <li><strong>First advantage</strong>: description</li>
-                <li><strong>Second advantage</strong>: description</li>
+                <li><strong>Primera ventaja</strong>: descripción detallada</li>
+                <li><strong>Segunda ventaja</strong>: descripción detallada</li>
             </ul>
 
             <h3>Desventajas (Cons)</h3>
             <ul>
-                <li><strong>First disadvantage</strong>: description</li>
-                <li><strong>Second disadvantage</strong>: description</li>
+                <li><strong>Primera desventaja</strong>: descripción detallada</li>
+                <li><strong>Segunda desventaja</strong>: descripción detallada</li>
             </ul>
 
             <h3>Conclusión</h3>
+            <p>Breve conclusión sobre la herramienta.</p>
+
+            ENGLISH VERSION:
+            <h2>Pros and Cons Analysis of [Tool Name]</h2>
+
+            <h3>Advantages (Pros)</h3>
+            <ul>
+                <li><strong>First advantage</strong>: detailed description</li>
+                <li><strong>Second advantage</strong>: detailed description</li>
+            </ul>
+
+            <h3>Disadvantages (Cons)</h3>
+            <ul>
+                <li><strong>First disadvantage</strong>: detailed description</li>
+                <li><strong>Second disadvantage</strong>: detailed description</li>
+            </ul>
+
+            <h3>Conclusion</h3>
             <p>Brief conclusion about the tool.</p>`;
 
         const analysisResponse = await this.model.invoke([
@@ -190,7 +222,18 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
         const categorizationOutput = JSON.parse(categorizationResponse.content as string);
 
         // Separar el análisis en español e inglés
-        const [spanishAnalysis, englishAnalysis] = analysisResponse.content.split('\n\nENGLISH VERSION:\n\n');
+        const content = analysisResponse.content;
+        let spanishAnalysis = '';
+        let englishAnalysis = '';
+
+        if (content.includes('SPANISH VERSION:') && content.includes('ENGLISH VERSION:')) {
+            const parts = content.split('ENGLISH VERSION:');
+            spanishAnalysis = parts[0].replace('SPANISH VERSION:', '').trim();
+            englishAnalysis = parts[1].trim();
+        } else {
+            this.logger.error('El modelo no devolvió ambas versiones del análisis de pros y contras');
+            throw new Error('El modelo debe proporcionar ambas versiones del análisis de pros y contras');
+        }
 
         return {
             es: {
@@ -220,6 +263,9 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             You can infer information from the context.
             You must provide the analysis in both Spanish and English.
             Format the ratings using this HTML format:
+
+            IMPORTANT: You must provide BOTH versions. If you only provide one, it's considered an error.
+            The response should follow this format for BOTH languages:
 
             SPANISH VERSION:
             <h2>Análisis de Puntuaciones de [Nombre de la Herramienta]</h2>
@@ -253,91 +299,28 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             new HumanMessage(html)
         ]);
 
-        const CATEGORIZATION_SYSTEM_TEMPLATE = `Your job is to extract structured information about the AI tool's ratings from a webpage.
-            You must provide the response in both Spanish and English.`;
-
-        const CATEGORIZATION_HUMAN_TEMPLATE = `The following text contains rating analyses in both Spanish and English.
-            Your task is to identify the categories evaluated and their scores.
-            Provide your response as a JSON object with the following structure:
-
-            {
-                "es": {
-                    "ratings": [
-                        {
-                            "category": "Nombre de la categoría",
-                            "score": 8.5,
-                            "description": "Descripción de la puntuación"
-                        }
-                    ]
-                },
-                "en": {
-                    "ratings": [
-                        {
-                            "category": "Category name",
-                            "score": 8.5,
-                            "description": "Score description"
-                        }
-                    ]
-                }
-            }
-
-            Important:
-            - All scores should be normalized to a 0-10 scale
-            - Convert percentages to the 0-10 scale
-            - If no ratings are found, return empty arrays
-
-            Here is the text:
-
-            <text>
-            ${analysisResponse.content}
-            </text>`;
-
-        const categorizationResponse = await this.model.invoke([
-            {
-                role: "system",
-                content: CATEGORIZATION_SYSTEM_TEMPLATE,
-            },
-            {
-                role: "user",
-                content: CATEGORIZATION_HUMAN_TEMPLATE,
-            }
-        ], {
-            response_format: {
-                type: "json_object",
-                schema: zodToJsonSchema(
-                    z.object({
-                        es: z.object({
-                            ratings: z.array(z.object({
-                                category: z.string(),
-                                score: z.number(),
-                                description: z.string()
-                            }))
-                        }),
-                        en: z.object({
-                            ratings: z.array(z.object({
-                                category: z.string(),
-                                score: z.number(),
-                                description: z.string()
-                            }))
-                        })
-                    })
-                )
-            }
-        });
-
-        const categorizationOutput = JSON.parse(categorizationResponse.content as string);
-
         // Separar el análisis en español e inglés
-        const [spanishAnalysis, englishAnalysis] = analysisResponse.content.split('\n\nENGLISH VERSION:\n\n');
+        const content = analysisResponse.content;
+        let spanishAnalysis = '';
+        let englishAnalysis = '';
+
+        if (content.includes('SPANISH VERSION:') && content.includes('ENGLISH VERSION:')) {
+            const parts = content.split('ENGLISH VERSION:');
+            spanishAnalysis = parts[0].replace('SPANISH VERSION:', '').trim();
+            englishAnalysis = parts[1].trim();
+        } else {
+            this.logger.error('El modelo no devolvió ambas versiones del análisis de ratings');
+            throw new Error('El modelo debe proporcionar ambas versiones del análisis de ratings');
+        }
 
         return {
             es: {
                 analysis: spanishAnalysis,
-                structuredData: categorizationOutput.es
+                structuredData: { ratings: [] }
             },
             en: {
                 analysis: englishAnalysis,
-                structuredData: categorizationOutput.en
+                structuredData: { ratings: [] }
             }
         };
     }
@@ -359,7 +342,8 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             - Do not use bullet points or lists
             - Do not mention specific prices
 
-            Provide the description in both Spanish and English, separated by:
+            IMPORTANT: You must provide BOTH versions. If you only provide one, it's considered an error.
+            Provide the description in both Spanish and English, clearly separated by markers:
 
             SPANISH VERSION:
             [Your Spanish description here]
@@ -376,7 +360,18 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
         ]);
 
         // Separar el análisis en español e inglés
-        const [spanishAnalysis, englishAnalysis] = analysisResponse.content.split('\n\nENGLISH VERSION:\n\n');
+        const content = analysisResponse.content;
+        let spanishAnalysis = '';
+        let englishAnalysis = '';
+
+        if (content.includes('SPANISH VERSION:') && content.includes('ENGLISH VERSION:')) {
+            const parts = content.split('ENGLISH VERSION:');
+            spanishAnalysis = parts[0].replace('SPANISH VERSION:', '').trim();
+            englishAnalysis = parts[1].trim();
+        } else {
+            this.logger.error('El modelo no devolvió ambas versiones del análisis');
+            throw new Error('El modelo debe proporcionar ambas versiones del análisis');
+        }
 
         return {
             es: { analysis: spanishAnalysis },
@@ -398,7 +393,8 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             - Single sentence or short paragraph
             - No complex technical terms
             
-            Provide the summary in both Spanish and English, separated by:
+            IMPORTANT: You must provide BOTH versions. If you only provide one, it's considered an error.
+            Provide the summary in both Spanish and English, clearly separated by markers:
             
             SPANISH VERSION:
             [Your Spanish summary here]
@@ -415,11 +411,76 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
         ]);
 
         // Separar el análisis en español e inglés
-        const [spanishAnalysis, englishAnalysis] = analysisResponse.content.split('\n\nENGLISH VERSION:\n\n');
+        const content = analysisResponse.content;
+        let spanishAnalysis = '';
+        let englishAnalysis = '';
+
+        if (content.includes('SPANISH VERSION:') && content.includes('ENGLISH VERSION:')) {
+            const parts = content.split('ENGLISH VERSION:');
+            spanishAnalysis = parts[0].replace('SPANISH VERSION:', '').trim();
+            englishAnalysis = parts[1].trim();
+        } else {
+            this.logger.error('El modelo no devolvió ambas versiones del resumen');
+            throw new Error('El modelo debe proporcionar ambas versiones del resumen');
+        }
 
         return {
-            es: { analysis: spanishAnalysis || '' },
-            en: { analysis: englishAnalysis || '' }
+            es: { analysis: spanishAnalysis },
+            en: { analysis: englishAnalysis }
+        };
+    }
+
+    async extractFeatures(html: string): Promise<MultiLanguageResponse<{ analysis: string }>> {
+        const SYSTEM_TEMPLATE = `You are an expert web content analyst specialized in artificial intelligence (AI) products.
+            Your task is to analyze a webpage and extract the key features of the AI tool.
+            Look specifically for sections that list features, capabilities, or functionalities.
+            You must provide the features in both Spanish and English.
+            Format the features using HTML list items, like this:
+
+            IMPORTANT: You must provide BOTH versions. If you only provide one, it's considered an error.
+            The response should follow this format for BOTH languages:
+
+            SPANISH VERSION:
+            <h2>Características Principales de [Nombre de la Herramienta]</h2>
+            <ul>
+                <li><strong>Primera característica</strong>: descripción detallada</li>
+                <li><strong>Segunda característica</strong>: descripción detallada</li>
+                <li><strong>Tercera característica</strong>: descripción detallada</li>
+            </ul>
+
+            ENGLISH VERSION:
+            <h2>Main Features of [Tool Name]</h2>
+            <ul>
+                <li><strong>First feature</strong>: detailed description</li>
+                <li><strong>Second feature</strong>: detailed description</li>
+                <li><strong>Third feature</strong>: detailed description</li>
+            </ul>`;
+
+        const analysisResponse = await this.model.invoke([
+            {
+                role: "system",
+                content: SYSTEM_TEMPLATE,
+            },
+            new HumanMessage(html)
+        ]);
+
+        // Separar el análisis en español e inglés
+        const content = analysisResponse.content;
+        let spanishAnalysis = '';
+        let englishAnalysis = '';
+
+        if (content.includes('SPANISH VERSION:') && content.includes('ENGLISH VERSION:')) {
+            const parts = content.split('ENGLISH VERSION:');
+            spanishAnalysis = parts[0].replace('SPANISH VERSION:', '').trim();
+            englishAnalysis = parts[1].trim();
+        } else {
+            this.logger.error('El modelo no devolvió ambas versiones de las características');
+            throw new Error('El modelo debe proporcionar ambas versiones de las características');
+        }
+
+        return {
+            es: { analysis: spanishAnalysis },
+            en: { analysis: englishAnalysis }
         };
     }
 } 
