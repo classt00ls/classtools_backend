@@ -341,7 +341,8 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             - Keep an approximate length of 200-300 words
             - Do not use bullet points or lists
             - Do not mention specific prices
-
+            - Do NOT include any ratings, scores or numerical evaluations
+            
             IMPORTANT: You must provide BOTH versions. If you only provide one, it's considered an error.
             Provide the description in both Spanish and English, clearly separated by markers:
 

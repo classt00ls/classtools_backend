@@ -5,7 +5,8 @@ POST http://localhost:3000/backoffice/futurpedia/test/update
 Content-Type: application/json
 
 {
-    "link": "https://www.futurepedia.io/tool/hubspot"
+    "link": "https://www.futurepedia.io/tool/hubspot",
+    "lang": "en"
 }
 
 ### Update futurpedia items

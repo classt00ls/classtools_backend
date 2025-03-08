@@ -29,10 +29,11 @@ export class FuturpediaTestController {
 
   @Post('update')
   async updateToolInfo(
-    @Body('link') link: string
+    @Body('link') link: string,
+    @Body('lang') lang: string = 'es'
   ) {
     await this.commandBus.execute(
-      new UpdateToolByLinkCommand(link)
+      new UpdateToolByLinkCommand(link, lang)
     );
 //     const response = [];
 //     let page = '';
