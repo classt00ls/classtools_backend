@@ -1,7 +1,4 @@
-type MultiLanguageResponse<T> = {
-    es: T;
-    en: T;
-};
+import { MultiLanguageResponse } from "@Shared/Domain/Types/MultiLanguageResponse";
 
 type ProsAndConsResponse = {
     analysis: string,
@@ -23,7 +20,9 @@ type RatingsResponse = {
 };
 
 export interface ToolParamsExtractor {
-    extractProsAndCons(html: string): Promise<MultiLanguageResponse<ProsAndConsResponse>>;
-    extractVideoUrl(html: string): Promise<string>;
-    extractRatings(html: string): Promise<MultiLanguageResponse<RatingsResponse>>;
+    extractProsAndCons(content: string): Promise<MultiLanguageResponse<ProsAndConsResponse>>;
+    extractRatings(content: string): Promise<MultiLanguageResponse<RatingsResponse>>;
+    extractVideoUrl(content: string): Promise<string>;
+    extractDescription(content: string): Promise<MultiLanguageResponse<{ analysis: string }>>;
+    extractExcerpt(content: string): Promise<MultiLanguageResponse<{ analysis: string }>>;
 } 

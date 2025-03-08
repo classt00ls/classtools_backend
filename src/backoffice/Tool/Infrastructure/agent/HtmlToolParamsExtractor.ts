@@ -4,11 +4,7 @@ import { HumanMessage } from '@langchain/core/messages';
 import zodToJsonSchema from 'zod-to-json-schema';
 import { z } from 'zod';
 import { ToolParamsExtractor } from '../../Domain/ToolParamsExtractor';
-
-type MultiLanguageResponse<T> = {
-    es: T;
-    en: T;
-};
+import { MultiLanguageResponse } from '@Shared/Domain/Types/MultiLanguageResponse';
 
 @Injectable()
 export class HtmlToolParamsExtractor implements ToolParamsExtractor {
@@ -343,6 +339,80 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
                 analysis: englishAnalysis,
                 structuredData: categorizationOutput.en
             }
+        };
+    }
+
+    async extractDescription(html: string): Promise<MultiLanguageResponse<{ analysis: string }>> {
+        const SYSTEM_TEMPLATE = `You are an expert web content analyst specialized in artificial intelligence (AI) products.
+            Your task is to provide a detailed description of the AI tool based on the provided content.
+            The description should:
+            1. Explain in detail the main features and functionalities
+            2. Mention the most relevant use cases
+            3. Highlight the AI technologies or models used
+            4. Include information about important integrations or compatibilities
+            5. Mention any relevant technical limitations or requirements
+            
+            Format:
+            - Write in a professional and technical tone
+            - Use well-structured paragraphs
+            - Keep an approximate length of 200-300 words
+            - Do not use bullet points or lists
+            - Do not mention specific prices`;
+
+        const analysisResponse = await this.model.invoke([
+            {
+                role: "system",
+                content: SYSTEM_TEMPLATE,
+            },
+            new HumanMessage(html)
+        ]);
+
+        // Separar el análisis en español e inglés
+        const [spanishAnalysis, englishAnalysis] = analysisResponse.content.split('\n\nENGLISH VERSION:\n\n');
+
+        return {
+            es: { analysis: spanishAnalysis || '' },
+            en: { analysis: englishAnalysis || '' }
+        };
+    }
+
+    async extractExcerpt(html: string): Promise<MultiLanguageResponse<{ analysis: string }>> {
+        const SYSTEM_TEMPLATE = `You are an expert web content analyst specialized in artificial intelligence (AI) products.
+            Your task is to create a concise and attractive summary of the AI tool based on the provided content.
+            The summary should:
+            1. Capture the essence and main purpose of the tool
+            2. Highlight the most important benefit or key differentiator
+            3. Be clear and direct
+            
+            Format:
+            - Maximum 50 words
+            - Persuasive but professional tone
+            - Single sentence or short paragraph
+            - No complex technical terms
+            - Do not mention prices
+            
+            Provide the summary in both Spanish and English, separated by:
+            
+            SPANISH VERSION:
+            [Your Spanish summary here]
+            
+            ENGLISH VERSION:
+            [Your English summary here]`;
+
+        const analysisResponse = await this.model.invoke([
+            {
+                role: "system",
+                content: SYSTEM_TEMPLATE,
+            },
+            new HumanMessage(html)
+        ]);
+
+        // Separar el análisis en español e inglés
+        const [spanishAnalysis, englishAnalysis] = analysisResponse.content.split('\n\nENGLISH VERSION:\n\n');
+
+        return {
+            es: { analysis: spanishAnalysis || '' },
+            en: { analysis: englishAnalysis || '' }
         };
     }
 } 
