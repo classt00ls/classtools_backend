@@ -357,7 +357,15 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             - Use well-structured paragraphs
             - Keep an approximate length of 200-300 words
             - Do not use bullet points or lists
-            - Do not mention specific prices`;
+            - Do not mention specific prices
+
+            Provide the description in both Spanish and English, separated by:
+
+            SPANISH VERSION:
+            [Your Spanish description here]
+
+            ENGLISH VERSION:
+            [Your English description here]`;
 
         const analysisResponse = await this.model.invoke([
             {
@@ -371,8 +379,8 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
         const [spanishAnalysis, englishAnalysis] = analysisResponse.content.split('\n\nENGLISH VERSION:\n\n');
 
         return {
-            es: { analysis: spanishAnalysis || '' },
-            en: { analysis: englishAnalysis || '' }
+            es: { analysis: spanishAnalysis },
+            en: { analysis: englishAnalysis }
         };
     }
 
@@ -389,7 +397,6 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             - Persuasive but professional tone
             - Single sentence or short paragraph
             - No complex technical terms
-            - Do not mention prices
             
             Provide the summary in both Spanish and English, separated by:
             

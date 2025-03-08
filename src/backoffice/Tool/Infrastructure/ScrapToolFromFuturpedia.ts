@@ -74,11 +74,11 @@ export class ScrapToolFromFuturpedia {
                 this.logger.warn(`Error al extraer estrellas para ${link}: ${error.message}`);
             }
 
-            try {
-                description = await GetToolDescription.execute(page);
-            } catch (error) {
-                this.logger.warn(`Error al extraer descripción para ${link}: ${error.message}`);
-            }
+            // try {
+            //     description = await GetToolDescription.execute(page);
+            // } catch (error) {
+            //     this.logger.warn(`Error al extraer descripción para ${link}: ${error.message}`);
+            // }
 
             try {
                 url = await page.$eval('div.mt-4.flex.flex-wrap.gap-4 > a', reference => reference.href);
@@ -86,11 +86,11 @@ export class ScrapToolFromFuturpedia {
                 this.logger.warn(`Error al extraer URL para ${link}: ${error.message}`);
             }
 
-            try {
-                excerpt = await page.$eval('p.my-2', desc => desc.innerText);
-            } catch (error) {
-                this.logger.warn(`Error al extraer resumen para ${link}: ${error.message}`);
-            }
+            // try {
+            //     excerpt = await page.$eval('p.my-2', desc => desc.innerText);
+            // } catch (error) {
+            //     this.logger.warn(`Error al extraer resumen para ${link}: ${error.message}`);
+            // }
 
             try {
                 body_content = await page.$eval(

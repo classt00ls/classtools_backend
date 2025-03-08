@@ -1,18 +1,17 @@
-// import { DistanceStrategy, PGVectorStore } from "@langchain/community/vectorstores/pgvector";
-// import { OllamaEmbeddings } from "@langchain/ollama";
-// import { Injectable } from "@nestjs/common";
-// import { OnEvent } from "@nestjs/event-emitter";
-// import { ToolCreatedEvent } from "@Backoffice/Tool/Domain/ToolCreatedEvent";
-// import { PoolConfig } from "pg";
-// import { Document } from "@langchain/core/documents";
-// import { Annotation, MessagesAnnotation, NodeInterrupt, StateGraph } from "@langchain/langgraph";
-// import { ChatTogetherModelProvider } from "src/discover/Agent/Infrastructure/ChatTogetherModelProvider";
-// import { HumanMessage } from "@langchain/core/messages";
-// import zodToJsonSchema from "zod-to-json-schema";
-// import { z } from "zod";
+import { DistanceStrategy, PGVectorStore } from "@langchain/community/vectorstores/pgvector";
+import { OllamaEmbeddings } from "@langchain/ollama";
+import { Injectable } from "@nestjs/common";
+import { OnEvent } from "@nestjs/event-emitter";
+import { ToolCreatedEvent } from "@Backoffice/Tool/Domain/ToolCreatedEvent";
+import { PoolConfig } from "pg";
+import { Document } from "@langchain/core/documents";
+import { Annotation, MessagesAnnotation, NodeInterrupt, StateGraph } from "@langchain/langgraph";
+import { HumanMessage } from "@langchain/core/messages";
+import zodToJsonSchema from "zod-to-json-schema";
+import { z } from "zod";
 
-// @Injectable()
-// export class ToolCreatedListener {
+@Injectable()
+export class ToolCreatedListener {
 
 //   StateAnnotation;
 
@@ -440,4 +439,4 @@
 //     };
 // };
 
-// }
+}

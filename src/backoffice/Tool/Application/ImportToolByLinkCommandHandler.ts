@@ -34,12 +34,32 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
         let prosAndConsAnalysis = '';
         let videoUrl = 'No video found';
         let ratingsAnalysis = '';
+        let descriptionAnalysis = '';
+        let excerptAnalysis = '';
+
+        // Extraer descripción del contenido principal
+        try {
+            const descriptionResult = await this.paramsExtractor.extractDescription(tool.body_content);
+            
+        } catch (error) {
+            this.logger.warn(`Error al extraer descripción para ${command.link}: ${error.message}`);
+            descriptionAnalysis = '';
+        }
+
+        // Extraer resumen del contenido principal
+        try {
+            const excerptResult = await this.paramsExtractor.extractExcerpt(tool.body_content);
+            
+            this.logger.debug('Resumen extraído correctamente');
+        } catch (error) {
+            this.logger.warn(`Error al extraer resumen para ${command.link}: ${error.message}`);
+            excerptAnalysis = '';
+        }
 
         // Extraer pros y contras del contenido principal
         try {
-            const { analysis, structuredData } = await this.paramsExtractor.extractProsAndCons(tool.body_content);
-            prosAndConsAnalysis = analysis;
-            this.logger.debug('Pros y contras extraídos correctamente', structuredData);
+            const prosAndConsResponse = await this.paramsExtractor.extractProsAndCons(tool.body_content);
+            
         } catch (error) {
             this.logger.warn(`Error al extraer pros y contras para ${command.link}: ${error.message}`);
             prosAndConsAnalysis = '';
@@ -56,9 +76,9 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
 
         // Extraer ratings del contenido principal
         try {
-            const { analysis, structuredData } = await this.paramsExtractor.extractRatings(tool.body_content);
-            ratingsAnalysis = analysis;
-            this.logger.debug('Ratings extraídos correctamente', structuredData);
+            const ratingsResponse = await this.paramsExtractor.extractRatings(tool.body_content);
+            
+            
         } catch (error) {
             this.logger.warn(`Error al extraer ratings para ${command.link}: ${error.message}`);
             ratingsAnalysis = '';
@@ -67,6 +87,8 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
         // Añadir los parámetros extraídos al objeto que se pasará al creator
         const toolWithParams = {
             ...tool,
+            description: descriptionAnalysis,
+            excerpt: excerptAnalysis,
             prosAndCons: prosAndConsAnalysis,
             videoUrl: videoUrl,
             ratings: ratingsAnalysis
@@ -74,7 +96,9 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
 
         try {
             const tags_created = await this.tagCreator.extract(tool.tags);
+
             await this.creator.create(toolWithParams, tags_created);
+            
             this.logger.log(`Tool ${command.link} creada exitosamente con todos sus parámetros`);
         } catch (error) {
             this.logger.error(`Error al crear la tool ${command.link}: ${error.message}`);
