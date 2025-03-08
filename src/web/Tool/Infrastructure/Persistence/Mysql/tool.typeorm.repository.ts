@@ -5,6 +5,7 @@ import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
 import { createToolSchema } from "@Backoffice//Tool/Infrastructure/Persistence/TypeOrm/tool.schema";
 import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
 import { ToolFilter } from "@Web/Tool/Domain/tool.filter";
+import { ToolLangFilter } from "@Web/Tool/Domain/tool.lang.filter";
 
 import * as fs from 'fs/promises';
 
@@ -22,14 +23,29 @@ export class ToolTypeormRepository extends ToolRepository {
   }
   
   async getAll(
-    filter: ToolFilter
+    filter: ToolFilter | ToolLangFilter
   ): Promise<ToolModel[]> {
+    const where: any = {};
+    
+    if (filter.getTags()?.length > 0) {
+      where.tags = { name: In(filter.getTags()) };
+    }
+    
+    if (filter.getTitle()) {
+      where.name = Like(`%${filter.getTitle()}%`);
+    }
+
+    if (filter.getStars()) {
+      where.stars = MoreThan(filter.getStars());
+    }
+
     return this.repository.find({
       skip: filter.getPage(),
       take: filter.getPageSize(),
       relations: ['tags'],
-      where: {
-        ...(filter.getTags()?.length > 0 && {tags: {name: In(filter.getTags())}})
+      where: where,
+      order: {
+        stars: 'DESC'
       }
     });
   }

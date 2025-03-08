@@ -24,15 +24,17 @@ export class GetFilteredToolsByLangQueryHandler implements IQueryHandler<GetFilt
     }
 
     private getRepositoryForLanguage(lang: string): ToolRepository {
-        if (!this.repositories[lang]) {
-            this.repositories[lang] = new ToolTypeormRepository(this.dataSource, `_${lang}`);
+        const cleanLang = lang.replace(/['"]/g, '').trim();
+        
+        if (!this.repositories[cleanLang]) {
+            this.repositories[cleanLang] = new ToolTypeormRepository(this.dataSource, `_${cleanLang}`);
         }
-        return this.repositories[lang];
+        return this.repositories[cleanLang];
     }
 
     async execute(query: GetFilteredToolsByLangQuery): Promise<ToolModel[]> {
         try {
-            const lang = query.filter.lang || 'es';
+            const lang = (query.filter.lang || 'es').replace(/['"]/g, '').trim();
             this.logger.log(`Buscando herramientas en idioma: ${lang}`);
 
             const repository = this.getRepositoryForLanguage(lang);

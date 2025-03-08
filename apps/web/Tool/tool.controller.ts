@@ -53,16 +53,18 @@ export class ToolController {
   @Serialize(getDetailToolDto)
   async getTool(
     @Request() request,
-    @Query('id') id: string
+    @Query('id') id: string,
+    @Query('lang') lang?: string
   ) {
-
     const userId = request.userId;
     console.log('userId: ', userId);
+    console.log('Lang parameter:', lang);
 
     const data = await this.queryBus.execute(
         new GetDetailToolQuery(
           id,
-          userId
+          userId,
+          lang
         )
     );
 

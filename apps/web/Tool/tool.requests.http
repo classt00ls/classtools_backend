@@ -22,10 +22,10 @@ GET http://localhost:3000/tool/suggestions/prompt?prompt='soy profesor de ingles
 GET http://localhost:3000/tool/search/?page=2&pageSize=2&filters[prompt]='programador'
 
 ### scrap tools
-GET http://localhost:3000/tool/search/scrap
+GET http://localhost:3000/tool/search/lang?page=1&pageSize=10&filters[lang]='en'
 
 ### get detail
-GET http://localhost:3000/tool/detail?id=21a63400-4dff-4d48-bb7c-ddf266abae20
+GET http://localhost:3000/tool/detail?id=21a63400-4dff-4d48-bb7c-ddf266abae20&lang=en
 ###  get tags
 GET http://localhost:3000
 
