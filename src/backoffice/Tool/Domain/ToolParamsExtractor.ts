@@ -26,4 +26,13 @@ export interface ToolParamsExtractor {
     extractDescription(content: string): Promise<MultiLanguageResponse<{ analysis: string }>>;
     extractExcerpt(content: string): Promise<MultiLanguageResponse<{ analysis: string }>>;
     extractFeatures(content: string): Promise<MultiLanguageResponse<{ analysis: string }>>;
+    extractHowToUse(content: string): Promise<MultiLanguageResponse<{
+        analysis: string,
+        structuredData: {
+            steps: Array<{
+                title: string,
+                description: string
+            }>
+        }
+    }>>;
 } 

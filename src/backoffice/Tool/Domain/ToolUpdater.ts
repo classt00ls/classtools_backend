@@ -50,7 +50,8 @@ export class ToolUpdater {
                     features: toolParams.features[lang]?.analysis,
                     video_url: toolParams.videoUrl || '',
                     prosAndCons: toolParams.prosAndCons[lang]?.analysis || '',
-                    ratings: toolParams.ratings[lang]?.analysis || ''
+                    ratings: toolParams.ratings[lang]?.analysis || '',
+                    howToUse: toolParams.howToUse[lang]?.analysis || ''
                 };
 
                 // Mantener los campos existentes que no se actualizan

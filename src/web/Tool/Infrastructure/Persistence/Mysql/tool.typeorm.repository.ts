@@ -146,7 +146,8 @@ export class ToolTypeormRepository extends ToolRepository {
         response.video_html,
         response.video_url,
         response.prosAndCons,
-        response.ratings
+        response.ratings,
+        response.howToUse
       );
     } catch (error) {
       this.logger.error(`Error al obtener tool por nombre ${name}: ${error.message}`);

@@ -79,6 +79,10 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
         const featuresResult = await this.paramsExtractor.extractFeatures(tool.body_content);
         const cleanFeaturesResult = this.cleanMultiLanguageResponse(featuresResult);
 
+        // Extraer y limpiar howToUse del contenido principal
+        const howToUseResult = await this.paramsExtractor.extractHowToUse(tool.body_content);
+        const cleanHowToUseResult = this.cleanMultiLanguageResponse(howToUseResult);
+
         // Extraer URL del video si existe
         const videoUrl = await this.paramsExtractor.extractVideoUrl(tool.body_content);
 
@@ -110,6 +114,7 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
                 es: cleanRatingsResponse.es,
                 en: cleanRatingsResponse.en
             },
+            howToUse: cleanHowToUseResult,
             videoUrl
         };
 

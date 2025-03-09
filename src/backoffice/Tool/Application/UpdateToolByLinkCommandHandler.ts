@@ -86,12 +86,16 @@ export class UpdateToolByLinkCommandHandler implements ICommandHandler<UpdateToo
                 this.paramsExtractor.extractVideoUrl(tool.video_html || '')
             ]);
 
+            // Extraer y limpiar howToUse del contenido principal
+            const howToUseResult = await this.paramsExtractor.extractHowToUse(tool.html);
+
             // Limpiar los resultados de asteriscos
             const cleanDescriptionResult = this.cleanMultiLanguageResponse(descriptionResult);
             const cleanExcerptResult = this.cleanMultiLanguageResponse(excerptResult);
             const cleanProsAndConsResponse = this.cleanMultiLanguageResponse(prosAndConsResponse);
             const cleanRatingsResponse = this.cleanMultiLanguageResponse(ratingsResponse);
             const cleanFeaturesResult = this.cleanMultiLanguageResponse(featuresResult);
+            const cleanHowToUseResult = this.cleanMultiLanguageResponse(howToUseResult);
 
             // Verificar si tenemos tags antes de intentar mapearlos
             if (!tool.tags) {
@@ -116,6 +120,7 @@ export class UpdateToolByLinkCommandHandler implements ICommandHandler<UpdateToo
                 features: cleanFeaturesResult,
                 prosAndCons: cleanProsAndConsResponse,
                 ratings: cleanRatingsResponse,
+                howToUse: cleanHowToUseResult,
                 videoUrl
             };
 

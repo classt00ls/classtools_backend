@@ -28,7 +28,8 @@ export class ToolModel extends BaseModel {
     public video_html: string,
     public video_url: string,
     public prosAndCons: string,
-    public ratings: string
+    public ratings: string,
+    public howToUse: string
     ){
       
 		super();
@@ -65,7 +66,8 @@ export class ToolModel extends BaseModel {
       tags: this.getTagsPrimitives(),
       video_url: this.video_url,
       prosAndCons: this.prosAndCons,
-      ratings: this.ratings
+      ratings: this.ratings,
+      howToUse: this.howToUse
     }
   }
 
@@ -84,7 +86,8 @@ export class ToolModel extends BaseModel {
     video_html: string,
     video_url: string,
     prosAndCons: string,
-    ratings: string = ''
+    ratings: string = '',
+    howToUse: string = ''
   ) {
     return new ToolModel(
       id,
@@ -101,7 +104,8 @@ export class ToolModel extends BaseModel {
       video_html,
       video_url,
       prosAndCons,
-      ratings
+      ratings,
+      howToUse
     )
   }
 

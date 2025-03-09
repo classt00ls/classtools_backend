@@ -21,12 +21,10 @@ export class UserWebExtractorFromFirebaseOrJwt extends UserWebExtractor {
         try {
 
             userWeb = await this.extractFromFirebase.execute(token);
-            console.log('Tenemos user de firebase')
            
         } catch (error) {
 
             userWeb = await this.extractFromJwt.execute(token);
-            console.log('Tenemos user de jwt')
         }
 
         return userWeb;

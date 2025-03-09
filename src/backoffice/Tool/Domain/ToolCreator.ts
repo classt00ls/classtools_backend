@@ -39,6 +39,17 @@ export type ToolParams = ScrapToolResponse & {
             }
         }
     };
+    howToUse: {
+        [key: string]: {
+            analysis: string,
+            structuredData: {
+                steps: Array<{
+                    title: string,
+                    description: string
+                }>
+            }
+        }
+    };
     videoUrl: string;
 };
 
@@ -95,7 +106,8 @@ export class ToolCreator {
                     video_html: toolParams.video_content,
                     video_url: toolParams.videoUrl || '',
                     prosAndCons: toolParams.prosAndCons[lang]?.analysis || '',
-                    ratings: toolParams.ratings[lang]?.analysis || ''
+                    ratings: toolParams.ratings[lang]?.analysis || '',
+                    howToUse: toolParams.howToUse[lang]?.analysis || ''
                 });
 
                 tool.tags = tags;
@@ -106,7 +118,7 @@ export class ToolCreator {
                     new ToolCreatedEvent(
                         tool.id,
                         tool.name,
-                        tool.tags.join("\n"),
+                        tool.tags.map(t => t.name).join("\n"),
                         tool.description,
                         tool.pricing,
                         tool.url,

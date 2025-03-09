@@ -61,4 +61,7 @@ export class getDetailToolDto {
 
 	@Expose()
 	ratings: string;
+
+	@Expose()
+	howToUse: string;
 }

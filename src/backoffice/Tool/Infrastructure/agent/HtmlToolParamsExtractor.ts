@@ -113,14 +113,14 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
 
             <h3>Ventajas (Pros)</h3>
             <ul>
-                <li><strong>Primera ventaja</strong>: descripción detallada</li>
-                <li><strong>Segunda ventaja</strong>: descripción detallada</li>
+                <li><strong>Integración con IA</strong>: descripción detallada</li>
+                <li><strong>Facilidad de uso</strong>: descripción detallada</li>
             </ul>
 
             <h3>Desventajas (Cons)</h3>
             <ul>
-                <li><strong>Primera desventaja</strong>: descripción detallada</li>
-                <li><strong>Segunda desventaja</strong>: descripción detallada</li>
+                <li><strong>Limitaciones técnicas</strong>: descripción detallada</li>
+                <li><strong>Costos</strong>: descripción detallada</li>
             </ul>
 
             <h3>Conclusión</h3>
@@ -131,14 +131,14 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
 
             <h3>Advantages (Pros)</h3>
             <ul>
-                <li><strong>First advantage</strong>: detailed description</li>
-                <li><strong>Second advantage</strong>: detailed description</li>
+                <li><strong>AI Integration</strong>: detailed description</li>
+                <li><strong>Ease of use</strong>: detailed description</li>
             </ul>
 
             <h3>Disadvantages (Cons)</h3>
             <ul>
-                <li><strong>First disadvantage</strong>: detailed description</li>
-                <li><strong>Second disadvantage</strong>: detailed description</li>
+                <li><strong>Technical limitations</strong>: detailed description</li>
+                <li><strong>Costs</strong>: detailed description</li>
             </ul>
 
             <h3>Conclusion</h3>
@@ -162,25 +162,25 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             {
                 "es": {
                     "pros": [
-                        "Primera ventaja",
-                        "Segunda ventaja",
+                        "Integración con IA",
+                        "Facilidad de uso",
                         ...
                     ],
                     "cons": [
-                        "Primera desventaja",
-                        "Segunda desventaja",
+                        "Limitaciones técnicas",
+                        "Costos",
                         ...
                     ]
                 },
                 "en": {
                     "pros": [
-                        "First advantage",
-                        "Second advantage",
+                        "AI Integration",
+                        "Ease of use",
                         ...
                     ],
                     "cons": [
-                        "First disadvantage",
-                        "Second disadvantage",
+                        "Technical limitations",
+                        "Costs",
                         ...
                     ]
                 }
@@ -482,6 +482,168 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
         return {
             es: { analysis: spanishAnalysis },
             en: { analysis: englishAnalysis }
+        };
+    }
+
+    async extractHowToUse(html: string): Promise<MultiLanguageResponse<{
+        analysis: string,
+        structuredData: {
+            steps: Array<{
+                title: string,
+                description: string
+            }>
+        }
+    }>> {
+        const SYSTEM_TEMPLATE = `You are an expert web content analyst specialized in artificial intelligence (AI) products.
+            Your task is to analyze a webpage and extract or create a step-by-step guide on how to use the AI tool.
+            Focus on providing clear, actionable steps that a user needs to follow to start using the tool effectively.
+
+            CRITICAL REQUIREMENTS:
+            1. You MUST provide TWO complete guides: one in Spanish and one in English
+            2. Both guides MUST follow the EXACT same structure and steps
+            3. Both guides MUST be clearly separated by the markers "SPANISH VERSION:" and "ENGLISH VERSION:"
+            4. If you cannot provide BOTH versions, throw an error
+            5. The response is not complete until BOTH versions are provided
+
+            FORMATTING RULES:
+            1. NEVER use asterisks (*) or any other symbols for lists
+            2. ALWAYS use proper HTML tags
+            3. Each step MUST be wrapped in <li> tags inside an <ol>
+            4. Use <strong> tags for step titles
+            5. Follow the exact HTML structure shown below
+
+            Your response MUST contain these TWO sections with this EXACT format:
+
+            SPANISH VERSION:
+            <h2>Guía de Uso de [Nombre de la Herramienta]</h2>
+
+            <h3>Pasos para Comenzar</h3>
+            <ol>
+                <li><strong>Primer paso</strong>: descripción detallada de qué hacer</li>
+                <li><strong>Segundo paso</strong>: descripción detallada de qué hacer</li>
+                <li><strong>Tercer paso</strong>: descripción detallada de qué hacer</li>
+            </ol>
+
+            <h3>Consejos Adicionales</h3>
+            <p>Consejos útiles para obtener mejores resultados.</p>
+
+            ENGLISH VERSION:
+            <h2>How to Use [Tool Name]</h2>
+
+            <h3>Getting Started Steps</h3>
+            <ol>
+                <li><strong>First step</strong>: detailed description of what to do</li>
+                <li><strong>Second step</strong>: detailed description of what to do</li>
+                <li><strong>Third step</strong>: detailed description of what to do</li>
+            </ol>
+
+            <h3>Additional Tips</h3>
+            <p>Useful tips for getting better results.</p>`;
+
+        const analysisResponse = await this.model.invoke([
+            {
+                role: "system",
+                content: SYSTEM_TEMPLATE,
+            },
+            new HumanMessage(html)
+        ]);
+
+        const CATEGORIZATION_SYSTEM_TEMPLATE = `Your job is to extract structured information about the steps to use the AI tool from a webpage.
+            You must provide the response in both Spanish and English.`;
+
+        const CATEGORIZATION_HUMAN_TEMPLATE = `The following text contains step-by-step guides in both Spanish and English.
+            Your task is to identify the steps and their descriptions from both versions.
+            Provide your response as a JSON object with the following structure:
+
+            {
+                "es": {
+                    "steps": [
+                        {
+                            "title": "Primer paso",
+                            "description": "Descripción detallada"
+                        },
+                        {
+                            "title": "Segundo paso",
+                            "description": "Descripción detallada"
+                        }
+                    ]
+                },
+                "en": {
+                    "steps": [
+                        {
+                            "title": "First step",
+                            "description": "Detailed description"
+                        },
+                        {
+                            "title": "Second step",
+                            "description": "Detailed description"
+                        }
+                    ]
+                }
+            }
+
+            Here is the text:
+
+            <text>
+            ${analysisResponse.content}
+            </text>`;
+
+        const categorizationResponse = await this.model.invoke([
+            {
+                role: "system",
+                content: CATEGORIZATION_SYSTEM_TEMPLATE,
+            },
+            {
+                role: "user",
+                content: CATEGORIZATION_HUMAN_TEMPLATE,
+            }
+        ], {
+            response_format: {
+                type: "json_object",
+                schema: zodToJsonSchema(
+                    z.object({
+                        es: z.object({
+                            steps: z.array(z.object({
+                                title: z.string(),
+                                description: z.string()
+                            }))
+                        }),
+                        en: z.object({
+                            steps: z.array(z.object({
+                                title: z.string(),
+                                description: z.string()
+                            }))
+                        })
+                    })
+                )
+            }
+        });
+
+        const categorizationOutput = JSON.parse(categorizationResponse.content as string);
+
+        // Separar el análisis en español e inglés
+        const content = analysisResponse.content;
+        let spanishAnalysis = '';
+        let englishAnalysis = '';
+
+        if (content.includes('SPANISH VERSION:') && content.includes('ENGLISH VERSION:')) {
+            const parts = content.split('ENGLISH VERSION:');
+            spanishAnalysis = parts[0].replace('SPANISH VERSION:', '').trim();
+            englishAnalysis = parts[1].trim();
+        } else {
+            this.logger.error('El modelo no devolvió ambas versiones de la guía de uso');
+            throw new Error('El modelo debe proporcionar ambas versiones de la guía de uso');
+        }
+
+        return {
+            es: {
+                analysis: spanishAnalysis,
+                structuredData: categorizationOutput.es
+            },
+            en: {
+                analysis: englishAnalysis,
+                structuredData: categorizationOutput.en
+            }
         };
     }
 } 
