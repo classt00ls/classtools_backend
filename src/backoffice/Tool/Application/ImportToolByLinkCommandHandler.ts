@@ -9,6 +9,7 @@ import { ToolParamsExtractor } from "../Domain/ToolParamsExtractor";
 import { ToolParams } from "../Domain/ToolCreator";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { ToolCreatedEvent } from "../Domain/ToolCreatedEvent";
+import { ScrapConnectionProvider } from "@Shared/Domain/Service/Tool/ScrapConnectionProvider";
 
 @CommandHandler(ImportToolCommand)
 @Injectable()
@@ -21,7 +22,8 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
         private creator: ToolCreator,
         private tagCreator: TagCreator,
         @Inject('ToolParamsExtractor') private readonly paramsExtractor: ToolParamsExtractor,
-        private eventEmitter: EventEmitter2
+        private eventEmitter: EventEmitter2,
+        private scrapProvider: ScrapConnectionProvider
     ) {
     }
 
@@ -50,14 +52,47 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
     }
 
     async execute(command: ImportToolCommand) {
+
+        let page = '';
+    
+        for(let i of [1,2,3,4,5,6]) {
+    
+          page = i==1 ? '' : '?page='+i;  
+    
+          const routeToscrap = command.link + page; 
+
+          let page_to_scrap = await this.scrapProvider.getPage(routeToscrap);
+ 
+        // Recuperamos los links a la pagina de las tools en futurpedia de la ruta especificada
+        const links = await page_to_scrap.$$eval("div.items-start", (resultItems) => {
+            const urls = [];
+            resultItems.map(async resultItem => {
+                const url = resultItem.querySelector('a').href;
+                if(!urls.includes(url)) urls.push(url);
+            });
+            return urls;
+        })
+
+        await this.scrapProvider.closeBrowser();
+
+    
+          for (let link of links) {
+
+            await this.importFromLink(link);
+
+          }
+        }
+    }
+
+    private async importFromLink(link: string) {
         try {
             // A este nivel el link donde escrapeamos es el identificador único
-            await this.toolRepository.getOneByLinkAndFail(command.link);
+            await this.toolRepository.getOneByLinkAndFail(link);
         } catch (error) {
-            this.logger.log(`Tool con link ${command.link} ya existe, continuando con el proceso...`);
+            this.logger.log(`Tool con link ${link} ya existe, continuando con el proceso...`);
         }
         
-        const tool = await this.scrapTool.scrap(command.link);
+        const tool = await this.scrapTool.scrap(link);
 
         // Extraer y limpiar descripción del contenido principal
         const descriptionResult = await this.paramsExtractor.extractDescription(tool.body_content);
@@ -87,7 +122,7 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
         const videoUrl = await this.paramsExtractor.extractVideoUrl(tool.body_content);
 
         // Obtener la respuesta del scraping
-        const scrapResponse = await this.scrapTool.scrap(command.link);
+        const scrapResponse = await this.scrapTool.scrap(link);
 
         // Crear los tags
         const tags = await this.tagCreator.extract(scrapResponse.tags);

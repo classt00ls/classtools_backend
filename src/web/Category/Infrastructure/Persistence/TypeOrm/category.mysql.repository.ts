@@ -28,6 +28,16 @@ export class CategoryMysqlRepository extends CategoryRepository {
         return category;
     }
 
+    async findByIdAndFail(id: string): Promise<void> {
+        const category = await this.repository.findOne({
+            where: { id }
+        });
+
+        if (category) {
+            throw new Error(`Category with id ${id} already exists`);
+        }
+    }
+
     async findAll(): Promise<Category[]> {
         return this.repository.find();
     }
