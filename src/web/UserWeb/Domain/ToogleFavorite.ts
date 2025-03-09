@@ -15,7 +15,6 @@ export class ToogleFavorite {
     ): Promise<void> 
     {
         const user = await this.repository.search(userId);
-
         user.toggleFavorite(toolId);
 
         await this.repository.save(user);

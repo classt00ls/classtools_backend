@@ -74,18 +74,15 @@ export class UserWeb extends AggregateRoot{
 			try {
 				favorites = JSON.parse(this.favorites);
 			} catch (error) {
-				console.error("Error al parsear favorites:", error);
 				favorites = [];
 			}
 		}
 		
-		const index = favorites.findIndex(item => item['id'] == favoriteTool);
+		const index = favorites.indexOf(favoriteTool);
 	
 		if (index === -1) {
-			// Si no existe, lo añadimos
 			favorites.push(favoriteTool);
 		} else {
-			// Si existe, lo eliminamos
 			favorites.splice(index, 1);
 		}
 	

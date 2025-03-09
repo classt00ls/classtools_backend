@@ -55,11 +55,6 @@ export class ToolSearchController {
   async getByFilterWithLang(
     @Query() searchRequest: ToolSearchRequest
   ) {
-    console.log('Lang parameter:', {
-      rawLang: searchRequest.filters.lang,
-      filters: searchRequest.filters,
-      fullRequest: searchRequest
-    });
 
     const data = await this.queryBus.execute(
         new GetFilteredToolsByLangQuery(

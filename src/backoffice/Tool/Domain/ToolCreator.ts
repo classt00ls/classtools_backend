@@ -7,6 +7,7 @@ import { TagModel } from "@Backoffice/Tag/Domain/Tag.model";
 import { Injectable, Logger } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import { ToolTypeormRepository } from "@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository";
+import { ToolAssignedEvent } from "@Backoffice/Tag/Domain/ToolAssignedEvent";
 
 export type ToolParams = ScrapToolResponse & {
     description: {
@@ -113,22 +114,35 @@ export class ToolCreator {
                 tool.tags = tags;
                 await repository.save(tool);
 
-                this.eventEmitter.emit(
-                    'backoffice.tool.created',
-                    new ToolCreatedEvent(
-                        tool.id,
-                        tool.name,
-                        tool.tags.map(t => t.name).join("\n"),
-                        tool.description,
-                        tool.pricing,
-                        tool.url,
-                        tool.html,
-                        tool.video_html,
-                        tool.video_url,
-                        tool.prosAndCons,
-                        tool.ratings
-                    )
-                );
+                // Emitir evento para cada tag asignado
+                // TODO en el futuro con estos eventos tendriamos que promocionar automáticamente a categorías
+                for (const tag of tags) {
+                    this.eventEmitter.emit(
+                        ToolAssignedEvent.eventName(),
+                        new ToolAssignedEvent(tag.id, tool.id)
+                    );
+                }
+
+                // Solo emitimos el evento para la versión en inglés
+                if (lang === 'en') {
+                    this.eventEmitter.emit(
+                        'backoffice.tool.created',
+                        new ToolCreatedEvent(
+                            tool.id,
+                            tool.name,
+                            tool.tags.map(t => t.name).join("\n"),
+                            tool.description,
+                            tool.pricing,
+                            tool.url,
+                            tool.html,
+                            tool.video_html,
+                            tool.video_url,
+                            tool.prosAndCons,
+                            tool.ratings
+                        )
+                    );
+                    this.logger.log(`Evento tool.created emitido para versión en inglés: ${tool.name} (${tool.id})`);
+                }
 
                 this.logger.log(`Tool creada exitosamente en ${lang}: ${tool.name} (${tool.id})`);
                 return tool;
