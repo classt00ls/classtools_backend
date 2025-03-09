@@ -55,7 +55,7 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
 
         let page = '';
     
-        for(let i of [1,2,3,4,5,6]) {
+        for(let i of [1,2]) {
     
             page = i==1 ? '' : '?page='+i;  
     
@@ -75,7 +75,6 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
 
             await this.scrapProvider.closeBrowser();
 
-    
             for (let link of links) {
 
                 await this.importFromLink(link);
@@ -102,89 +101,104 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
             await this.toolRepository.getOneByLinkAndFail(link);
         } catch (error) {
             this.logger.log(`Tool con link ${link} ya existe, continuando con el proceso...`);
+            return;
         }
         
-        const tool = await this.scrapTool.scrap(link);
+        for (let attempt = 1; attempt <= 2; attempt++) {
+            try {
+                const tool = await this.scrapTool.scrap(link);
 
-        // Extraer y limpiar descripción del contenido principal
-        const descriptionResult = await this.paramsExtractor.extractDescription(tool.body_content);
-        const cleanDescriptionResult = this.cleanMultiLanguageResponse(descriptionResult);
-            
-        // Extraer y limpiar resumen del contenido principal
-        const excerptResult = await this.paramsExtractor.extractExcerpt(tool.body_content);
-        const cleanExcerptResult = this.cleanMultiLanguageResponse(excerptResult);
-            
-        // Extraer y limpiar pros y contras del contenido principal
-        const prosAndConsResponse = await this.paramsExtractor.extractProsAndCons(tool.body_content);
-        const cleanProsAndConsResponse = this.cleanMultiLanguageResponse(prosAndConsResponse);
-            
-        // Extraer y limpiar ratings del contenido principal
-        const ratingsResponse = await this.paramsExtractor.extractRatings(tool.body_content);
-        const cleanRatingsResponse = this.cleanMultiLanguageResponse(ratingsResponse);
+                // Extraer y limpiar descripción del contenido principal
+                const descriptionResult = await this.paramsExtractor.extractDescription(tool.body_content);
+                const cleanDescriptionResult = this.cleanMultiLanguageResponse(descriptionResult);
+                    
+                // Extraer y limpiar resumen del contenido principal
+                const excerptResult = await this.paramsExtractor.extractExcerpt(tool.body_content);
+                const cleanExcerptResult = this.cleanMultiLanguageResponse(excerptResult);
+                    
+                // Extraer y limpiar pros y contras del contenido principal
+                const prosAndConsResponse = await this.paramsExtractor.extractProsAndCons(tool.body_content);
+                const cleanProsAndConsResponse = this.cleanMultiLanguageResponse(prosAndConsResponse);
+                    
+                // Extraer y limpiar ratings del contenido principal
+                const ratingsResponse = await this.paramsExtractor.extractRatings(tool.body_content);
+                const cleanRatingsResponse = this.cleanMultiLanguageResponse(ratingsResponse);
 
-        // Extraer y limpiar features del contenido principal
-        const featuresResult = await this.paramsExtractor.extractFeatures(tool.body_content);
-        const cleanFeaturesResult = this.cleanMultiLanguageResponse(featuresResult);
+                // Extraer y limpiar features del contenido principal
+                const featuresResult = await this.paramsExtractor.extractFeatures(tool.body_content);
+                const cleanFeaturesResult = this.cleanMultiLanguageResponse(featuresResult);
 
-        // Extraer y limpiar howToUse del contenido principal
-        const howToUseResult = await this.paramsExtractor.extractHowToUse(tool.body_content);
-        const cleanHowToUseResult = this.cleanMultiLanguageResponse(howToUseResult);
+                // Extraer y limpiar howToUse del contenido principal
+                const howToUseResult = await this.paramsExtractor.extractHowToUse(tool.body_content);
+                const cleanHowToUseResult = this.cleanMultiLanguageResponse(howToUseResult);
 
-        // Extraer URL del video si existe
-        const videoUrl = await this.paramsExtractor.extractVideoUrl(tool.body_content);
+                // Extraer URL del video si existe
+                const videoUrl = await this.paramsExtractor.extractVideoUrl(tool.body_content);
 
-        // Obtener la respuesta del scraping
-        const scrapResponse = await this.scrapTool.scrap(link);
+                // Obtener la respuesta del scraping
+                const scrapResponse = await this.scrapTool.scrap(link);
 
-        // Crear los tags
-        const tags = await this.tagCreator.extract(scrapResponse.tags);
+                // Crear los tags
+                const tags = await this.tagCreator.extract(scrapResponse.tags);
 
-        const toolParams: ToolParams = {
-            ...scrapResponse,
-            description: {
-                es: cleanDescriptionResult.es,
-                en: cleanDescriptionResult.en
-            },
-            excerpt: {
-                es: cleanExcerptResult.es,
-                en: cleanExcerptResult.en
-            },
-            features: {
-                es: cleanFeaturesResult.es,
-                en: cleanFeaturesResult.en
-            },
-            prosAndCons: {
-                es: cleanProsAndConsResponse.es,
-                en: cleanProsAndConsResponse.en
-            },
-            ratings: {
-                es: cleanRatingsResponse.es,
-                en: cleanRatingsResponse.en
-            },
-            howToUse: cleanHowToUseResult,
-            videoUrl
-        };
+                const toolParams: ToolParams = {
+                    ...scrapResponse,
+                    description: {
+                        es: cleanDescriptionResult.es,
+                        en: cleanDescriptionResult.en
+                    },
+                    excerpt: {
+                        es: cleanExcerptResult.es,
+                        en: cleanExcerptResult.en
+                    },
+                    features: {
+                        es: cleanFeaturesResult.es,
+                        en: cleanFeaturesResult.en
+                    },
+                    prosAndCons: {
+                        es: cleanProsAndConsResponse.es,
+                        en: cleanProsAndConsResponse.en
+                    },
+                    ratings: {
+                        es: cleanRatingsResponse.es,
+                        en: cleanRatingsResponse.en
+                    },
+                    howToUse: cleanHowToUseResult,
+                    videoUrl
+                };
 
-        const tools = await this.creator.create(toolParams, tags);
+                const tools = await this.creator.create(toolParams, tags);
 
-        // Emitir evento para cada herramienta creada
-        for (const tool of tools) {
-            await this.eventEmitter.emit(
-                'tool.created',
-                new ToolCreatedEvent(
-                    tool.id,
-                    tool.name,
-                    tool.tags.map(t => t.name).join("\n"),
-                    tool.description,
-                    tool.pricing,
-                    tool.url,
-                    tool.html,
-                    tool.video_html,
-                    tool.video_url,
-                    tool.prosAndCons,
-                    tool.ratings
-                )
-            );
+                // Emitir evento para cada herramienta creada
+                for (const tool of tools) {
+                    await this.eventEmitter.emit(
+                        'tool.created',
+                        new ToolCreatedEvent(
+                            tool.id,
+                            tool.name,
+                            tool.tags.map(t => t.name).join("\n"),
+                            tool.description,
+                            tool.pricing,
+                            tool.url,
+                            tool.html,
+                            tool.video_html,
+                            tool.video_url,
+                            tool.prosAndCons,
+                            tool.ratings
+                        )
+                    );
+                }
+                
+                // Si llegamos aquí, todo ha ido bien
+                return;
+
+            } catch (error) {
+                if (attempt === 2) {
+                    this.logger.error(`Failed to import tool ${link} after 2 attempts: ${error.message}`);
+                    return;
+                }
+                this.logger.warn(`Failed attempt ${attempt} for tool ${link}: ${error.message}. Retrying...`);
+            }
         }
     }
 }

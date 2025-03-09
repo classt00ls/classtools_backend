@@ -1,6 +1,7 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Post, Put } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { UpdateToolInterface } from '@Backoffice/Tool/Domain/UpdateToolInterface';
+import { ImportToolCommand } from '@Backoffice/Tool/Application/ImportToolCommand';
 
 @Controller('backoffice/futurpedia')
 export class FuturpediaController {
@@ -15,10 +16,18 @@ export class FuturpediaController {
    * @description A partir de una ruta del tipo "ai-tools/ ... " hacemos el scrapping de todas las tools 
    * @param route 
    */
-  @Post('')
+  @Put('')
   async getWebTools(
-    @Body('route') route: string
+    @Body('link') link: string
   ) {
+    await this.commandBus.execute(
+      new ImportToolCommand(link)
+    );
+
+    return {
+      statusCode: 200,
+      message: 'OK'
+    };
 
    
   }
