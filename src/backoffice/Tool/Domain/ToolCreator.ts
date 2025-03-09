@@ -118,7 +118,7 @@ export class ToolCreator {
                 for (const tag of tags) {
                     this.eventEmitter.emit(
                         ToolAssignedEvent.eventName(),
-                        new ToolAssignedEvent(tag.id, tool.id, tag.name)
+                        new ToolAssignedEvent(tag.id, tool.id, tag.name, tag.times_added)
                     );
                 }
 
