@@ -6,6 +6,7 @@ import { EventEmitter2 } from "@nestjs/event-emitter";
 import { ToolVisitedEvent } from "src/Shared/Application/Event/Tool/ToolVisitedEvent";
 import { DataSource } from "typeorm";
 import { ToolTypeormRepository } from "@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository";
+import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
 
 @QueryHandler(GetDetailToolQuery)
 @Injectable()
@@ -33,7 +34,7 @@ export class GetDetailToolQueryHandler {
         return this.repositories[cleanLang];
     }
 
-    async execute(query: GetDetailToolQuery) {
+    async execute(query: GetDetailToolQuery): Promise<ToolModel> {
         try {
             const lang = (query.lang || 'es').replace(/['"]/g, '').trim();
             this.logger.log(`Buscando herramienta ${query.id} en idioma: ${lang}`);

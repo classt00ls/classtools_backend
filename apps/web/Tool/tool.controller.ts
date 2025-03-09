@@ -10,7 +10,7 @@ import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interce
 import { PublicGuard } from 'src/Shared/Infrastructure/guards/public.guard';
 import { AuthGuard } from '@Shared/Infrastructure/guards/auth.guard';
 import { FilterDto } from '@Web/Tool/Domain/filterTools.dto';
-import { getDetailToolDto } from '@Web/Tool/Domain/getDetailTool.dto';
+import { getDetailToolDto } from '@web/Tool/getDetailTool.dto';
 import { getAllToolsDto } from '@Web/Tool/Domain/getAllTools.dto';
 import { ToggleFavoriteCommand } from '@Web/UserWeb/Application/ToggleFavoriteCommand';
 import { TokenAuthGuard } from '@Web/Infrastructure/guard/token.auth.guard';

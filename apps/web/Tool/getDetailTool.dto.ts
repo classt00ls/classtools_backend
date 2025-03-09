@@ -52,4 +52,13 @@ export class getDetailToolDto {
 	@Type(() => TagDto)
     @ValidateNested()
 	tags: TagDto[];
+
+	@Expose()
+	video_url: string;
+
+	@Expose()
+	prosAndCons: string;
+
+	@Expose()
+	ratings: string;
 }

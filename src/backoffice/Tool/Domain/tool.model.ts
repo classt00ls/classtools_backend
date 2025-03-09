@@ -59,6 +59,10 @@ export class ToolModel extends BaseModel {
       excerpt: this.excerpt,
       url: this.url,
       stars: this.stars,
+      description: this.description,
+      features: this.features,
+      pricing: this.pricing,
+      tags: this.getTagsPrimitives(),
       video_url: this.video_url,
       prosAndCons: this.prosAndCons,
       ratings: this.ratings
