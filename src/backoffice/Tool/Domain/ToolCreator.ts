@@ -115,11 +115,10 @@ export class ToolCreator {
                 await repository.save(tool);
 
                 // Emitir evento para cada tag asignado
-                // TODO en el futuro con estos eventos tendriamos que promocionar automáticamente a categorías
                 for (const tag of tags) {
                     this.eventEmitter.emit(
                         ToolAssignedEvent.eventName(),
-                        new ToolAssignedEvent(tag.id, tool.id)
+                        new ToolAssignedEvent(tag.id, tool.id, tag.name)
                     );
                 }
 

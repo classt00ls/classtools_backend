@@ -9,7 +9,8 @@ export class TagModel extends BaseModel {
 		public description: string,
 		public excerpt: string,
 		public deleted: boolean,
-		public isCategory: number
+		public isCategory: number,
+		public times_added: number = 0
     ){
 		super();
 	}
@@ -26,13 +27,18 @@ export class TagModel extends BaseModel {
     this.isCategory = 0;
   }
 
+  public increment() {
+    this.times_added++;
+  }
+
   toPrimitives() {
     return {
       id: this.id,
       name: this.name,
       excerpt: this.excerpt,
       description: this.description,
-      isCategory: this.isCategory
+      isCategory: this.isCategory,
+      times_added: this.times_added
     }
   }
 
@@ -42,7 +48,8 @@ export class TagModel extends BaseModel {
 		description: string,
 		excerpt: string,
 		deleted: boolean,
-		isCategory: number
+		isCategory: number,
+		times_added: number = 0
   ) {
     return new TagModel(
       id,
@@ -50,7 +57,8 @@ export class TagModel extends BaseModel {
       description,
       excerpt,
       deleted,
-      isCategory
+      isCategory,
+      times_added
     )
   }
 }
