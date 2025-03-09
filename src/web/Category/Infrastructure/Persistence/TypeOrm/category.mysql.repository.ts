@@ -28,6 +28,10 @@ export class CategoryMysqlRepository extends CategoryRepository {
         return category;
     }
 
+    async findAll(): Promise<Category[]> {
+        return this.repository.find();
+    }
+
     async save(category: Category): Promise<void> {
         await this.repository.save(category);
     }
