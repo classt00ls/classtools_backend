@@ -6,7 +6,7 @@ import { ToolParamsExtractor } from "../Domain/ToolParamsExtractor";
 import { ToolUpdater } from "../Domain/ToolUpdater";
 import { ToolParams } from "../Domain/ToolCreator";
 import { DataSource } from "typeorm";
-import { ToolTypeormRepository } from "@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository";
+import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
 
 @CommandHandler(UpdateToolByLinkCommand)
 @Injectable()

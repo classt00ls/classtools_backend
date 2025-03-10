@@ -5,7 +5,7 @@ import { GetDetailToolQuery } from "./GetDetailToolQuery";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { ToolVisitedEvent } from "src/Shared/Application/Event/Tool/ToolVisitedEvent";
 import { DataSource } from "typeorm";
-import { ToolTypeormRepository } from "@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository";
+import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
 import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
 
 @QueryHandler(GetDetailToolQuery)

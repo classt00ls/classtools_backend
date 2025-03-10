@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ToolRepository } from "./tool.repository";
 import { DataSource } from "typeorm";
-import { ToolTypeormRepository } from "@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository";
+import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
 import { ToolParams } from "./ToolCreator";
 import { ToolModel } from "./tool.model";
 

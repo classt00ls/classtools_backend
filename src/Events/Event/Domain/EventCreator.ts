@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { EventRepository } from './event.repository';
 import { Event } from './Event';
 import { v4 as uuidv4 } from 'uuid';
@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class EventCreator {
     constructor(
-        private repository: EventRepository
+        @Inject('EventRepository') private repository: EventRepository
     ) {}
 
     async create(event_type: string, event_data: any, aggregate_id: string): Promise<void> {

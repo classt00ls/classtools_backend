@@ -6,9 +6,10 @@ import { v6 as uuidv6 } from 'uuid';
 import { TagModel } from "@Backoffice/Tag/Domain/Tag.model";
 import { Injectable, Logger } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import { ToolTypeormRepository } from "@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository";
+import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
 import { ToolAssignedEvent } from "@Backoffice/Tag/Domain/ToolAssignedEvent";
-import { EventOutboxRepository } from "@Shared/Infrastructure/Event/event-outbox.repository";
+import { CommandBus } from "@nestjs/cqrs";
+import { CreateEventCommand } from "@Events/Event/Application/Create/CreateEventCommand";
 
 export type ToolParams = ScrapToolResponse & {
     description: {
@@ -63,7 +64,7 @@ export class ToolCreator {
     constructor(
         private eventEmitter: EventEmitter2,
         private dataSource: DataSource,
-        private eventOutboxRepository: EventOutboxRepository
+        private commandBus: CommandBus
     ) {
         // Inicializar repositorios para los idiomas principales
         this.repositories = {
@@ -120,9 +121,12 @@ export class ToolCreator {
 
                 // Guardamos los eventos de tags asignados
                 for (const tag of tags) {
-                    await this.eventOutboxRepository.save(
-                        ToolAssignedEvent.eventName(),
-                        new ToolAssignedEvent(tag.id, tool.id, tag.name, tag.times_added)
+                    await this.commandBus.execute(
+                        new CreateEventCommand(
+                            ToolAssignedEvent.eventName(),
+                            new ToolAssignedEvent(tag.id, tool.id, tag.name, tag.times_added),
+                            tag.id
+                        )
                     );
                 }
 
@@ -139,22 +143,28 @@ export class ToolCreator {
 
             // Solo después de que todas las versiones se hayan creado exitosamente, guardamos el evento principal
             if (englishTool) {
-                await this.eventOutboxRepository.save(
-                    'backoffice.tool.created',
-                    new ToolCreatedEvent(
-                        englishTool.id,
-                        englishTool.name,
-                        englishTool.tags.map(t => t.name).join("\n"),
-                        englishTool.description,
-                        englishTool.pricing,
-                        englishTool.url,
-                        englishTool.html,
-                        englishTool.video_html,
-                        englishTool.video_url,
-                        englishTool.prosAndCons,
-                        englishTool.ratings
+                const event = new ToolCreatedEvent(
+                    englishTool.id,
+                    englishTool.name,
+                    englishTool.tags.map(t => t.name).join("\n"),
+                    englishTool.description,
+                    englishTool.pricing,
+                    englishTool.url,
+                    englishTool.html,
+                    englishTool.video_html,
+                    englishTool.video_url,
+                    englishTool.prosAndCons,
+                    englishTool.ratings
+                );
+
+                await this.commandBus.execute(
+                    new CreateEventCommand(
+                        'backoffice.tool.created',
+                        event,
+                        englishTool.id
                     )
                 );
+                
                 this.logger.log(`Evento tool.created guardado para: ${englishTool.name} (${englishTool.id})`);
             }
 

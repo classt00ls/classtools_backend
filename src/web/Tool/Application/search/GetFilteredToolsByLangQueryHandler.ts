@@ -3,7 +3,7 @@ import { GetFilteredToolsByLangQuery } from "./GetFilteredToolsByLangQuery";
 import { ToolRepository } from "@Backoffice/Tool/Domain/tool.repository";
 import { Injectable, Logger } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import { ToolTypeormRepository } from "@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository";
+import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
 import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
 import { ToolLangFilter } from "@Web/Tool/Domain/tool.lang.filter";
 

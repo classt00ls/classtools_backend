@@ -3,7 +3,6 @@ import { Event } from '../../../Domain/Event';
 
 export const EventSchema = new EntitySchema<Event>({
     name: 'event',
-    schema: 'classtools',
     columns: {
         id: {
             type: String,

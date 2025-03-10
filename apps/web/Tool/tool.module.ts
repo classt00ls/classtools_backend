@@ -16,7 +16,7 @@ import { OllamaLangchainUserToolSuggestionsRepository } from '@Web/UserToolSugge
 import { UserWebRepository } from '@Web/UserWeb/Domain/UserWebRepository';
 import { ToggleFavoriteCommandHandler } from '@Web/UserWeb/Application/ToggleFavoriteCommandHandler';
 import { ToogleFavorite } from '@Web/UserWeb/Domain/ToogleFavorite';
-import { ToolRepositoryModule } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.repository.module';
+import { ToolRepositoryModule } from 'src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.repository.module';
 
 @Module({
     imports: [

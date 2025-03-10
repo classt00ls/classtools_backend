@@ -10,7 +10,7 @@ import { ToolParams } from "../Domain/ToolCreator";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { ScrapConnectionProvider } from "@Shared/Domain/Service/Tool/ScrapConnectionProvider";
 import { DataSource } from "typeorm";
-import { ToolTypeormRepository } from "@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository";
+import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
 import { ScrapToolLinks } from "../Domain/ScrapToolLinks";
 @CommandHandler(ImportToolCommand)
 @Injectable()
@@ -67,7 +67,7 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
 
         try {
             // Solo tomamos el primer link
-            const firstLink = links[1];
+            const firstLink = links[4];
             await this.importFromLink(firstLink);
             this.logger.log(`Importación exitosa de la herramienta desde ${firstLink}`);
         } catch (error) {
@@ -121,14 +121,11 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
                 // Extraer URL del video si existe
                 const videoUrl = await this.paramsExtractor.extractVideoUrl(tool.body_content);
 
-                // Obtener la respuesta del scraping
-                const scrapResponse = await this.scrapTool.scrap(link);
-
                 // Crear los tags
-                const tags = await this.tagCreator.extract(scrapResponse.tags);
+                const tags = await this.tagCreator.extract(tool.tags);
 
                 const toolParams: ToolParams = {
-                    ...scrapResponse,
+                    ...tool,
                     description: {
                         es: cleanDescriptionResult.es,
                         en: cleanDescriptionResult.en
@@ -154,6 +151,8 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
                 };
 
                 await this.creator.create(toolParams, tags);
+
+                return;
 
             } catch (error) {
                 if (attempt === 2) {

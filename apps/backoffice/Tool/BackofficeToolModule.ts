@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { DataSource } from 'typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { BackofficeToolController } from './BackofficeToolcontroller';
 import { TagTypeormRepository } from 'src/Infrastructure/Repository/typeorm/tag.typeorm.repository';
 import { TagRepository } from '@Backoffice/Tag/Domain/tag.repository';
@@ -8,17 +9,19 @@ import { ToolExportCommandHandler } from '@Web/Tool/Application/ToolExportComman
 import { GoogleGeminiProvider } from '@Shared/Infrastructure/IA/GoogleGeminiProvider';
 import { BackofficeFuturpediaToolModule } from './Futurpedia/BackofficeFuturpediaToolModule';
 import { BackofficeFuturpediaToolTestModule } from './Futurpedia/BackofficeFuturpediaToolTestModule';
-import { ToolRepositoryModule } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.repository.module';
+import { ToolRepositoryModule } from 'src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.repository.module';
 import { ToolRepository } from '@Backoffice/Tool/Domain/tool.repository';
-import { ToolTypeormRepository } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository';
-import { TOOL_TABLE_SUFFIX } from '@Web/Tool/Infrastructure/Persistence/Mysql/tool.repository.module';
+import { ToolTypeormRepository } from 'src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository';
+import { TOOL_TABLE_SUFFIX } from 'src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.repository.module';
+import { EventSchema } from 'src/Events/Event/Infrastructure/Persistence/TypeOrm/event.schema';
 
 @Module({
     imports: [
         BackofficeFuturpediaToolModule,
         BackofficeFuturpediaToolTestModule,
         ToolRepositoryModule,
-        CqrsModule
+        CqrsModule,
+        TypeOrmModule.forFeature([EventSchema])
     ],
     controllers: [
         BackofficeToolController
