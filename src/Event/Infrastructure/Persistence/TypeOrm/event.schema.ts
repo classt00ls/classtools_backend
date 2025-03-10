@@ -15,6 +15,9 @@ export const EventSchema = new EntitySchema<Event>({
         event_data: {
             type: 'jsonb'
         },
+        aggregate_id: {
+            type: String
+        },
         created_at: {
             type: Date,
             createDate: true

@@ -3,6 +3,7 @@ export class Event {
         readonly id: string,
         readonly event_type: string,
         readonly event_data: any,
+        readonly aggregate_id: string,
         readonly created_at: Date,
         readonly processed_at: Date | null,
         readonly status: 'pending' | 'processing' | 'completed' | 'failed',
@@ -13,12 +14,14 @@ export class Event {
     static create(
         id: string,
         event_type: string,
-        event_data: any
+        event_data: any,
+        aggregate_id: string
     ): Event {
         return new Event(
             id,
             event_type,
             event_data,
+            aggregate_id,
             new Date(),
             null,
             'pending',
@@ -32,6 +35,7 @@ export class Event {
             this.id,
             this.event_type,
             this.event_data,
+            this.aggregate_id,
             this.created_at,
             null,
             'processing',
@@ -45,6 +49,7 @@ export class Event {
             this.id,
             this.event_type,
             this.event_data,
+            this.aggregate_id,
             this.created_at,
             new Date(),
             'completed',
@@ -58,6 +63,7 @@ export class Event {
             this.id,
             this.event_type,
             this.event_data,
+            this.aggregate_id,
             this.created_at,
             new Date(),
             'failed',
