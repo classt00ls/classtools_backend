@@ -23,6 +23,7 @@ import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/Pu
 import { HtmlToolParamsExtractor } from '@Backoffice/Tool/Infrastructure/agent/HtmlToolParamsExtractor';
 import { ScrapToolLinksFromFuturpedia } from '@Backoffice/Tool/Infrastructure/ScrapToolLinksFromFuturpedia';
 import { ScrapToolLinks } from '@Backoffice/Tool/Domain/ScrapToolLinks';    
+import { EventOutboxRepository } from '@Shared/Infrastructure/Event/event-outbox.repository';
 @Module({
     imports: [
         TypeOrmModule.forFeature([
@@ -40,6 +41,7 @@ import { ScrapToolLinks } from '@Backoffice/Tool/Domain/ScrapToolLinks';
         ImportToolByLinkCommandHandler,
         UpdateToolByLinkCommandHandler,
         ChatTogetherModelProvider,
+        EventOutboxRepository,
         {
             provide: TOOL_TABLE_SUFFIX,
             useValue: process.env.TOOL_TABLE_SUFFIX || ''

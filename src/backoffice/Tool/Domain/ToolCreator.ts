@@ -8,6 +8,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import { ToolTypeormRepository } from "@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository";
 import { ToolAssignedEvent } from "@Backoffice/Tag/Domain/ToolAssignedEvent";
+import { EventOutboxRepository } from "@Shared/Infrastructure/Event/event-outbox.repository";
 
 export type ToolParams = ScrapToolResponse & {
     description: {
@@ -61,7 +62,8 @@ export class ToolCreator {
 
     constructor(
         private eventEmitter: EventEmitter2,
-        private dataSource: DataSource
+        private dataSource: DataSource,
+        private eventOutboxRepository: EventOutboxRepository
     ) {
         // Inicializar repositorios para los idiomas principales
         this.repositories = {
@@ -89,12 +91,14 @@ export class ToolCreator {
             // Generar un ID único para todas las versiones de la herramienta
             const toolId = uuidv6();
 
+            let englishTool = null;
+
             // Crear todas las versiones en paralelo
             const creationPromises = availableLanguages.map(async lang => {
                 const repository = this.getRepositoryForLanguage(lang);
                 
                 const tool = await repository.create({
-                    id: toolId, // Mismo ID para todas las versiones
+                    id: toolId,
                     name: toolParams.title,
                     excerpt: toolParams.excerpt[lang]?.analysis,
                     link: toolParams.link,
@@ -114,38 +118,46 @@ export class ToolCreator {
                 tool.tags = tags;
                 await repository.save(tool);
 
-                // Emitir evento para cada tag asignado
+                // Guardamos los eventos de tags asignados
                 for (const tag of tags) {
-                    this.eventEmitter.emit(
+                    await this.eventOutboxRepository.save(
                         ToolAssignedEvent.eventName(),
                         new ToolAssignedEvent(tag.id, tool.id, tag.name, tag.times_added)
                     );
                 }
 
-                // Solo emitimos el evento para la versión en inglés
+                // Guardamos la referencia a la versión en inglés
                 if (lang === 'en') {
-                    this.eventEmitter.emit(
-                        'backoffice.tool.created',
-                        new ToolCreatedEvent(
-                            tool.id,
-                            tool.name,
-                            tool.tags.map(t => t.name).join("\n"),
-                            tool.description,
-                            tool.pricing,
-                            tool.url,
-                            tool.html,
-                            tool.video_html,
-                            tool.video_url,
-                            tool.prosAndCons,
-                            tool.ratings
-                        )
-                    );
+                    englishTool = tool;
                 }
 
                 this.logger.log(`Tool creada exitosamente en ${lang}: ${tool.name} (${tool.id})`);
+                return tool;
             });
 
             const createdTools = await Promise.all(creationPromises);
+
+            // Solo después de que todas las versiones se hayan creado exitosamente, guardamos el evento principal
+            if (englishTool) {
+                await this.eventOutboxRepository.save(
+                    'backoffice.tool.created',
+                    new ToolCreatedEvent(
+                        englishTool.id,
+                        englishTool.name,
+                        englishTool.tags.map(t => t.name).join("\n"),
+                        englishTool.description,
+                        englishTool.pricing,
+                        englishTool.url,
+                        englishTool.html,
+                        englishTool.video_html,
+                        englishTool.video_url,
+                        englishTool.prosAndCons,
+                        englishTool.ratings
+                    )
+                );
+                this.logger.log(`Evento tool.created guardado para: ${englishTool.name} (${englishTool.id})`);
+            }
+
             return createdTools;
 
         } catch (error) {

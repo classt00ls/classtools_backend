@@ -34,6 +34,7 @@ import { GoogleGeminiProvider } from '@Shared/Infrastructure/IA/GoogleGeminiProv
 import { AgentModule } from 'apps/discover/Agent/AgentModule';
 import { ToolCreatedListener } from '@Web/Tool/Domain/ToolCreatedListener';
 import { ChatTogetherModelProvider } from '@Shared/Infrastructure/IA/ChatTogetherModelProvider';
+import { EventModule } from './Shared/Infrastructure/Event/event.module';
 
 const cookieSession = require('cookie-session');
 
@@ -114,6 +115,7 @@ const databaseModules = databaseConfig.map((config) =>
     UserWebModule,
     UserToolSuggestionsModule,
     WebAuthModule,
+    EventModule,
     EventEmitterModule.forRoot({
       // set this to `true` to use wildcards
       wildcard: false,

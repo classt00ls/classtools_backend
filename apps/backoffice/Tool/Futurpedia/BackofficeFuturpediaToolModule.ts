@@ -23,6 +23,7 @@ import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/Pu
 import { HtmlToolParamsExtractor } from '@Backoffice/Tool/Infrastructure/agent/HtmlToolParamsExtractor';
 import { ScrapToolLinksFromFuturpedia } from '@Backoffice/Tool/Infrastructure/ScrapToolLinksFromFuturpedia';
 import { ScrapToolLinks } from '@Backoffice/Tool/Domain/ScrapToolLinks';    
+import { EventOutboxRepository } from '@Shared/Infrastructure/Event/event-outbox.repository';
 
 // Crear los schemas para cada idioma
 const ToolSchemaEs = createToolSchema('_es');
@@ -46,6 +47,7 @@ const ToolSchemaEn = createToolSchema('_en');
         ImportToolByLinkCommandHandler,
         UpdateToolByLinkCommandHandler,
         ChatTogetherModelProvider,
+        EventOutboxRepository,
         {
             provide: TOOL_TABLE_SUFFIX,
             useValue: process.env.TOOL_TABLE_SUFFIX || ''

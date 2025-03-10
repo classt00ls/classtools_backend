@@ -114,12 +114,13 @@ export class ToolTypeormRepository extends ToolRepository {
 
   async getOneByLinkAndFail(link: string) {
     try {
-      await this.repository.findOneByOrFail({link: link});
-    } catch (error) {
-      this.logger.debug(`Tool con link ${link} no existe`);
+      const tool = await this.repository.findOneByOrFail({link: link});
+      this.logger.debug(`Tool con link ${link} ya existe`);
       return;
+    } catch (error) {
+      // Si no existe la herramienta, continuamos con la importación
+      throw new Error(`La tool con link ${link} no existe`);
     }
-    throw new Error(`La tool con link ${link} ya existe`);
   }
 
   async getOneByLinkOrFail(link: string): Promise<ToolModel> {

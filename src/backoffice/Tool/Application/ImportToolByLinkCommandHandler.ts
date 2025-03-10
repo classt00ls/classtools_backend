@@ -9,41 +9,85 @@ import { ToolParamsExtractor } from "../Domain/ToolParamsExtractor";
 import { ToolParams } from "../Domain/ToolCreator";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { ScrapConnectionProvider } from "@Shared/Domain/Service/Tool/ScrapConnectionProvider";
+import { DataSource } from "typeorm";
+import { ToolTypeormRepository } from "@Web/Tool/Infrastructure/Persistence/Mysql/tool.typeorm.repository";
 import { ScrapToolLinks } from "../Domain/ScrapToolLinks";
 @CommandHandler(ImportToolCommand)
 @Injectable()
 export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToolCommand>{
     private readonly logger = new Logger(ImportToolByLinkCommandHandler.name);
+    private repositories: { [key: string]: ToolRepository } = {};
 
     constructor(
         @Inject('ScrapTool') private readonly scrapTool: ScrapTool,
         @Inject('ScrapToolLinks') private readonly scrapToolLinks: ScrapToolLinks,
-        private toolRepository: ToolRepository,
+        private dataSource: DataSource,
         private creator: ToolCreator,
         private tagCreator: TagCreator,
         @Inject('ToolParamsExtractor') private readonly paramsExtractor: ToolParamsExtractor,
         private eventEmitter: EventEmitter2,
         private scrapProvider: ScrapConnectionProvider
     ) {
+        // Inicializar repositorios para los idiomas principales
+        this.repositories = {
+            es: new ToolTypeormRepository(dataSource, '_es'),
+            en: new ToolTypeormRepository(dataSource, '_en')
+        };
     }
 
-    
+    private getRepositoryForLanguage(lang: string): ToolRepository {
+        if (!this.repositories[lang]) {
+            this.repositories[lang] = new ToolTypeormRepository(this.dataSource, `_${lang}`);
+        }
+        return this.repositories[lang];
+    }
 
     async execute(command: ImportToolCommand) {
-        const links = await this.scrapToolLinks.scrap(command.link);
+        const browser = await this.scrapProvider.getConnection();
+        const routeToscrap = command.link;
+        let page_to_scrap = await this.scrapProvider.getPage(routeToscrap, browser);
 
-        for(let link of links) {
-            await this.importFromLink(link);
-        }   
+        // Recuperamos los links a la pagina de las tools en futurpedia de la ruta especificada
+        const links = await page_to_scrap.$$eval("div.items-start", (resultItems) => {
+            const urls = [];
+            resultItems.map(async resultItem => {
+                const url = resultItem.querySelector('a').href;
+                if(!urls.includes(url)) urls.push(url);
+            });
+            return urls;
+        });
+
+        if (links.length === 0) {
+            this.logger.warn('No se encontraron herramientas para importar');
+            await browser.close();
+            return;
+        }
+
+        this.logger.log(`Importando primera herramienta de ${links.length} encontradas`);
+
+        try {
+            // Solo tomamos el primer link
+            const firstLink = links[1];
+            await this.importFromLink(firstLink);
+            this.logger.log(`Importación exitosa de la herramienta desde ${firstLink}`);
+        } catch (error) {
+            this.logger.error(`Error importando herramienta: ${error.message}`);
+            throw error;
+        } finally {
+            await browser.close();
+        }
     }
 
     private async importFromLink(link: string) {
         try {
-            // A este nivel el link donde escrapeamos es el identificador único
-            await this.toolRepository.getOneByLinkAndFail(link);
-        } catch (error) {
-            this.logger.log(`Tool con link ${link} ya existe, continuando con el proceso...`);
+            // Verificamos si la herramienta ya existe en inglés
+            const enRepository = this.getRepositoryForLanguage('en');
+            await enRepository.getOneByLinkAndFail(link);
+            this.logger.log(`Tool con link ${link} ya existe en inglés, saltando importación...`);
             return;
+        } catch (error) {
+            // Si no existe en inglés, continuamos con la importación
+            this.logger.log(`Tool con link ${link} no existe en inglés, procediendo con la importación...`);
         }
         
         for (let attempt = 1; attempt <= 2; attempt++) {

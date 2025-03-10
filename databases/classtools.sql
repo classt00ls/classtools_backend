@@ -54,3 +54,14 @@ CREATE TABLE tool_en (
     pros_and_cons TEXT,
     ratings TEXT
 );
+
+CREATE TABLE IF NOT EXISTS event_outbox (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    event_type VARCHAR(255) NOT NULL,
+    event_data JSONB NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    processed_at TIMESTAMP WITH TIME ZONE,
+    status VARCHAR(50) DEFAULT 'pending',
+    error_message TEXT,
+    retries INTEGER DEFAULT 0
+);

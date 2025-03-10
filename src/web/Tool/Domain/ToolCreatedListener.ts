@@ -41,13 +41,19 @@ export class ToolCreatedListener {
             );
 
             const document = await this.createDocument(event);
-            await vectorStore.addDocuments([document]);
+            
+            await vectorStore.addVectors(
+                await vectorStore.embeddings.embedDocuments([document.pageContent]),
+                [document],
+                { ids: [event.id] }
+            );
+            
             await vectorStore.end();
 
             this.logger.log(`Successfully processed tool: ${event.name}`);
         } catch (error) {
             this.logger.error(`Error processing tool ${event.name}: ${error.message}`);
-            throw error;
+            throw new Error(`Error inserting: ${error.message}`);
         }
     }
 
