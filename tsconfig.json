@@ -20,6 +20,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
             "@web/*": ["apps/web/*"],
+            "@Events/*": ["src/Events/*"],
             "@Web/*": ["src/web/*"],
             "@Backoffice/*": ["src/Backoffice/*"],
             "@Shared/*": ["src/Shared/*"]
