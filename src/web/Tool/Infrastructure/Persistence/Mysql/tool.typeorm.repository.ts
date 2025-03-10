@@ -16,7 +16,7 @@ export class ToolTypeormRepository extends ToolRepository {
 
   constructor(
     datasource: DataSource,
-    suffix: string = ''
+    suffix: string = 'en'
   ) {
     super(suffix);
     this.repository = datasource.getRepository(createToolSchema(this.suffix));
@@ -114,12 +114,11 @@ export class ToolTypeormRepository extends ToolRepository {
 
   async getOneByLinkAndFail(link: string) {
     try {
-      await this.repository.findOneByOrFail({link});
+      await this.repository.findOneByOrFail({link: link});
     } catch (error) {
       this.logger.debug(`Tool con link ${link} no existe`);
       return;
     }
-    this.logger.debug(`Tool con link ${link} ya existe`);
     throw new Error(`La tool con link ${link} ya existe`);
   }
 

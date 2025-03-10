@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import puppeteer, { Browser } from "puppeteer-core";
+import puppeteer, { Browser, Page } from "puppeteer-core";
 import { ScrapConnectionProvider } from "src/Shared/Domain/Service/Tool/ScrapConnectionProvider";
 
 
@@ -8,7 +8,6 @@ import { ScrapConnectionProvider } from "src/Shared/Domain/Service/Tool/ScrapCon
 @Injectable()
 export class PuppeterScrapConnectionProvider extends ScrapConnectionProvider {
 
-    browser;
 
     provider_key;
 
@@ -32,20 +31,10 @@ export class PuppeterScrapConnectionProvider extends ScrapConnectionProvider {
         return browser;
     }
 
-    public async setBrowser() {
-
-        this.browser = await puppeteer.connect({
-            browserWSEndpoint: this.provider_key // this.configService.getOrThrow('SBR_WS_ENDPOINT')
-        });
-
-    }
-
     // En lugar de devolvernos el browser nos devuelve una página
-    async getPage(url: string): Promise<Browser> {
+    async getPage(url: string, browser: Browser): Promise<Page> {
 
-        if(!this.browser) await this.setBrowser();
-        
-        let page = await this.browser.newPage();
+        let page = await browser.newPage();
 
         page.setDefaultNavigationTimeout(2 * 60 * 1000);
         
@@ -55,12 +44,5 @@ export class PuppeterScrapConnectionProvider extends ScrapConnectionProvider {
         ]);
 
         return page;
-    }
-
-    async closeBrowser() {
-
-        await this.browser.close();
-        this.browser = null;
-
     }
 }

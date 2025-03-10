@@ -140,11 +140,9 @@ export class ToolCreator {
                             tool.ratings
                         )
                     );
-                    this.logger.log(`Evento tool.created emitido para versión en inglés: ${tool.name} (${tool.id})`);
                 }
 
                 this.logger.log(`Tool creada exitosamente en ${lang}: ${tool.name} (${tool.id})`);
-                return tool;
             });
 
             const createdTools = await Promise.all(creationPromises);

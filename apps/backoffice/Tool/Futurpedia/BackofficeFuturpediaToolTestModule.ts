@@ -21,7 +21,8 @@ import { ToolCreator } from '@Backoffice/Tool/Domain/ToolCreator';
 import { ToolUpdater } from '@Backoffice/Tool/Domain/ToolUpdater';
 import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/PuppeterScrapConnectionProvider';
 import { HtmlToolParamsExtractor } from '@Backoffice/Tool/Infrastructure/agent/HtmlToolParamsExtractor';
-
+import { ScrapToolLinksFromFuturpedia } from '@Backoffice/Tool/Infrastructure/ScrapToolLinksFromFuturpedia';
+import { ScrapToolLinks } from '@Backoffice/Tool/Domain/ScrapToolLinks';    
 @Module({
     imports: [
         TypeOrmModule.forFeature([
@@ -69,6 +70,10 @@ import { HtmlToolParamsExtractor } from '@Backoffice/Tool/Infrastructure/agent/H
         {
             provide: ScrapConnectionProvider,
             useClass: PuppeterScrapConnectionProvider
+        },
+        {
+            provide: 'ScrapToolLinks',
+            useClass: ScrapToolLinksFromFuturpedia,
         }
     ]
  })

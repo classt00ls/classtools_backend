@@ -21,6 +21,8 @@ import { ToolUpdater } from '@Backoffice/Tool/Domain/ToolUpdater';
 import { FuturpediaController } from './futurpedia.controller';
 import { PuppeterScrapConnectionProvider } from '@Shared/Infrastructure/Scrap/PuppeterScrapConnectionProvider';
 import { HtmlToolParamsExtractor } from '@Backoffice/Tool/Infrastructure/agent/HtmlToolParamsExtractor';
+import { ScrapToolLinksFromFuturpedia } from '@Backoffice/Tool/Infrastructure/ScrapToolLinksFromFuturpedia';
+import { ScrapToolLinks } from '@Backoffice/Tool/Domain/ScrapToolLinks';    
 
 // Crear los schemas para cada idioma
 const ToolSchemaEs = createToolSchema('_es');
@@ -74,6 +76,10 @@ const ToolSchemaEn = createToolSchema('_en');
         {
             provide: ScrapConnectionProvider,
             useClass: PuppeterScrapConnectionProvider
+        },
+        {
+            provide: 'ScrapToolLinks',
+            useClass: ScrapToolLinksFromFuturpedia,
         }
     ]
 })

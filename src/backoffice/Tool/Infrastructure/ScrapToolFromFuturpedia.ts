@@ -4,8 +4,6 @@ import { GetToolFuturpediaTitle } from        "@Backoffice/Tool/Domain/Futurpedi
 import { GetToolTags } from         "@Backoffice/Tool/Domain/GetToolTags";
 import { GetToolPricing } from      "@Backoffice/Tool/Domain/GetToolPricing";
 import { GetToolStars } from        "@Backoffice/Tool/Domain/GetToolStars";
-import { GetToolFeatures } from     "@Backoffice/Tool/Domain/Futurpedia/GetToolFeatures";
-import { GetToolDescription } from  "@Backoffice/Tool/Domain/GetToolDescription";
 
 import { ScrapConnectionProvider } from "@Shared/Domain/Service/Tool/ScrapConnectionProvider";
 import { ScrapToolResponse } from "../Domain/ScrapResponse";
@@ -22,9 +20,15 @@ export class ScrapToolFromFuturpedia {
     ) {  }
 
     public async scrap(link: string): Promise<ScrapToolResponse> {
-        let page;
+
+        let page, browser;
+
         try {
-            page = await this.scrapProvider.getPage(link);
+
+            browser = await this.scrapProvider.getConnection();
+
+            page = await this.scrapProvider.getPage(link, browser);
+
         } catch (error) {
             this.logger.error(`Error al obtener la página ${link}: ${error.message}`);
             throw new Error(`No se pudo obtener la página desde el proveedor de scrap: ${error.message}`);
@@ -91,7 +95,7 @@ export class ScrapToolFromFuturpedia {
                 this.logger.warn(`Error al extraer contenido de video para ${link}: ${error.message}`);
             }
 
-            await this.scrapProvider.closeBrowser();
+            await browser.close();
             
             const response = new ScrapToolResponse(
                 title,
@@ -109,7 +113,7 @@ export class ScrapToolFromFuturpedia {
             
         } catch (error) {
             this.logger.error(`Error general durante el scraping de ${link}: ${error.message}`);
-            await this.scrapProvider.closeBrowser();
+            await browser.close();
             throw error;
         }
     }
