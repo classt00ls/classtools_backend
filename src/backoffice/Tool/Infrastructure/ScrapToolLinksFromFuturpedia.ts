@@ -22,7 +22,7 @@ export class ScrapToolLinksFromFuturpedia {
 
         let response: Array<string> = [];
 
-        for(let i of [1,2]) {
+        for(let i of [6,7]) {
             let page = i == 1 ? '' : '?page='+i;  
             const routeToscrap = url + page; 
 

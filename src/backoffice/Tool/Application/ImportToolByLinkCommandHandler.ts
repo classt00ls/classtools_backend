@@ -43,39 +43,17 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
     }
 
     async execute(command: ImportToolCommand) {
-        const browser = await this.scrapProvider.getConnection();
+        
         const routeToscrap = command.link;
-        let page_to_scrap = await this.scrapProvider.getPage(routeToscrap, browser);
 
         // Recuperamos los links a la pagina de las tools en futurpedia de la ruta especificada
-        const links = await page_to_scrap.$$eval("div.items-start", (resultItems) => {
-            const urls = [];
-            resultItems.map(async resultItem => {
-                const url = resultItem.querySelector('a').href;
-                if(!urls.includes(url)) urls.push(url);
-            });
-            return urls;
-        });
-
-        if (links.length === 0) {
-            this.logger.warn('No se encontraron herramientas para importar');
-            await browser.close();
-            return;
-        }
+        const links = await this.scrapToolLinks.scrap(routeToscrap);
 
         this.logger.log(`Importando primera herramienta de ${links.length} encontradas`);
 
-        try {
-            // Solo tomamos el primer link
-            const firstLink = links[4];
-            await this.importFromLink(firstLink);
-            this.logger.log(`Importación exitosa de la herramienta desde ${firstLink}`);
-        } catch (error) {
-            this.logger.error(`Error importando herramienta: ${error.message}`);
-            throw error;
-        } finally {
-            await browser.close();
-        }
+        links.map(async (link) => {
+            await this.importFromLink(link);
+        });
     }
 
     private async importFromLink(link: string) {
