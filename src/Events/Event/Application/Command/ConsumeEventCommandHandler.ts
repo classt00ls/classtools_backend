@@ -14,7 +14,7 @@ export class ConsumeEventCommandHandler implements ICommandHandler<ConsumeEventC
 
     async execute(command: ConsumeEventCommand): Promise<void> {
 
-        const events = await this.eventRepository.find  (command.type);
+        const events = await this.eventRepository.find(command.type);
 
         for (const event of events) {
             this.logger.log(`Consumiendo evento: ${event.event_type}`);

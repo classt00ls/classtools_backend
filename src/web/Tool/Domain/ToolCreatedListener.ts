@@ -1,16 +1,17 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { OnEvent } from "@nestjs/event-emitter";
 import { ToolCreatedEvent } from "@Backoffice/Tool/Domain/ToolCreatedEvent";
 import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { Document } from "@langchain/core/documents";
+import { EventListener } from "@Shared/Infrastructure/decorators/event-listener.decorator";
 
+@EventListener('backoffice.tool.created')
 @Injectable()
 export class ToolCreatedListener {
     private readonly logger = new Logger(ToolCreatedListener.name);
 
-    @OnEvent('backoffice.tool.created', { async: true })
-    async handleToolCreatedEvent(event: ToolCreatedEvent) {
+    
+    async handle(event: ToolCreatedEvent) {
         
         this.logger.log(`Processing tool created event for: ${event.name} (${event.id})`);
 

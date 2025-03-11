@@ -18,11 +18,13 @@ export class TypeOrmEventRepository implements EventRepository {
         await this.repository.save(event);
     }
 
-    async find(event_type: string): Promise<Event[]> {
+    async find(event_type: string, limit?: number): Promise<Event[]> {
         return this.repository.find({
             where: {
-                event_type
-            }
+                event_type,
+                status: 'pending'
+            },
+            take: limit
         });
     }
 } 

@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { RouterModule } from '@nestjs/core';
+import { RouterModule, DiscoveryModule } from '@nestjs/core';
 import { join } from 'path';
 
 import { AppController } from './app.controller';
@@ -35,6 +35,8 @@ import { AgentModule } from 'apps/discover/Agent/AgentModule';
 import { ToolCreatedListener } from '@Web/Tool/Domain/ToolCreatedListener';
 import { ChatTogetherModelProvider } from '@Shared/Infrastructure/IA/ChatTogetherModelProvider';
 import { EventModule } from './Shared/Infrastructure/Event/event.module';
+import { EventDispatcherService } from '@Events/Event/Infrastructure/event-dispatcher.service';
+import { EventAutoRegisterService } from '@Events/Event/Infrastructure/event-auto-register';
 
 const cookieSession = require('cookie-session');
 
@@ -100,6 +102,7 @@ const databaseModules = databaseConfig.map((config) =>
 
 @Module({
   imports: [
+    DiscoveryModule,
     RouterModule.register(webRoutes),
     ToolModule,
     ToolSearchModule,
@@ -167,6 +170,8 @@ const databaseModules = databaseConfig.map((config) =>
     AppService,
     QueryBus,
     CommandBus,
+    EventDispatcherService,
+    EventAutoRegisterService
   ],
 })
 export class AppModule {
