@@ -166,4 +166,12 @@ export class ToolTypeormRepository extends ToolRepository {
       throw error;
     }
   }
+
+  async findByTagId(tagId: string): Promise<ToolModel[]> {
+    return this.repository
+      .createQueryBuilder('tool')
+      .innerJoin('tool.tags', 'tag')
+      .where('tag.id = :tagId', { tagId })
+      .getMany();
+  }
 }

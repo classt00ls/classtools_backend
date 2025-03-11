@@ -14,7 +14,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 import { BackofficeToolModule } from 'apps/backoffice/Tool/BackofficeToolModule';
-import { BackofficeTagModule } from 'apps/backoffice/Tag/BackofficeTagModule';
+import { BackofficeTagModule } from 'apps/backoffice/Controller/Tag/BackofficeTagModule';
 import { OpenAIModule } from 'apps/discover/Tool/openAI/OpenAIModule';
 
 import { CurrentUserMiddleware } from '@Shared/Infrastructure/middlewares/current-user.middleware';
@@ -37,6 +37,7 @@ import { ChatTogetherModelProvider } from '@Shared/Infrastructure/IA/ChatTogethe
 import { EventModule } from './Shared/Infrastructure/Event/event.module';
 import { EventAutoRegister } from '@Events/Event/Infrastructure/event-auto-register';
 import { ConsumeEventsModule } from 'apps/backoffice/Controller/Event/ConsumeEventsModule';
+import { ToolAssignedListener } from '@Web/Category/Domain/ToolAssignedListener';
 
 const cookieSession = require('cookie-session');
 

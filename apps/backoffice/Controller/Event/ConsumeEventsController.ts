@@ -34,4 +34,11 @@ export class ConsumeEventsController {
             )
         );
     }
+
+    async revert(
+        @Body('type') type: string
+    ): Promise<void> {
+    
+        
+    }
 } 

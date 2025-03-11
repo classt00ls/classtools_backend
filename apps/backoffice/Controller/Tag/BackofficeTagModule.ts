@@ -9,8 +9,11 @@ import { BackofficeTagController } from './BackofficeTagController';
 import { BackofficeCategoryController } from './Category/BackofficeCategoryController';
 import { UpgradeTagToCategoryCommandHandler } from '@Backoffice/Application/Command/Tag/UpgradeTagToCategoryCommandHandler';
 import { UpdateTagCommandHandler } from '@Backoffice/Application/Command/Tag/UpdateTagCommandHandler';
-
-
+import { ToolAssignedListener } from '@Web/Category/Domain/ToolAssignedListener';
+import { CategoryCreator } from '@Web/Category/Application/Create/CategoryCreator';
+import { CategoryRepository } from '@Web/Category/Domain/category.repository';
+import { CategoryMysqlRepository } from '@Web/Category/Infrastructure/Persistence/TypeOrm/category.mysql.repository';
+import { ToolTypeormRepository } from 'src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository';
 @Module({
     imports: [
         TypeOrmModule.forFeature([
@@ -24,11 +27,17 @@ import { UpdateTagCommandHandler } from '@Backoffice/Application/Command/Tag/Upd
         BackofficeCategoryController
     ],
     providers: [
+        ToolAssignedListener,
+        CategoryCreator,
         UpdateTagCommandHandler,
         UpgradeTagToCategoryCommandHandler,
         {
             provide: TagRepository,
             useClass: TagTypeormRepository,
+        },
+        {
+            provide: CategoryRepository,
+            useClass: CategoryMysqlRepository,
         }
     ]
  })
