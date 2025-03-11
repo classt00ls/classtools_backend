@@ -1,5 +1,5 @@
 import { Event } from './Event';
 
 export interface EventProcess {
-    processEvent(eventType: string, eventData: any): Promise<void>;
+    processEvent(event: Event): Promise<void>;
 } 

@@ -19,12 +19,28 @@ export class TypeOrmEventRepository implements EventRepository {
     }
 
     async find(event_type: string, limit?: number): Promise<Event[]> {
-        return this.repository.find({
+        const events = await this.repository.find({
             where: {
                 event_type,
                 status: 'pending'
             },
             take: limit
         });
+
+        return events.map(event => Event.fromPrimitives(
+            event.id,
+            event.event_type,
+            event.event_data,
+            event.aggregate_id,
+            event.created_at,
+            event.processed_at,
+            event.status,
+            event.error_message,
+            event.retries
+        ));
+    }
+
+    async save(event: Event): Promise<void> {
+        await this.repository.save(event);
     }
 } 

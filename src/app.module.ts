@@ -35,8 +35,8 @@ import { AgentModule } from 'apps/discover/Agent/AgentModule';
 import { ToolCreatedListener } from '@Web/Tool/Domain/ToolCreatedListener';
 import { ChatTogetherModelProvider } from '@Shared/Infrastructure/IA/ChatTogetherModelProvider';
 import { EventModule } from './Shared/Infrastructure/Event/event.module';
-import { EventDispatcherService } from '@Events/Event/Infrastructure/event-dispatcher.service';
-import { EventAutoRegisterService } from '@Events/Event/Infrastructure/event-auto-register';
+import { EventAutoRegister } from '@Events/Event/Infrastructure/event-auto-register';
+import { ConsumeEventsModule } from 'apps/backoffice/Controller/Event/ConsumeEventsModule';
 
 const cookieSession = require('cookie-session');
 
@@ -104,10 +104,11 @@ const databaseModules = databaseConfig.map((config) =>
   imports: [
     DiscoveryModule,
     RouterModule.register(webRoutes),
-    ToolModule,
-    ToolSearchModule,
+    ToolModule, 
+    ToolSearchModule,   
     DiscoverToolModule,
     DiscoverAuthModule,
+    ConsumeEventsModule,
     AgentModule,
     TagModule,
     BackofficeTagModule,
@@ -170,8 +171,7 @@ const databaseModules = databaseConfig.map((config) =>
     AppService,
     QueryBus,
     CommandBus,
-    EventDispatcherService,
-    EventAutoRegisterService
+    EventAutoRegister
   ],
 })
 export class AppModule {

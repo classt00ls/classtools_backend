@@ -4,6 +4,7 @@ import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { Document } from "@langchain/core/documents";
 import { EventListener } from "@Shared/Infrastructure/decorators/event-listener.decorator";
+import { Event } from "@Events/Event/Domain/Event";
 
 @EventListener('backoffice.tool.created')
 @Injectable()
@@ -11,9 +12,9 @@ export class ToolCreatedListener {
     private readonly logger = new Logger(ToolCreatedListener.name);
 
     
-    async handle(event: ToolCreatedEvent) {
+    async handle(event: Event) {
         
-        this.logger.log(`Processing tool created event for: ${event.name} (${event.id})`);
+        this.logger.log(`Processing tool created event for: ${event.event_data.name} (${event.id})`);
 
         try {
             const vectorStore = await PGVectorStore.initialize(
@@ -51,33 +52,33 @@ export class ToolCreatedListener {
             
             await vectorStore.end();
 
-            this.logger.log(`Successfully processed tool: ${event.name}`);
+            this.logger.log(`Successfully processed tool: ${event.event_data.name}`);
         } catch (error) {
-            this.logger.error(`Error processing tool ${event.name}: ${error.message}`);
+            this.logger.error(`Error processing tool ${event.event_data.name}: ${error.message}`);
             throw new Error(`Error inserting: ${error.message}`);
         }
     }
 
-    private async createDocument(event: ToolCreatedEvent): Promise<Document> {
+    private async createDocument(event: Event): Promise<Document> {
         const content = `
-${event.name}
+${event.event_data.name}
 
-${event.description}
+${event.event_data.description}
 
-${event.prosAndCons}
+${event.event_data.prosAndCons}
 
-${event.ratings}
+${event.event_data.ratings}
 `.trim();
 
         return new Document({
             pageContent: content,
             metadata: {
                 id: event.id,
-                name: event.name,
-                excerpt: event.description.substring(0, 350),
-                url: event.url,
-                price: event.price,
-                tags: event.tags
+                name: event.event_data.name,
+                excerpt: event.event_data.description.substring(0, 350),
+                url: event.event_data.url,
+                price: event.event_data.price,
+                tags: event.event_data.tags
             }
         });
     }

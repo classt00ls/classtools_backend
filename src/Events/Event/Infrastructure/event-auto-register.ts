@@ -3,7 +3,7 @@ import { DiscoveryService, Reflector } from '@nestjs/core';
 
 // Este servicio escanea todos los listeners y guarda la relación { tipo de evento → servicio } en un Map.
 @Injectable()
-export class EventAutoRegisterService implements OnModuleInit {
+export class EventAutoRegister implements OnModuleInit {
 
     private listeners = new Map<string, any>();
 
@@ -47,6 +47,10 @@ export class EventAutoRegisterService implements OnModuleInit {
             const eventType = this.reflector.get<string>('eventType', instance.constructor);
 
             if (eventType) {
+                if (this.listeners.has(eventType)) {
+                    console.warn(`⚠️ El listener para el evento ${eventType} ya está registrado.`);
+                    continue;
+                }
                 console.log(`📌 Registrando listener para ${eventType}`);
                 // La línea `this.eventDispatcher.subscribe(eventType, instance.handle.bind(instance));` registra un listener para un tipo de evento específico.
                 // `eventType` es el tipo de evento que el listener manejará.
@@ -54,6 +58,7 @@ export class EventAutoRegisterService implements OnModuleInit {
                 // Esto es importante para que el método `handle` pueda acceder a las propiedades y métodos de la instancia del listener.
                 // En resumen, esta línea suscribe el listener al `EventDispatcherService` para que pueda manejar eventos del tipo `eventType`.
                 this.listeners.set(eventType, instance);
+         
             }
         }// Comenzar el procesamiento de eventos
     }

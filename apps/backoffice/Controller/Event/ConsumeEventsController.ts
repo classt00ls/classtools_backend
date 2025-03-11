@@ -12,7 +12,7 @@ export class ConsumeEventsController {
         private readonly commandBus: CommandBus
     ) {}
 
-    @Post('/consume')
+    @Post('consume')
     @ApiOperation({ summary: 'Consume un evento del sistema' })
     @ApiResponse({ 
         status: 201, 
@@ -23,12 +23,14 @@ export class ConsumeEventsController {
         description: 'Datos del evento inválidos' 
     })
     async consume(
-        @Body('type') type: string
+        @Body('type') type: string,
+        @Body('limit') limit: number
     ): Promise<void> {
     
         await this.commandBus.execute(
             new ConsumeEventCommand(
-                type
+                type,
+                limit
             )
         );
     }
