@@ -82,14 +82,15 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 			);
 
 		return await this.connection.sql`
-			SELECT id,name, description, excerpt
+			SELECT *
 			FROM classtools.tool_vector
 			ORDER BY (embedding <=> ${embedding})
 			LIMIT ${limit};
 		`;
 
 		} catch (error) {
-			return null;
+			console.error('[PostgreToolVectorRepository] Error en búsqueda:', error);
+			return [];
 		}
 	}
 

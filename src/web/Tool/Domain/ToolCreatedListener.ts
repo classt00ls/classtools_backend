@@ -47,7 +47,7 @@ export class ToolCreatedListener {
             await vectorStore.addVectors(
                 await vectorStore.embeddings.embedDocuments([document.pageContent]),
                 [document],
-                { ids: [event.id] }
+                { ids: [event.aggregate_id] }
             );
             
             await vectorStore.end();

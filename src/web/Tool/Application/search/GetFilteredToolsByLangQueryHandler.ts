@@ -6,6 +6,7 @@ import { DataSource } from "typeorm";
 import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
 import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
 import { ToolLangFilter } from "@Web/Tool/Domain/tool.lang.filter";
+import { ToolVectorSearcher } from "./ToolVectorSearcher";
 
 @Injectable()
 @QueryHandler(GetFilteredToolsByLangQuery)
@@ -14,7 +15,8 @@ export class GetFilteredToolsByLangQueryHandler implements IQueryHandler<GetFilt
     private repositories: { [key: string]: ToolRepository } = {};
 
     constructor(
-        private dataSource: DataSource
+        private dataSource: DataSource,
+        private toolVectorSearcher: ToolVectorSearcher
     ) {
         // Inicializar repositorios para los idiomas principales
         this.repositories = {
@@ -35,6 +37,14 @@ export class GetFilteredToolsByLangQueryHandler implements IQueryHandler<GetFilt
     async execute(query: GetFilteredToolsByLangQuery): Promise<ToolModel[]> {
         try {
             const lang = (query.filter.lang || 'es').replace(/['"]/g, '').trim();
+
+            if(typeof query.filter?.prompt === 'string' && query.filter.prompt.trim() !== '') {
+                this.logger.log(`Buscando herramientas con prompt: ${query.filter.prompt} en idioma: ${lang}`);
+                const tools =  await this.toolVectorSearcher.search(query.filter.prompt, lang);
+                this.logger.log(`Encontradas ${tools.length} herramientas`);
+                return tools;
+            }
+
             this.logger.log(`Buscando herramientas en idioma: ${lang}`);
 
             const repository = this.getRepositoryForLanguage(lang);

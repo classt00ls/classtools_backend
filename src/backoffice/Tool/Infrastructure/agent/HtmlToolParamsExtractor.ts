@@ -20,8 +20,14 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
     async extractVideoUrl(html: string): Promise<string> {
         try {
             const SYSTEM_TEMPLATE =
-                `You are an expert web content analyst. Your task is to analyze a webpage and extract the URL of a video if it is explicitly mentioned in the HTML content. 
-            Focus specifically on identifying the first video URL and return it. Do not infer any information—extract only what is explicitly stated in the content.`;
+                `You are an expert web content analyst. Your task is to analyze a webpage and extract the URL of a video if it is present within a div that has the class 'player-wrapper'.
+                
+                IMPORTANT INSTRUCTIONS:
+                1. ONLY look for video URLs within divs that have the class 'player-wrapper'
+                2. Focus on finding video elements or iframes within these divs
+                3. Return the src attribute of the video/iframe if found
+                4. If no video is found within a player-wrapper div, return "No video found"
+                5. Do not look for videos in other parts of the HTML`;
 
             const analysisResponse = await this.model.invoke([
                 {
@@ -32,24 +38,28 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             ]);
 
             const VIDEO_CATEGORIZATION_SYSTEM_TEMPLATE =
-                `Your job is to extract the URL of a video if it is present in the webpage content.`;
+                `Your job is to extract the URL of a video that appears within a div with class 'player-wrapper'.
+                Only return a URL if it's found within this specific div class.`;
 
             const VIDEO_CATEGORIZATION_HUMAN_TEMPLATE =
-                `The following text is extracted from a webpage containing video content.  
-            Tu misión es extraer la url de un video que encuentres que hable acerca de la IA que explica el html que te envío (lo más probable es que tenga la etiqueta html de video).
-            Debes responder usando este formato:
+                `The following text contains information about a video element.
+                Extract ONLY the video URL that appears within a div with class 'player-wrapper'.
+                
+                Rules:
+                1. The URL must come from within a player-wrapper div
+                2. Return "No video found" if no such div exists or no video URL is found within it
+                3. The URL should be a direct link to a video source
+                
+                Respond using this format:
+                {
+                    "video_url": "URL_of_the_video"
+                }
 
-            {
-                "video_url": "URL_of_the_video"
-            }
-            Es muy importante que el video sea un link a un video, y que hable sobre la IA.
-            If no video URL is mentioned, return "No video found".  
+                Here is the text:
 
-            Here is the text:
-
-            <text>
-            ${analysisResponse.content}
-            </text>`;
+                <text>
+                ${analysisResponse.content}
+                </text>`;
 
             const categorizationResponse = await this.model.invoke([
                 {
@@ -377,6 +387,166 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
         return {
             es: { analysis: spanishAnalysis },
             en: { analysis: englishAnalysis }
+        };
+    }
+
+    async extractReviews(html: string): Promise<MultiLanguageResponse<{
+        analysis: string,
+        structuredData: {
+            reviews: Array<{
+                theme: string,
+                sentiment: string,
+                content: string
+            }>
+        }
+    }>> {
+        const SYSTEM_TEMPLATE = `You are an expert web content analyst specialized in artificial intelligence (AI) products.
+            Your task is to analyze a webpage and extract user reviews and testimonials about the AI tool.
+            Focus on finding and summarizing:
+            1. Real user experiences and feedback
+            2. Customer testimonials
+            3. Use cases from actual users
+            4. Common themes in user feedback
+            5. Both positive and negative experiences
+            
+            Format:
+            - Group reviews by common themes
+            - Include direct quotes when relevant
+            - Maintain the original sentiment of the reviews
+            - Focus on specific experiences rather than generic praise
+            - Include balanced feedback (both positive and negative)
+            - Exclude any marketing or promotional content
+            - If no reviews are found, return empty content without any explanatory messages
+            
+            IMPORTANT: You must provide BOTH versions. If you only provide one, it's considered an error.
+            Provide the reviews analysis in both Spanish and English, clearly separated by markers:
+
+            SPANISH VERSION:
+            <h2>Reseñas de Usuarios de [Nombre de la Herramienta]</h2>
+
+            <h3>Experiencias Destacadas</h3>
+            [Análisis de las experiencias más relevantes o dejar vacío si no hay]
+
+            <h3>Temas Comunes</h3>
+            [Patrones y temas recurrentes en las reseñas o dejar vacío si no hay]
+
+            <h3>Casos de Uso Reales</h3>
+            [Ejemplos específicos de implementación por usuarios o dejar vacío si no hay]
+
+            ENGLISH VERSION:
+            <h2>User Review</h2>
+
+            <h3>Featured Experiences</h3>
+            [Analysis of most relevant experiences or leave empty if none]
+
+            <h3>Common Themes</h3>
+            [Patterns and recurring themes in reviews or leave empty if none]
+
+            <h3>Real Use Cases</h3>
+            [Specific implementation examples from users or leave empty if none]`;
+
+        const analysisResponse = await this.model.invoke([
+            {
+                role: "system",
+                content: SYSTEM_TEMPLATE,
+            },
+            new HumanMessage(html)
+        ]);
+
+        const CATEGORIZATION_SYSTEM_TEMPLATE = `Your job is to extract structured information about user reviews from a webpage.
+            You must provide the response in both Spanish and English.
+            If no reviews are found, return empty arrays without any explanatory messages.`;
+
+        const CATEGORIZATION_HUMAN_TEMPLATE = `The following text contains user reviews analysis in both Spanish and English.
+            Your task is to identify the reviews, their themes, and sentiment from both versions.
+            If no reviews are found, return empty arrays without any explanatory messages.
+            Provide your response as a JSON object with the following structure:
+
+            {
+                "es": {
+                    "reviews": [
+                        {
+                            "theme": "Facilidad de Uso",
+                            "sentiment": "positivo",
+                            "content": "Texto de la reseña"
+                        }
+                    ]
+                },
+                "en": {
+                    "reviews": [
+                        {
+                            "theme": "Ease of Use",
+                            "sentiment": "positive",
+                            "content": "Review text"
+                        }
+                    ]
+                }
+            }
+
+            Here is the text:
+
+            <text>
+            ${analysisResponse.content}
+            </text>`;
+
+        const categorizationResponse = await this.model.invoke([
+            {
+                role: "system",
+                content: CATEGORIZATION_SYSTEM_TEMPLATE,
+            },
+            {
+                role: "user",
+                content: CATEGORIZATION_HUMAN_TEMPLATE,
+            }
+        ], {
+            response_format: {
+                type: "json_object",
+                schema: zodToJsonSchema(
+                    z.object({
+                        es: z.object({
+                            reviews: z.array(z.object({
+                                theme: z.string(),
+                                sentiment: z.string(),
+                                content: z.string()
+                            }))
+                        }),
+                        en: z.object({
+                            reviews: z.array(z.object({
+                                theme: z.string(),
+                                sentiment: z.string(),
+                                content: z.string()
+                            }))
+                        })
+                    })
+                )
+            }
+        });
+
+        const categorizationOutput = JSON.parse(categorizationResponse.content as string);
+
+        // Separar el análisis en español e inglés
+        const content = analysisResponse.content;
+        let spanishAnalysis = '';
+        let englishAnalysis = '';
+
+        if (content.includes('SPANISH VERSION:') && content.includes('ENGLISH VERSION:')) {
+            const parts = content.split('ENGLISH VERSION:');
+            spanishAnalysis = parts[0].replace('SPANISH VERSION:', '').trim();
+            englishAnalysis = parts[1].trim();
+        } else {
+            this.logger.error('El modelo no devolvió ambas versiones del análisis');
+            throw new Error('El modelo debe proporcionar ambas versiones del análisis');
+        }
+
+        return {
+            es: {
+                analysis: spanishAnalysis,
+                structuredData: categorizationOutput.es
+            },
+            en: {
+                analysis: englishAnalysis,
+                structuredData: categorizationOutput.en
+            }
         };
     }
 

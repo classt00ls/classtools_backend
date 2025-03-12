@@ -7,8 +7,6 @@ import { ToolCreator } from "../Domain/ToolCreator";
 import { TagCreator } from "@Backoffice/Tag/Domain/TagCreator";
 import { ToolParamsExtractor } from "../Domain/ToolParamsExtractor";
 import { ToolParams } from "../Domain/ToolCreator";
-import { EventEmitter2 } from "@nestjs/event-emitter";
-import { ScrapConnectionProvider } from "@Shared/Domain/Service/Tool/ScrapConnectionProvider";
 import { DataSource } from "typeorm";
 import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
 import { ScrapToolLinks } from "../Domain/ScrapToolLinks";
@@ -24,9 +22,7 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
         private dataSource: DataSource,
         private creator: ToolCreator,
         private tagCreator: TagCreator,
-        @Inject('ToolParamsExtractor') private readonly paramsExtractor: ToolParamsExtractor,
-        private eventEmitter: EventEmitter2,
-        private scrapProvider: ScrapConnectionProvider
+        @Inject('ToolParamsExtractor') private readonly paramsExtractor: ToolParamsExtractor
     ) {
         // Inicializar repositorios para los idiomas principales
         this.repositories = {
@@ -72,6 +68,10 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
             try {
                 const tool = await this.scrapTool.scrap(link);
 
+                // const reviewsResult = await this.paramsExtractor.extractReviews(tool.reviews_content);
+                // const cleanReviewsResult = this.cleanMultiLanguageResponse(reviewsResult);
+             
+
                 // Extraer y limpiar descripción del contenido principal
                 const descriptionResult = await this.paramsExtractor.extractDescription(tool.body_content);
                 const cleanDescriptionResult = this.cleanMultiLanguageResponse(descriptionResult);
@@ -97,7 +97,7 @@ export class ImportToolByLinkCommandHandler implements ICommandHandler<ImportToo
                 const cleanHowToUseResult = this.cleanMultiLanguageResponse(howToUseResult);
 
                 // Extraer URL del video si existe
-                const videoUrl = await this.paramsExtractor.extractVideoUrl(tool.body_content);
+                const videoUrl = await this.paramsExtractor.extractVideoUrl(tool.video_content);
 
                 // Crear los tags
                 const tags = await this.tagCreator.extract(tool.tags);

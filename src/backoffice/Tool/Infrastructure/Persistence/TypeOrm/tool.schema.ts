@@ -89,6 +89,10 @@ export const createToolSchema = (suffix: string = '') => new EntitySchema<ToolMo
     howToUse: {
       type: String,
       nullable: true
+    },
+    reviews_content: {
+      type: String,
+      nullable: true
     }
   },
   relations: {

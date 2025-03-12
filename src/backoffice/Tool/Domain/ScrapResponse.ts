@@ -8,6 +8,7 @@ export class ScrapToolResponse {
     public readonly link: string,
     public readonly url: string,
     public readonly body_content: string,
-    public readonly video_content: string
+    public readonly video_content: string,
+    public readonly reviews_content: string
     ){}
 }

@@ -5,7 +5,7 @@ PUT http://localhost:3000/backoffice/futurpedia
 Content-Type: application/json
 
 {
-    "link": "https://www.futurepedia.io/ai-tools/research-assistant"
+    "link": "https://www.futurepedia.io/ai-tools/workflows"
 }
 
 ### Update futurpedia items

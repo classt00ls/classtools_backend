@@ -41,8 +41,7 @@ export class ScrapToolFromFuturpedia {
             let pricing = 'No disponible';
             let stars = 0;
             let url = link;
-            let body_content = '';
-            let video_content = '';
+            let body_content, reviews_content, video_content = '';
 
             // Intentar extraer cada elemento individualmente
             try {
@@ -88,12 +87,19 @@ export class ScrapToolFromFuturpedia {
 
             try {
                 video_content = await page.$eval(
-                    '.react-player.aspect-video.max-w-full.rounded-lg.shadow-lg',
-                    (element) => element.innerHTML
+                    '.mx-auto.mb-20.mt-4.grid.w-full.max-w-7xl.grid-cols-1.justify-center.gap-8.px-4.md\\:grid-cols-2.xl\\:px-0',
+                    (elemento) => elemento.innerHTML
                 );
             } catch (error) {
                 this.logger.warn(`Error al extraer contenido de video para ${link}: ${error.message}`);
             }
+
+            try {
+                reviews_content = await page.$eval('#tool-reviews', (element) => element.innerHTML);
+            } catch (error) {
+                this.logger.warn(`Error al extraer contenido de reseñas para ${link}: ${error.message}`);
+            }
+            const reviews_html = await page.$eval('#tool-reviews', (element) => element.innerHTML);
 
             await browser.close();
             
@@ -105,7 +111,8 @@ export class ScrapToolFromFuturpedia {
                 link,
                 url,
                 body_content,
-                video_content
+                video_content,
+                reviews_html
             );
 
             this.logger.log(`Scraping completado exitosamente para ${link}`);

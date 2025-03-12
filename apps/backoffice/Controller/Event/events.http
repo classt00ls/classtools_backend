@@ -3,6 +3,6 @@ POST http://localhost:3000/events/consume
 Content-Type: application/json
 
 {
-    "type": "backoffice.tag.tool.assigned",
+    "type": "backoffice.tool.created",
     "limit": 1000
 } 

@@ -14,11 +14,8 @@ export class GetFilteredToolsQueryHandler {
     ) {}
     
     async execute(query: GetFilteredToolsQuery) {
-
         if(typeof query.filter?.prompt === 'string' && query.filter.prompt.trim() !== '') {
-            // @TODO  aqui se detiene la búsqueda por promt
             return await this.toolVectorSearcher.search(query.filter.prompt);
-
         }
 
         return await this.toolSearcher.search(
@@ -27,7 +24,6 @@ export class GetFilteredToolsQueryHandler {
                 query.filter.title,
                 query.page,
                 query.pageSize,
-                
         );
     }
 }

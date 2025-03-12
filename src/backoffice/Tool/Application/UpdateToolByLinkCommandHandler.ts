@@ -113,6 +113,7 @@ export class UpdateToolByLinkCommandHandler implements ICommandHandler<UpdateToo
                 stars: tool.stars,
                 body_content: tool.html,
                 video_content: tool.video_html,
+                reviews_content: tool.reviews_content || '',
                 tags: Array.isArray(tool.tags) ? tool.tags.map(t => t.name) : [],
                 // Actualizamos con el nuevo contenido extraído y limpio
                 description: cleanDescriptionResult,

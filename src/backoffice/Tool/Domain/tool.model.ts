@@ -29,7 +29,8 @@ export class ToolModel extends BaseModel {
     public video_url: string,
     public prosAndCons: string,
     public ratings: string,
-    public howToUse: string
+    public howToUse: string,
+    public reviews_content: string = ''
     ){
       
 		super();
@@ -87,7 +88,8 @@ export class ToolModel extends BaseModel {
     video_url: string,
     prosAndCons: string,
     ratings: string = '',
-    howToUse: string = ''
+    howToUse: string = '',
+    reviews_content: string = ''
   ) {
     return new ToolModel(
       id,
@@ -105,7 +107,8 @@ export class ToolModel extends BaseModel {
       video_url,
       prosAndCons,
       ratings,
-      howToUse
+      howToUse,
+      reviews_content
     )
   }
 
