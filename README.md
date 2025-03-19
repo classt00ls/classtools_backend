@@ -1,73 +1,157 @@
+# ClassTools Backend
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" />
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Índice
+- [Descripción](#descripción)
+- [Arquitectura](#arquitectura)
+  - [Estructura DDD](#estructura-ddd)
+  - [Módulos principales](#módulos-principales)
+- [Instalación](#instalación)
+- [Configuración](#configuración)
+- [Ejecución](#ejecución)
+  - [Desarrollo](#desarrollo)
+  - [Producción](#producción)
+- [Comandos útiles](#comandos-útiles)
+- [Tests](#tests)
+- [Docker](#docker)
+- [Contribución](#contribución)
+- [Licencia](#licencia)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Descripción
 
-## Description
+Backend del proyecto ClassTools construido con [NestJS](https://github.com/nestjs/nest), un framework progresivo de Node.js para construir aplicaciones del lado del servidor eficientes y escalables.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Este proyecto implementa una arquitectura basada en Domain-Driven Design (DDD) para organizar el código de manera que refleje el dominio del negocio.
 
-## Installation
+## Arquitectura
+
+### Estructura DDD
+
+El proyecto sigue los principios de Domain-Driven Design (DDD) con la siguiente estructura:
+
+```
+src/
+├── backoffice/              # Contexto acotado para administración
+│   ├── Tool/                # Módulo/entidad de herramientas
+│   │   ├── Domain/          # Lógica del dominio y reglas de negocio
+│   │   │   ├── model.ts     # Entidad de dominio
+│   │   │   ├── repository.ts # Interfaz del repositorio
+│   │   │   └── events/      # Eventos de dominio
+│   │   ├── Application/     # Casos de uso y servicios de aplicación
+│   │   │   ├── queries/     # Consultas (CQRS)
+│   │   │   └── commands/    # Comandos (CQRS)
+│   │   └── Infrastructure/  # Implementaciones concretas
+│   │       ├── controllers/ # Controladores API
+│   │       └── persistence/ # Implementación del repositorio
+│   └── Tag/                 # Otro módulo dentro del contexto
+├── discover/                # Contexto acotado para descubrimiento
+├── web/                     # Contexto acotado para web pública
+└── Shared/                  # Componentes compartidos entre contextos
+    ├── Domain/              # Objetos de valor, interfaces, etc.
+    └── Infrastructure/      # Servicios compartidos, bases de datos
+```
+
+Cada módulo se divide en tres capas principales siguiendo DDD y arquitectura hexagonal:
+
+1. **Domain**: Contiene las entidades, objetos de valor, interfaces de repositorio y lógica de dominio.
+2. **Application**: Orquesta los flujos de la aplicación, implementa casos de uso e interactúa con el dominio.
+3. **Infrastructure**: Proporciona implementaciones concretas para las interfaces definidas en el dominio.
+
+### Módulos principales
+
+- **Backoffice**: Gestión administrativa de la plataforma.
+- **Discover**: Funcionalidad para descubrimiento de herramientas.
+- **Web**: APIs públicas para la interfaz web.
+- **Shared**: Componentes compartidos entre todos los contextos.
+
+## Instalación
 
 ```bash
+# Instalación de dependencias
 $ npm install
 ```
 
-## Running the app
+## Configuración
+
+El proyecto utiliza archivos de configuración para los diferentes entornos:
 
 ```bash
-# development
-$ npm run start
+# Copia el archivo de configuración de ejemplo
+$ cp .env.example .env.development
+```
 
-# watch mode
+Edita los valores en `.env.development` según tu entorno local.
+
+## Ejecución
+
+### Desarrollo
+
+```bash
+# Modo de desarrollo
 $ npm run start:dev
 
-# production mode
+# Modo de desarrollo con depuración
+$ npm run start:debug
+```
+
+### Producción
+
+```bash
+# Construir para producción
+$ npm run build
+
+# Ejecutar en modo producción
 $ npm run start:prod
 ```
 
-## Test
+## Comandos útiles
 
 ```bash
-# unit tests
+# Formatear código
+$ npm run format
+
+# Ejecutar linting
+$ npm run lint
+
+# Crear vectores de herramientas
+$ npm run create-vector-tools
+
+# Buscar vectores de herramientas
+$ npm run search-vector-tools
+
+# Procesar eventos
+$ npm run process-events
+```
+
+## Tests
+
+```bash
+# Tests unitarios
 $ npm run test
 
-# e2e tests
+# Tests e2e
 $ npm run test:e2e
 
-# test coverage
+# Cobertura de tests
 $ npm run test:cov
 ```
 
-## Support
+## Docker
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+El proyecto incluye configuración para Docker:
 
-## Stay in touch
+```bash
+# Iniciar servicios con Docker Compose
+$ docker-compose up -d
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Contribución
 
-## License
+Por favor, lee la guía de contribución antes de enviar una pull request.
 
-Nest is [MIT licensed](LICENSE).
+## Licencia
+
+Este proyecto está licenciado bajo [MIT License](LICENSE).
