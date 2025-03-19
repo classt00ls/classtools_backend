@@ -4,6 +4,7 @@ import { ToolController } from './tool.controller';
 import { GetAllToolsQueryHandler } from 'src/web/Application/Query/Tool/GetAllToolsQueryHandler';
 import { CountToolsQueryHandler } from 'src/web/Application/Query/Tool/CountToolsQueryHandler';
 import { GetDetailToolQueryHandler } from 'src/web/Application/Query/Tool/GetDetailToolQueryHandler';
+import { GetToolBySlugQueryHandler } from 'src/web/Application/Query/Tool/GetToolBySlugQueryHandler';
 import { TypeormUserWebRepository } from '@Web/UserWeb/Infrastructure/Persistence/TypeOrm/TypeormUserWebRepository';
 import { GenerateUserToolSuggestionsOnToolGetDetail } from '@Web/Application/Listener/UserToolSuggestions/GenerateUserToolSuggestionsOnToolGetDetail';
 import { UserWebExtractor } from '@Web/UserWeb/Domain/UserWebExtractor';
@@ -29,6 +30,7 @@ import { ToolRepositoryModule } from 'src/backoffice/Tool/Infrastructure/Persist
     providers: [
         CountToolsQueryHandler,
         GetAllToolsQueryHandler,
+        GetToolBySlugQueryHandler,
         ToggleFavoriteCommandHandler,
         GetDetailToolQueryHandler,
         UserToolSuggestionsSearcher,

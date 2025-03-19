@@ -5,6 +5,7 @@ import { QueryBus } from '@nestjs/cqrs';
 import { CountToolsQuery } from 'src/web/Application/Query/Tool/CountToolsQuery';
 import { GetAllToolsQuery } from 'src/web/Application/Query/Tool/GetAllToolsQuery';
 import { GetDetailToolQuery } from 'src/web/Application/Query/Tool/GetDetailToolQuery';
+import { GetToolBySlugQuery } from 'src/web/Application/Query/Tool/GetToolBySlugQuery';
 
 import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';
 import { PublicGuard } from 'src/Shared/Infrastructure/guards/public.guard';
@@ -92,6 +93,26 @@ export class ToolController {
     return data;
   }
 
+  @Get('slug')
+  @UseGuards(PublicGuard)
+  @Serialize(getDetailToolDto)
+  async getBySlug(
+    @Request() request,
+    @Query('title') slug: string,
+    @Query('lang') lang?: string
+  ) {
+    const userId = request.userId;
+
+    const data = await this.queryBus.execute(
+        new GetToolBySlugQuery(
+          slug,
+          userId,
+          lang
+        )
+    );
+
+    return data;
+  }
 
   @Get('')
   async getJson() {

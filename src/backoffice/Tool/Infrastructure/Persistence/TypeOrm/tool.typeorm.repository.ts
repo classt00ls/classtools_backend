@@ -155,6 +155,38 @@ export class ToolTypeormRepository extends ToolRepository {
     }
   }
 
+  async getOneBySlugOrFail(slug: string): Promise<ToolModel> {
+    try {
+      this.logger.debug(`Buscando tool con nombre: ${slug}`);
+      
+      const response = await this.repository.findOneByOrFail({
+        name: slug
+      });
+
+      return ToolModel.fromPrimitives(
+        response.id,
+        response.name,
+        response.pricing,
+        response.stars,
+        response.description,
+        response.features,
+        response.excerpt,
+        response.tags,
+        response.link,
+        response.url,
+        response.html,
+        response.video_html,
+        response.video_url,
+        response.prosAndCons,
+        response.ratings,
+        response.howToUse
+      );
+    } catch (error) {
+      this.logger.error(`Error al obtener tool por nombre ${slug}: ${error.message}`);
+      throw error;
+    }
+  }
+
   async export(): Promise<void> {
     try {
       const tools = await this.repository.find();
