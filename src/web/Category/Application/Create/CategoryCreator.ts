@@ -8,10 +8,11 @@ export class CategoryCreator {
         private repository: CategoryRepository
     ) {}
 
-    async create(id: string, name: string): Promise<void> {
+    async create(id: string, name: string, tools_num: number = 0): Promise<void> {
         const category = Category.fromPrimitives(
             id,
-            name
+            name,
+            tools_num
         );
 
         await this.repository.save(category);

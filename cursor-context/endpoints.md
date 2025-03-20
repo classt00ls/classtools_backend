@@ -14,18 +14,77 @@ Este documento describe los principales endpoints disponibles en la API de Class
   - `slug` (query, obligatorio): El nombre de la herramienta
   - `lang` (query, opcional): El idioma de la herramienta (por defecto 'es')
 - **Respuesta**: Objeto detallado de la herramienta
+- **Formato de Respuesta (DTO)**:
+  ```json
+  {
+    "id": "string",                // ID único de la herramienta
+    "name": "string",              // Nombre de la herramienta
+    "url": "string",               // URL de la herramienta
+    "background_image": "string",  // URL de la imagen de fondo
+    "pricing": "string",           // Información de precios en texto
+    "stars": "string",             // Valoración en estrellas
+    "excerpt": "string",           // Resumen corto
+    "features": "string",          // Características en formato JSON
+    "description": "string",       // Descripción completa
+    "link": "boolean",             // Si tiene enlace válido
+    "isBookmarked": "boolean",     // Si está en favoritos del usuario
+    "totalBookmarked": "boolean",  // Total de usuarios que la tienen en favoritos
+    "category": "number",          // ID de la categoría
+    "tags": [                      // Array de etiquetas
+      {
+        "id": "string",            // ID de la etiqueta
+        "name": "string"           // Nombre de la etiqueta
+      }
+    ],
+    "video_url": "string",         // URL del video demostrativo
+    "prosAndCons": "string",       // Pros y contras en formato JSON
+    "ratings": "string",           // Valoraciones detalladas
+    "howToUse": "string"           // Instrucciones de uso
+  }
+  ```
 
 #### GET `/tool`
 - **Descripción**: Obtiene todas las herramientas
 - **Parámetros**: 
-  - Parámetros de paginación probablemente
-- **Respuesta**: Lista de herramientas
+  - `page` (query, opcional): Número de página
+  - `pageSize` (query, opcional): Tamaño de página
+- **Respuesta**: Lista de herramientas con recuento total
+- **Formato de Respuesta (DTO)**:
+  ```json
+  {
+    "data": [                      // Array de herramientas
+      {
+        "id": "string",            // ID único de la herramienta
+        "name": "string",          // Nombre de la herramienta
+        "url": "string",           // URL de la herramienta
+        "pricing": "string",       // Información de precios
+        "background_image": "string", // URL de la imagen de fondo
+        "price": "string",         // Precio en texto
+        "stars": "string",         // Valoración en estrellas
+        "excerpt": "string",       // Resumen corto
+        "description": "string",   // Descripción completa
+        "link": "boolean",         // Si tiene enlace válido
+        "isBookmarked": "boolean", // Si está en favoritos del usuario
+        "totalBookmarked": "boolean", // Total de usuarios que la tienen en favoritos
+        "category": "number",      // ID de la categoría
+        "tags": [                  // Array de etiquetas
+          {
+            "id": "string",        // ID de la etiqueta
+            "name": "string"       // Nombre de la etiqueta
+          }
+        ]
+      }
+    ],
+    "count": "number"              // Número total de herramientas
+  }
+  ```
 
 #### GET `/tool/:id`
 - **Descripción**: Obtiene una herramienta por su ID
 - **Parámetros**:
   - `id` (path, obligatorio): ID de la herramienta
 - **Respuesta**: Objeto detallado de la herramienta
+- **Formato de Respuesta (DTO)**: Mismo formato que el endpoint `/tool/slug`
 
 ### Endpoints de Búsqueda de Herramientas
 
@@ -36,6 +95,35 @@ Este documento describe los principales endpoints disponibles en la API de Class
   - `pageSize` (query, opcional): Tamaño de página
   - `filters` (query, opcional): Objeto con filtros (categorías, estrellas, título, etc.)
 - **Respuesta**: Objeto con datos de herramientas y recuento total
+- **Formato de Respuesta (DTO)**:
+  ```json
+  {
+    "data": [                      // Array de herramientas filtradas
+      {
+        "id": "string",            // ID único de la herramienta
+        "name": "string",          // Nombre de la herramienta
+        "url": "string",           // URL de la herramienta
+        "pricing": "string",       // Información de precios
+        "background_image": "string", // URL de la imagen de fondo
+        "price": "string",         // Precio en texto
+        "stars": "string",         // Valoración en estrellas
+        "excerpt": "string",       // Resumen corto
+        "description": "string",   // Descripción completa
+        "link": "boolean",         // Si tiene enlace válido
+        "isBookmarked": "boolean", // Si está en favoritos del usuario
+        "totalBookmarked": "boolean", // Total de usuarios que la tienen en favoritos
+        "category": "number",      // ID de la categoría
+        "tags": [                  // Array de etiquetas
+          {
+            "id": "string",        // ID de la etiqueta
+            "name": "string"       // Nombre de la etiqueta
+          }
+        ]
+      }
+    ],
+    "count": "number"              // Número total de herramientas que coinciden con los filtros
+  }
+  ```
 
 #### GET `/tool/search/lang`
 - **Descripción**: Busca herramientas en un idioma específico
@@ -45,6 +133,7 @@ Este documento describe los principales endpoints disponibles en la API de Class
   - `filters` (query, opcional): Objeto con filtros
   - `lang` (query, obligatorio): Idioma de búsqueda
 - **Respuesta**: Objeto con datos de herramientas y recuento total
+- **Formato de Respuesta (DTO)**: Mismo formato que el endpoint `/tool/search`
 
 #### GET `/tool/search/scrap`
 - **Descripción**: Inicia el proceso de scraping para actualizar herramientas
@@ -105,6 +194,23 @@ Este documento describe los principales endpoints disponibles en la API de Class
 - **Parámetros**:
   - Datos de registro en el cuerpo de la petición
 - **Respuesta**: Confirmación de registro y posiblemente token
+
+#### GET `/web/auth/me`
+- **Descripción**: Obtiene el perfil del usuario autenticado actual
+- **Parámetros**:
+  - Token de autenticación (header)
+- **Respuesta**: Datos del perfil de usuario
+- **Formato de Respuesta (DTO)**:
+  ```json
+  {
+    "id": "string",            // ID único del usuario
+    "visitedTools": "string",  // JSON stringificado con las herramientas visitadas
+    "favorites": "string",     // JSON stringificado con los IDs de herramientas favoritas
+    "email": "string",         // Correo electrónico del usuario
+    "name": "string",          // Nombre del usuario
+    "suggestions": "string"    // JSON stringificado con sugerencias de herramientas
+  }
+  ```
 
 ### Endpoints de Usuario
 

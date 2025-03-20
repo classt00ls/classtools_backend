@@ -15,6 +15,10 @@ export const CategorySchema = new EntitySchema<Category>({
         imageUrl: {
             type: String,
             nullable: true
+        },
+        tools_num: {
+            type: Number,
+            default: 0
         }
     }
 }); 
