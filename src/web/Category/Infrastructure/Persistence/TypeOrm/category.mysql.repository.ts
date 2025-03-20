@@ -42,7 +42,15 @@ export class CategoryMysqlRepository extends CategoryRepository {
         return this.repository.find();
     }
 
+    async countAll(): Promise<number> {
+        return this.repository.count();
+    }
+
     async save(category: Category): Promise<void> {
         await this.repository.save(category);
+    }
+
+    async delete(id: string): Promise<void> {
+        await this.repository.delete(id);
     }
 } 
