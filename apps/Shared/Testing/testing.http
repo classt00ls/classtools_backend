@@ -14,6 +14,40 @@ Content-Type: {{contentType}}
   "query": "¿Qué son los embeddings vectoriales y cómo se utilizan en búsqueda semántica?"
 }
 
+### Consulta utilizando llmQuery diferenciada de la query de búsqueda
+POST {{baseUrl}}/api/testing/query
+Content-Type: {{contentType}}
+
+{
+  "query": "embeddings vectoriales pgvector cosine similarity nearest neighbors",
+  "options": {
+    "limit": 8,
+    "temperature": 0.7,
+    "llmQuery": "Explica de manera sencilla qué son los embeddings vectoriales y cómo funcionan en búsqueda semántica, usando ejemplos cotidianos"
+  }
+}
+
+### Consulta al endpoint específico para queries diferenciadas
+POST {{baseUrl}}/api/testing/queries-diferenciadas
+Content-Type: {{contentType}}
+
+{
+  "query": "RAG retrieval augmented generation vector search semantic"
+}
+
+### Consulta avanzada con llmQuery técnica específica
+POST {{baseUrl}}/api/testing/query
+Content-Type: {{contentType}}
+
+{
+  "query": "index ivfflat hnsw pgvector postgres performance",
+  "options": {
+    "limit": 10,
+    "temperature": 0.3,
+    "llmQuery": "Compara los índices IVFFlat y HNSW en pgvector, explicando ventajas, desventajas y casos de uso óptimos para cada uno"
+  }
+}
+
 ### Consulta de RAG con opciones personalizadas
 POST {{baseUrl}}/api/testing/query
 Content-Type: {{contentType}}
@@ -23,13 +57,13 @@ Content-Type: {{contentType}}
   "options": {
     "limit": 8,
     "temperature": 0.5,
-    "systemPrompt": "Responde como si fueras un profesor universitario de inteligencia artificial."
+    "systemPrompt": "Eres un profesor que explica conceptos complejos de manera sencilla"
   }
 }
 
 ### Ejemplo con filtros de metadatos (pre-configurado en el controlador)
-POST {{baseUrl}}/api/testing/filter-example
-Content-Type: {{contentType}}
+POST http://localhost:3000/api/testing/filter-example
+Content-Type: application/json
 
 {
   "query": "¿Cuáles son las mejores prácticas para implementar embeddings en una aplicación?"

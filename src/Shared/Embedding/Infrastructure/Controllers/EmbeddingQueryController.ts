@@ -1,7 +1,8 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { GetEmbeddingResponseCommand } from '../../Application/respond/GetEmbeddingResponseCommand';
-import { EmbeddingResponse, EmbeddingResponseOptions } from '../../Domain/EmbeddingResponseService';
+import { EmbeddingResponse } from '../../Domain/EmbeddingResponseService';
+import { EmbeddingResponseOptions } from '../../Domain/EmbeddingResponseOptions';
 import { ApiOperation, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 /**

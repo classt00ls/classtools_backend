@@ -1,24 +1,21 @@
 import { Controller, Post, Body, Get, HttpCode, HttpStatus } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { GetEmbeddingResponseCommand } from '../../../src/Shared/Embedding/Application/respond/GetEmbeddingResponseCommand';
-import { EmbeddingResponse, EmbeddingResponseOptions } from '../../../src/Shared/Embedding/Domain/EmbeddingResponseService';
+import { EmbeddingResponse } from '../../../src/Shared/Embedding/Domain/EmbeddingResponseService';
+import { EmbeddingResponseOptions } from '../../../src/Shared/Embedding/Domain/EmbeddingResponseOptions';
 import { ApiOperation, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 /**
  * DTO para realizar consultas a embeddings
  */
 class TestingQueryDto {
-  /** La consulta en lenguaje natural */
+  /** La consulta para la búsqueda de embeddings */
   query: string;
   
   /** Opciones opcionales para personalizar la respuesta */
   options?: EmbeddingResponseOptions;
 }
 
-/**
- * Controlador para probar las funcionalidades del módulo de Embedding
- */
-@ApiTags('Testing')
 @Controller('api/testing')
 export class TestingController {
   constructor(private readonly commandBus: CommandBus) {}
@@ -26,18 +23,28 @@ export class TestingController {
   /**
    * Endpoint para probar la funcionalidad RAG con embeddings
    */
-  @Get()
+  @Get('')
   @HttpCode(HttpStatus.OK)
   async index(): Promise<string> {
     return `
       <h1>Testing de Embedding Module</h1>
       <p>Utiliza el endpoint POST /api/testing/query para probar las capacidades RAG</p>
-      <p>Ejemplo de body:</p>
+      <p>Ejemplo de body básico:</p>
       <pre>
       {
         "query": "¿Qué son los embeddings vectoriales?",
         "options": {
           "limit": 5,
+          "temperature": 0.7
+        }
+      }
+      </pre>
+      <p>Ejemplo con queries diferenciadas:</p>
+      <pre>
+      {
+        "query": "embeddings vectoriales pgvector cosine similarity",
+        "options": {
+          "llmQuery": "Explica de manera simple y didáctica qué son los embeddings vectoriales y cómo funcionan",
           "temperature": 0.7
         }
       }
@@ -65,6 +72,28 @@ export class TestingController {
     // Ejemplo de cómo usar el módulo de Embedding a través del CommandBus
     return this.commandBus.execute(
       new GetEmbeddingResponseCommand(query, options)
+    );
+  }
+
+  /**
+   * Endpoint para demostrar el uso de queries diferenciadas
+   */
+  @Post('queries-diferenciadas')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Demuestra el uso de queries diferenciadas para búsqueda y LLM' })
+  async queriesDiferenciadas(@Body() body: TestingQueryDto): Promise<EmbeddingResponse> {
+    const { query } = body;
+    
+    // Ejemplo de cómo usar queries diferenciadas
+    return this.commandBus.execute(
+      new GetEmbeddingResponseCommand(query, {
+        limit: 10,
+        metadataFilter: { 
+          type: "documentation"
+        },
+        llmQuery: "Basándote únicamente en el contexto proporcionado, explica este tema de manera didáctica, como si estuvieras enseñando a un estudiante. Incluye analogías y ejemplos prácticos.",
+        temperature: 0.7
+      })
     );
   }
 

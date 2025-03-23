@@ -8,9 +8,9 @@ import { ConfigService } from '@nestjs/config';
 
 import { 
   EmbeddingResponseService, 
-  EmbeddingResponseOptions, 
   EmbeddingResponse 
 } from '../Domain/EmbeddingResponseService';
+import { EmbeddingResponseOptions } from '../Domain/EmbeddingResponseOptions';
 import { EmbeddingRepository } from '../Domain/EmbeddingRepository';
 
 /**
@@ -72,7 +72,7 @@ export class OllamaEmbeddingResponseService implements EmbeddingResponseService 
     private readonly configService?: ConfigService
   ) {
     // Inicialización de valores desde variables de entorno o valores predeterminados
-    this.defaultModelName = this.getConfigOrDefault('OLLAMA_LLM_MODEL', 'llama3.1:8b');
+    this.defaultModelName = this.getConfigOrDefault('OLLAMA_LLM_MODEL', 'mistral:latest');
     this.defaultPromptName = this.getConfigOrDefault('OLLAMA_PROMPT_NAME', 'rlm/rag-prompt');
     this.defaultTemperature = this.getConfigOrDefault('OLLAMA_DEFAULT_TEMPERATURE', 0.7);
     this.defaultLimit = this.getConfigOrDefault('OLLAMA_DEFAULT_LIMIT', 5);
@@ -134,6 +134,13 @@ export class OllamaEmbeddingResponseService implements EmbeddingResponseService 
      * });
      * ```
      * 
+     * 5. Usando query diferenciada para búsqueda y LLM:
+     * ```typescript
+     * const response = await embeddingResponseService.respond("vectores índices pgvector", {
+     *   llmQuery: "Explica detalladamente cómo funcionan los índices en pgvector y cuándo usar cada tipo" 
+     * });
+     * ```
+     * 
      * Nota: Los campos disponibles en metadataFilter dependen de cómo hayas estructurado
      * los metadatos en tus embeddings. Los ejemplos anteriores son ilustrativos y deben
      * adaptarse a tu modelo de datos real.
@@ -143,10 +150,11 @@ export class OllamaEmbeddingResponseService implements EmbeddingResponseService 
       limit = this.defaultLimit,
       metadataFilter,
       temperature = this.defaultTemperature,
-      systemPrompt
+      systemPrompt,
+      llmQuery
     } = options;
 
-    // 1. Obtener los documentos relacionados con la consulta
+    // 1. Obtener los documentos relacionados con la consulta de búsqueda
     const embeddings = await this.embeddingRepository.search(
       query,
       limit,
@@ -189,9 +197,12 @@ export class OllamaEmbeddingResponseService implements EmbeddingResponseService 
     });
 
     // 4. Ejecutar la cadena para obtener la respuesta
+    // Usar llmQuery si está disponible, de lo contrario usar la query original
+    const finalQuery = llmQuery || query;
+    
     const startTime = Date.now();
     const responseContent = await ragChain.invoke({
-      question: query,
+      question: finalQuery,
       context
     });
     const endTime = Date.now();
@@ -203,7 +214,9 @@ export class OllamaEmbeddingResponseService implements EmbeddingResponseService 
         model: this.defaultModelName,
         timestamp: new Date(),
         sourceDocuments: context, // Incluimos los documentos fuente en los metadatos
-        processingTimeMs: endTime - startTime
+        processingTimeMs: endTime - startTime,
+        searchQuery: query,         // Añadimos la query de búsqueda
+        llmQuery: finalQuery        // Añadimos la query usada en el LLM
       }
     };
   }

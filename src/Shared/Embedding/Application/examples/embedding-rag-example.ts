@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { CommandBus } from '@nestjs/cqrs';
 import { EmbeddingModule } from '../../embedding.module';
 import { GetEmbeddingResponseCommand } from '../respond/GetEmbeddingResponseCommand';
-import { EmbeddingResponseOptions } from '../../Domain/EmbeddingResponseService';
+import { EmbeddingResponseOptions } from '../../Domain/EmbeddingResponseOptions';
 
 /**
  * Script de ejemplo para usar el sistema RAG de embeddings.

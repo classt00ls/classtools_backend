@@ -7,8 +7,7 @@ import { EmbeddingResponseService, EmbeddingResponse } from '../../Domain/Embedd
 @CommandHandler(GetEmbeddingResponseCommand)
 export class GetEmbeddingResponseCommandHandler implements ICommandHandler<GetEmbeddingResponseCommand> {
   constructor(
-    @Inject('EmbeddingResponseService') 
-    private readonly responseService: EmbeddingResponseService
+    @Inject('EmbeddingResponseService') private readonly responseService: EmbeddingResponseService
   ) {}
 
   /**
@@ -19,7 +18,7 @@ export class GetEmbeddingResponseCommandHandler implements ICommandHandler<GetEm
    */
   async execute(command: GetEmbeddingResponseCommand): Promise<EmbeddingResponse> {
     return this.responseService.respond(
-      command.query,
+      command.searchQuery,
       command.options
     );
   }

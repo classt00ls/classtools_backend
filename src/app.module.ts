@@ -39,6 +39,7 @@ import { EventAutoRegister } from '@Events/Event/Infrastructure/event-auto-regis
 import { ConsumeEventsModule } from 'apps/backoffice/Controller/Event/ConsumeEventsModule';
 import { ToolAssignedListener } from '@Web/Category/Domain/ToolAssignedListener';
 import { EmbeddingModule } from '@Shared/Embedding/embedding.module';
+import { TestingModule } from 'apps/Shared/Testing';
 
 const cookieSession = require('cookie-session');
 
@@ -102,6 +103,7 @@ const databaseModules = databaseConfig.map((config) =>
     UserToolSuggestionsModule,
     WebAuthModule,
     EventModule,
+    TestingModule,
     EventEmitterModule.forRoot({
       // set this to `true` to use wildcards
       wildcard: false,
