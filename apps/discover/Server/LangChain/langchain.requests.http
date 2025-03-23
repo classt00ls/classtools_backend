@@ -5,7 +5,7 @@ POST http://localhost:3000/discover/langchain/ollama
 Content-Type: application/json
 
 {
-    "prompt": "que es eurega ?"
+    "prompt": " ?"
 }
 
 ###

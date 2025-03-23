@@ -6,6 +6,7 @@ import { ToolSchema } from                                  '@Backoffice/Tool/In
 import { ToolRepository } from                              '@Backoffice/Tool/Domain/tool.repository';
 import { ToolTypeormRepository } from                       'src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository';
 import { TOOL_TABLE_SUFFIX } from 'src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.repository.module';
+import { EmbeddingModule } from '@Shared/Embedding/embedding.module';
 
 import { GetDetailToolQueryHandler } from                           '@Web/Application/Query/Tool/GetDetailToolQueryHandler';
 import { CountToolsByLangQueryHandler } from                       '@Web/Application/Query/Tool/CountToolsByLangQueryHandler';
@@ -38,7 +39,8 @@ import { UserWebRepository } from '@Web/UserWeb/Domain/UserWebRepository';
             ToolWebSchema,
             ToolSchema
           ]),
-        CqrsModule
+        CqrsModule,
+        EmbeddingModule
     ],
     controllers: [
         ToolSearchController

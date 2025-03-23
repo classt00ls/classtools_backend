@@ -36,7 +36,7 @@ import { ToolCreatedListener } from '@Web/Tool/Domain/ToolCreatedListener';
 import { ChatTogetherModelProvider } from '@Shared/Infrastructure/IA/ChatTogetherModelProvider';
 import { EventModule } from './Shared/Infrastructure/Event/event.module';
 import { EventAutoRegister } from '@Events/Event/Infrastructure/event-auto-register';
-import { ConsumeEventsModule } from 'apps/backoffice/Controller/Event/ConsumeEventsModule';
+import { ConsumeEventsModule } from 'apps/backoffice/Event/ConsumeEventsModule';
 import { ToolAssignedListener } from '@Web/Category/Domain/ToolAssignedListener';
 import { EmbeddingModule } from '@Shared/Embedding/embedding.module';
 import { TestingModule } from 'apps/Shared/Testing';

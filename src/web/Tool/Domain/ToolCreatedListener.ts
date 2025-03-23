@@ -1,60 +1,36 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { ToolCreatedEvent } from "@Backoffice/Tool/Domain/ToolCreatedEvent";
-import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
-import { OllamaEmbeddings } from "@langchain/ollama";
-import { Document } from "@langchain/core/documents";
+import { Injectable, Logger, Inject } from "@nestjs/common";
 import { EventListener } from "@Shared/Infrastructure/decorators/event-listener.decorator";
 import { Event } from "@Events/Event/Domain/Event";
+import { EmbeddingRepository } from "@Shared/Embedding/Domain/EmbeddingRepository";
+import { Embedding } from "@Shared/Embedding/Domain/Embedding";
 
 @EventListener('backoffice.tool.created')
 @Injectable()
 export class ToolCreatedListener {
     private readonly logger = new Logger(ToolCreatedListener.name);
 
+    constructor(
+        @Inject('EmbeddingRepository') private readonly embeddingRepository: EmbeddingRepository
+    ) {}
     
     async handle(event: Event) {
-        
         this.logger.log(`Processing tool created event for: ${event.event_data.name} (${event.id})`);
 
         try {
-            const vectorStore = await PGVectorStore.initialize(
-                new OllamaEmbeddings({
-                    model: "nomic-embed-text",
-                    baseUrl: "http://localhost:11434",
-                }),
-                {
-                    postgresConnectionOptions: {
-                        type: "postgres",
-                        host: "localhost",
-                        port: 5431,
-                        user: "classtools",
-                        password: "classtools",
-                        database: "classtools",
-                    },
-                    tableName: "classtools.tool_vector",
-                    columns: {
-                        idColumnName: "id",
-                        contentColumnName: "description",
-                        vectorColumnName: "embedding",
-                        metadataColumnName: "metadata"
-                    },
-                    distanceStrategy: "cosine",
-                }
+            // Crear el embedding usando el módulo de Embeddings
+            const content = this.createContent(event);
+            const metadata = this.createMetadata(event);
+
+            // Crear una instancia de Embedding usando el método estático
+            const embedding = Embedding.create(
+                event.aggregate_id,
+                content,
+                metadata
             );
 
-            const document = await this.createDocument(event);
-
-            // 1. Genera embeddings con API del vectorStore
-            const embeddings = await vectorStore.embeddings.embedDocuments([document.pageContent]);
+            // Guardar el embedding usando el repositorio
+            await this.embeddingRepository.save(embedding);
             
-            await vectorStore.addVectors(
-                embeddings,
-                [document],
-                { ids: [event.aggregate_id] }
-            );
-            
-            await vectorStore.end();
-
             this.logger.log(`Successfully processed tool: ${event.event_data.name}`);
         } catch (error) {
             this.logger.error(`Error processing tool ${event.event_data.name}: ${error.message}`);
@@ -62,27 +38,43 @@ export class ToolCreatedListener {
         }
     }
 
-    private async createDocument(event: Event): Promise<Document> {
-        const content = `
-${event.event_data.name}
+    private createContent(event: Event): string {
+        // Crear un contenido más estructurado y rico para mejorar la calidad de las búsquedas
+        return `
+Nombre: ${event.event_data.name}
 
-${event.event_data.description}
+Descripción: ${event.event_data.description}
 
-${event.event_data.prosAndCons}
+Pros y Contras: ${event.event_data.prosAndCons || ''}
 
-${event.event_data.ratings}
+Valoraciones: ${event.event_data.ratings || ''}
+
+excerpt: ${event.event_data.description ? event.event_data.excerpt : ''}
+
+Precio: ${event.event_data.price || 'No especificado'}
+
+Tags: ${Array.isArray(event.event_data.tags) ? event.event_data.tags.join(', ') : ''}
+
+URL: ${event.event_data.url || ''}
 `.trim();
+    }
 
-        return new Document({
-            pageContent: content,
-            metadata: {
-                id: event.id,
-                name: event.event_data.name,
-                excerpt: event.event_data.description.substring(0, 350),
-                url: event.event_data.url,
-                price: event.event_data.price,
-                tags: event.event_data.tags
-            }
-        });
+    private createMetadata(event: Event): Record<string, any> {
+        return {
+            id: event.id,
+            source: 'tool',
+            type: 'tool',
+            name: event.event_data.name,
+            url: event.event_data.url || '',
+            price: event.event_data.price || '',
+            tags: Array.isArray(event.event_data.tags) ? event.event_data.tags : [],
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            aggregateId: event.aggregate_id,
+            eventId: event.id,
+            domain: 'backoffice',
+            subDomain: 'tool',
+            eventType: event.event_type
+        };
     }
 }

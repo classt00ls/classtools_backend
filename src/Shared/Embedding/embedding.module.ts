@@ -74,6 +74,8 @@ const Controllers = [
   exports: [
     // Exportar los servicios o comandos que se necesiten en otros módulos
     CqrsModule,
+    'EmbeddingRepository',
+    'EmbeddingResponseService'
   ]
 })
 export class EmbeddingModule {} 

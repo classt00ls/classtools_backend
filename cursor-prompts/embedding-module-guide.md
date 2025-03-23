@@ -286,3 +286,329 @@ Para mejorar el rendimiento de agentes basados en embedding:
    ```
 
 Estas técnicas permiten crear agentes de IA sofisticados que combinan el poder de los modelos de lenguaje con conocimiento contextual específico, memoria de largo plazo y capacidades de razonamiento mejoradas mediante RAG. 
+
+## Integración con Eventos de Dominio
+
+El módulo de Embedding está diseñado para integrarse fácilmente con la arquitectura de eventos de dominio, permitiendo la generación automática de embeddings cuando ocurren eventos relevantes en el sistema.
+
+### Escuchando Eventos de Dominio
+
+Para indexar automáticamente contenido cuando se crean o actualizan entidades, puedes crear listeners de eventos que utilicen el `EmbeddingRepository`:
+
+```typescript
+@EventListener('backoffice.tool.created')
+@Injectable()
+export class ToolCreatedListener {
+    private readonly logger = new Logger(ToolCreatedListener.name);
+
+    constructor(
+        @Inject('EmbeddingRepository') private readonly embeddingRepository: EmbeddingRepository
+    ) {}
+    
+    async handle(event: Event) {
+        try {
+            // 1. Crear contenido estructurado a partir del evento
+            const content = this.createContent(event);
+            
+            // 2. Definir metadatos relevantes para la búsqueda
+            const metadata = this.createMetadata(event);
+
+            // 3. Crear una instancia de Embedding
+            const embedding = Embedding.create(
+                event.aggregate_id,
+                content,
+                metadata
+            );
+
+            // 4. Persistir el embedding
+            await this.embeddingRepository.save(embedding);
+        } catch (error) {
+            this.logger.error(`Error processing event: ${error.message}`);
+            throw error;
+        }
+    }
+    
+    private createContent(event: Event): string {
+        // Crear contenido estructurado para optimizar la búsqueda semántica
+        return `
+Nombre: ${event.event_data.name}
+Descripción: ${event.event_data.description}
+// Otros campos relevantes...
+`.trim();
+    }
+
+    private createMetadata(event: Event): Record<string, any> {
+        return {
+            source: 'tool',
+            type: 'tool',
+            name: event.event_data.name,
+            tags: event.event_data.tags || [],
+            // Otros campos para filtrado...
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+    }
+}
+```
+
+### Configuración del Módulo
+
+Para utilizar el `EmbeddingRepository` en un listener de eventos, asegúrate de:
+
+1. Importar el `EmbeddingModule` en el módulo donde se define el listener:
+
+```typescript
+@Module({
+    imports: [
+        // Otros imports...
+        EmbeddingModule
+    ],
+    providers: [
+        // Otros providers...
+        ToolCreatedListener
+    ]
+})
+export class ToolModule {}
+```
+
+2. Inyectar el `EmbeddingRepository` usando el token de inyección de dependencias:
+
+```typescript
+constructor(
+    @Inject('EmbeddingRepository') private readonly embeddingRepository: EmbeddingRepository
+) {}
+```
+
+### Mejores Prácticas para Eventos
+
+1. **Estructura del contenido**: Organiza el contenido de manera estructurada para facilitar la recuperación semántica.
+2. **Metadatos relevantes**: Incluye todos los metadatos que puedan ser útiles para filtrar resultados.
+3. **Manejo de errores**: Implementa estrategias de reintento o compensación para eventos fallidos.
+4. **Idempotencia**: Asegúrate de que el proceso sea idempotente para evitar duplicados si el evento se procesa más de una vez.
+5. **Consistencia eventual**: Recuerda que existe un pequeño retraso entre la creación de la entidad y su disponibilidad para consultas. 
+
+## Exportación e Inyección de Dependencias
+
+El módulo de Embedding expone sus servicios a través de tokens de inyección de dependencias. Para utilizarlos correctamente en otros módulos, es importante entender cómo están configurados y exportados.
+
+### Servicios Exportados
+
+El `EmbeddingModule` exporta los siguientes servicios:
+
+```typescript
+@Module({
+  // ...
+  exports: [
+    CqrsModule,
+    'EmbeddingRepository',
+    'EmbeddingResponseService'
+  ]
+})
+export class EmbeddingModule {}
+```
+
+### Configuración en Módulos Consumidores
+
+Para utilizar el módulo de Embedding en otro módulo, sigue estos pasos:
+
+1. **Importa el módulo**:
+
+```typescript
+@Module({
+  imports: [
+    // Otros imports...
+    EmbeddingModule
+  ],
+  // ...
+})
+export class TuModulo {}
+```
+
+2. **Inyecta los servicios usando el decorador `@Inject`**:
+
+```typescript
+@Injectable()
+export class TuServicio {
+  constructor(
+    @Inject('EmbeddingRepository') private readonly embeddingRepository: EmbeddingRepository,
+    @Inject('EmbeddingResponseService') private readonly embeddingResponseService: EmbeddingResponseService
+  ) {}
+  
+  // Tu lógica aquí...
+}
+```
+
+### Resolución de Problemas Comunes
+
+Si encuentras errores como:
+
+```
+Error: Nest can't resolve dependencies of the [TuServicio] (?). 
+Please make sure that the argument "EmbeddingRepository" at index [0] is available in the [TuModulo] context.
+```
+
+Verifica:
+
+1. Que has importado correctamente el `EmbeddingModule` en tu módulo.
+2. Que estás usando el token de inyección exacto: `'EmbeddingRepository'` (como string).
+3. Que no estás redefiniendo el mismo token en tu módulo, lo que podría causar conflictos.
+
+Si necesitas personalizar la implementación del repositorio o servicio para un módulo específico, puedes redefinir el proveedor en ese módulo:
+
+```typescript
+@Module({
+  imports: [
+    // No importes EmbeddingModule si vas a redefinir todos sus servicios
+  ],
+  providers: [
+    {
+      provide: 'EmbeddingRepository',
+      useClass: TuImplementacionDelRepositorio,
+    },
+  ],
+})
+export class TuModuloPersonalizado {}
+```
+
+## Migración de Componentes Existentes
+
+### Migración de ToolVectorSearcher
+
+El `ToolVectorSearcher` es un componente que originalmente utilizaba directamente `OllamaEmbeddings` para generar embeddings y buscar herramientas similares. A continuación se muestra cómo migrarlo para aprovechar el nuevo módulo de Embedding:
+
+#### Implementación Original
+
+```typescript
+// Implementación original usando OllamaEmbeddings directamente
+@Injectable()
+export class ToolVectorSearcher {
+    private repositories: { [key: string]: ToolRepository } = {};
+
+    constructor(
+        private readonly dataSource: DataSource,
+        private readonly toolVectorRepository: ToolVectorRepository
+    ) {
+        // Inicializar repositorios para los idiomas principales
+        this.repositories = {
+            es: new ToolTypeormRepository(dataSource, '_es'),
+            en: new ToolTypeormRepository(dataSource, '_en')
+        };
+    }
+    
+    async search(
+        prompt: string,
+        lang: string = 'es'
+    ) {
+        try {
+            const result = await this.toolVectorRepository.search(prompt);
+            
+            const repository = this.getRepositoryForLanguage(lang);
+            const response = await Promise.all(result.map(item => this.format(item, repository))); 
+            return response;
+            
+        } catch(error) {
+            console.error('[ToolVectorRepository] Error en búsqueda vectorial:', error);
+            throw error;
+        }
+    }
+
+    // Otros métodos...
+}
+```
+
+#### Implementación Migrada al Módulo de Embedding
+
+```typescript
+@Injectable()
+export class ToolVectorSearcher {
+    private repositories: { [key: string]: ToolRepository } = {};
+
+    constructor(
+        private readonly dataSource: DataSource,
+        // Inyectamos el EmbeddingRepository del nuevo módulo
+        @Inject('EmbeddingRepository') private readonly embeddingRepository: EmbeddingRepository
+    ) {
+        // Inicializar repositorios para los idiomas principales
+        this.repositories = {
+            es: new ToolTypeormRepository(dataSource, '_es'),
+            en: new ToolTypeormRepository(dataSource, '_en')
+        };
+    }
+    
+    async search(
+        prompt: string,
+        lang: string = 'es'
+    ) {
+        try {
+            // Usamos el EmbeddingRepository para buscar contenido similar
+            const embeddings = await this.embeddingRepository.search(
+                prompt, 
+                10, // Límite de resultados
+                { type: 'tool' } // Filtro por metadatos para asegurar que solo devuelve herramientas
+            );
+            
+            // Extraemos los IDs de los resultados
+            const toolIds = embeddings.map(embedding => embedding.metadata.aggregateId || embedding.id);
+            
+            // Obtenemos la información completa de las herramientas desde el repositorio específico del idioma
+            const repository = this.getRepositoryForLanguage(lang);
+            const response = await Promise.all(
+                toolIds.map(id => repository.getOne(id))
+            );
+            
+            // Filtramos posibles valores nulos (herramientas que pudieran no existir)
+            return response.filter(tool => tool !== null);
+            
+        } catch(error) {
+            console.error('[ToolVectorSearcher] Error en búsqueda de embeddings:', error);
+            throw error;
+        }
+    }
+
+    private getRepositoryForLanguage(lang: string): ToolRepository {
+        const cleanLang = lang.replace(/['"]/g, '').trim();
+        
+        if (!this.repositories[cleanLang]) {
+            this.repositories[cleanLang] = new ToolTypeormRepository(this.dataSource, `_${cleanLang}`);
+        }
+        return this.repositories[cleanLang];
+    }
+
+    // Otros métodos si son necesarios...
+}
+```
+
+### Beneficios de la Migración
+
+1. **Simplificación**: No necesitas gestionar directamente la generación de embeddings ni las consultas vectoriales.
+2. **Mantenibilidad**: El código de búsqueda vectorial está centralizado en el módulo de Embedding.
+3. **Flexibilidad**: Puedes aprovechar todas las características del módulo, como el filtrado por metadatos.
+4. **Consistencia**: Todos los componentes de la aplicación utilizan la misma lógica para búsquedas semánticas.
+
+### Consideraciones para la Migración
+
+1. **Metadatos**: Asegúrate de que las herramientas indexadas en el repositorio de embeddings tengan los metadatos adecuados (`type: 'tool'`, `aggregateId`, etc.).
+
+2. **Evento de Indexación**: Implementa un evento para indexar herramientas en el repositorio de embeddings, como se muestra en la sección "Integración con Eventos de Dominio".
+
+3. **Búsqueda Avanzada**: Si necesitas funcionalidades más avanzadas, puedes utilizar el `EmbeddingResponseService` para obtener respuestas generadas por LLM basadas en las herramientas recuperadas:
+
+```typescript
+@Injectable()
+export class ToolRAGService {
+    constructor(
+        @Inject('EmbeddingResponseService') 
+        private readonly embeddingResponseService: EmbeddingResponseService
+    ) {}
+    
+    async getToolRecommendations(userQuery: string): Promise<EmbeddingResponse> {
+        return await this.embeddingResponseService.respond(
+            userQuery,
+            {
+                metadataFilter: { type: 'tool' },
+                systemPrompt: "Eres un experto en herramientas tecnológicas. Recomienda las herramientas más adecuadas basadas en la consulta del usuario y explica por qué son apropiadas para su caso de uso."
+            }
+        );
+    }
+}
+``` 

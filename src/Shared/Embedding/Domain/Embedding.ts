@@ -20,7 +20,6 @@ export class Embedding extends AggregateRoot {
   private _content: string;
   private _metadata: Record<string, any>;
   readonly createdAt: Date;
-  private _updatedAt: Date;
 
   private constructor(
     id: string,
@@ -34,7 +33,7 @@ export class Embedding extends AggregateRoot {
     this._content = content;
     this._metadata = metadata;
     this.createdAt = createdAt;
-    this._updatedAt = updatedAt;
+    this.updatedAt = updatedAt;
   }
 
   static create(
@@ -88,7 +87,7 @@ export class Embedding extends AggregateRoot {
     const normalizedContent = Embedding.preprocessContent(newContent);
     
     this._content = normalizedContent;
-    this._updatedAt = new Date();
+    this.updatedAt = new Date();
     
     this.record(new EmbeddingUpdated({
       id: this.id, 
@@ -100,7 +99,7 @@ export class Embedding extends AggregateRoot {
     Embedding.validateMetadata(newMetadata);
     
     this._metadata = newMetadata;
-    this._updatedAt = new Date();
+    this.updatedAt = new Date();
     
     this.record(new EmbeddingMetadataModified({
       id: this.id,
@@ -118,7 +117,7 @@ export class Embedding extends AggregateRoot {
       content: this._content,
       metadata: this._metadata,
       createdAt: this.createdAt,
-      updatedAt: this._updatedAt
+      updatedAt: this.updatedAt
     };
   }
 

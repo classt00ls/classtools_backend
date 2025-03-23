@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
-import { ToolVectorRepository } from "@Web/Tool/Domain/tool.vector.repository";
 import { DataSource } from "typeorm";
 import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
+import { EmbeddingRepository } from "@Shared/Embedding/Domain/EmbeddingRepository";
 
 @Injectable()
 export class ToolVectorSearcher {
@@ -10,7 +10,7 @@ export class ToolVectorSearcher {
 
     constructor(
         private readonly dataSource: DataSource,
-        private readonly toolVectorRepository: ToolVectorRepository
+        @Inject('EmbeddingRepository') private readonly embeddingRepository: EmbeddingRepository
     ) {
         // Inicializar repositorios para los idiomas principales
         this.repositories = {
@@ -33,14 +33,27 @@ export class ToolVectorSearcher {
         lang: string = 'es'
     ) {
         try {
-            const result = await this.toolVectorRepository.search(prompt);
+            // Usamos el EmbeddingRepository para buscar contenido similar
+            const embeddings = await this.embeddingRepository.search(
+                prompt, 
+                10, // Límite de resultados
+                { type: 'tool' } // Filtro por metadatos para asegurar que solo devuelve herramientas
+            );
             
+            // Extraemos los IDs de los resultados
+            const toolIds = embeddings.map(embedding => embedding.metadata.aggregateId || embedding.id);
+            
+            // Obtenemos la información completa de las herramientas desde el repositorio específico del idioma
             const repository = this.getRepositoryForLanguage(lang);
-            const response = await Promise.all(result.map(item => this.format(item, repository))); 
-            return response;
+            const response = await Promise.all(
+                toolIds.map(id => this.format({ id }, repository))
+            );
+            
+            // Filtramos posibles valores nulos (herramientas que pudieran no existir)
+            return response.filter(tool => tool !== null);
             
         } catch(error) {
-            console.error('[ToolVectorRepository] Error en búsqueda vectorial:', error);
+            console.error('[ToolVectorSearcher] Error en búsqueda de embeddings:', error);
             throw error;
         }
     }

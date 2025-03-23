@@ -18,11 +18,14 @@ import { UserWebRepository } from '@Web/UserWeb/Domain/UserWebRepository';
 import { ToggleFavoriteCommandHandler } from '@Web/UserWeb/Application/ToggleFavoriteCommandHandler';
 import { ToogleFavorite } from '@Web/UserWeb/Domain/ToogleFavorite';
 import { ToolRepositoryModule } from 'src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.repository.module';
+import { EmbeddingModule } from '@Shared/Embedding/embedding.module';
+import { ToolCreatedListener } from 'src/web/Tool/Domain/ToolCreatedListener';
 
 @Module({
     imports: [
         ToolRepositoryModule,
-        CqrsModule
+        CqrsModule,
+        EmbeddingModule
     ],
     controllers: [
         ToolController
@@ -38,6 +41,7 @@ import { ToolRepositoryModule } from 'src/backoffice/Tool/Infrastructure/Persist
         GenerateUserToolSuggestionsOnToolGetDetail,
         UserWebExtractorFromFirebase,
         UserWebExtractorFromJwt,
+        ToolCreatedListener,
         {
             provide: UserWebRepository,
             useClass: TypeormUserWebRepository,

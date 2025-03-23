@@ -19,7 +19,7 @@ POST {{baseUrl}}/api/testing/query
 Content-Type: {{contentType}}
 
 {
-  "query": "embeddings vectoriales pgvector cosine similarity nearest neighbors",
+  "query": "Las tools que se necesitan para hacer una cancion",
   "options": {
     "limit": 8,
     "temperature": 0.7,

@@ -183,6 +183,7 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
   }
   
   private toDocument(embedding: Embedding): Document {
+    // Ahora podemos acceder directamente a las propiedades
     return new Document({
       pageContent: embedding.content,
       metadata: {
@@ -190,7 +191,7 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
         // Añadimos campos adicionales en metadata para poder reconstruir el objeto completo
         _createdAt: embedding.createdAt.toISOString(),
         _updatedAt: embedding.updatedAt.toISOString(),
-        _id: embedding.id // Redundante pero útil para reconstrucción
+        _id: embedding.id
       }
     });
   }
