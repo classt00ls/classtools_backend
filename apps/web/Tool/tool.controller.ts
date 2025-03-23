@@ -59,6 +59,8 @@ export class ToolController {
   ) {
     const userId = request.userId;
 
+    console.log("=============== userID ", userId);
+
     const data = await this.queryBus.execute(
         new GetDetailToolQuery(
           id,
@@ -102,6 +104,8 @@ export class ToolController {
     @Query('lang') lang?: string
   ) {
     const userId = request.userId;
+
+    console.log("=============== userID ", userId);
 
     const data = await this.queryBus.execute(
         new GetToolBySlugQuery(

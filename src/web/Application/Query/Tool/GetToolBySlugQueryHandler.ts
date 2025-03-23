@@ -44,6 +44,7 @@ export class GetToolBySlugQueryHandler {
             tool.url = tool.url.split('?')[0];
 
             if(query.userId) {
+                console.log('Emitir evento web.tool.get_detail');
                 this.eventEmitter.emit(
                     'web.tool.get_detail',
                     new ToolVisitedEvent(

@@ -44,6 +44,7 @@ export class GetDetailToolQueryHandler {
             tool.url = tool.url.split('?')[0];
 
             if(query.userId) {
+                
                 this.eventEmitter.emit(
                     'web.tool.get_detail',
                     new ToolVisitedEvent(
