@@ -49,48 +49,27 @@ switch (process.env.NODE_ENV) {
   case 'development':
     databaseConfig = [{
       type        : 'postgres', 
-      host        : 'localhost',
-      port        : 5432,
+      host        : process.env.DB_HOST,
+      port        : parseInt(process.env.DB_PORT),
+      username: process.env.DB_USER, 
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       synchronize : true,
-      username: 'postgres', 
-      password: 'eurega',
-      database: 'classtools',
       autoLoadEntities: true
     }
-    // {
-    //   name        : "pgvector",
-    //   type        : 'postgres',
-    //   host        : 'localhost',
-    //   port        : 5431,
-    //   synchronize : false,
-    //   username: 'classtools',
-    //   password: 'classtools',
-    //   database: 'classtools',
-    //   autoLoadEntities: false
-    // }
   ];
   break;
   default:
     databaseConfig = [{
-      type        : 'postgres',
-      host        : 'postgres_pgvector',
-      port        : 5431,
-      synchronize : true,
-      username: 'classtools', 
-      password: 'classtools',
-      database: 'classtools',
-      autoLoadEntities: true
+      type        : 'postgres', 
+      host        : process.env.DB_HOST,
+      port        : parseInt(process.env.DB_PORT),
+      username: process.env.DB_USER, 
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      synchronize : false,
+      autoLoadEntities: false
     }]
-    // databaseConfig = [{
-    //   type        : 'postgres',
-    //   host        : 'postgres_pgvector',
-    //   port        : 5432,
-    //   synchronize : true,
-    //   username: 'classtools',
-    //   password: 'classtools',
-    //   database: 'classtools',
-    //   autoLoadEntities: true
-    // }];
   break;
 }
 

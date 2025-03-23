@@ -1,0 +1,95 @@
+### Variables globales
+@baseUrl = http://localhost:3000
+@contentType = application/json
+
+### Obtener la página de inicio con información sobre el módulo
+GET {{baseUrl}}/api/testing
+Accept: text/html
+
+### Consulta básica de RAG
+POST {{baseUrl}}/api/testing/query
+Content-Type: {{contentType}}
+
+{
+  "query": "¿Qué son los embeddings vectoriales y cómo se utilizan en búsqueda semántica?"
+}
+
+### Consulta de RAG con opciones personalizadas
+POST {{baseUrl}}/api/testing/query
+Content-Type: {{contentType}}
+
+{
+  "query": "Explica las ventajas de utilizar RAG en comparación con modelos sin context retrieval",
+  "options": {
+    "limit": 8,
+    "temperature": 0.5,
+    "systemPrompt": "Responde como si fueras un profesor universitario de inteligencia artificial."
+  }
+}
+
+### Ejemplo con filtros de metadatos (pre-configurado en el controlador)
+POST {{baseUrl}}/api/testing/filter-example
+Content-Type: {{contentType}}
+
+{
+  "query": "¿Cuáles son las mejores prácticas para implementar embeddings en una aplicación?"
+}
+
+### Respuesta concisa (pre-configurado en el controlador)
+POST {{baseUrl}}/api/testing/concise
+Content-Type: {{contentType}}
+
+{
+  "query": "¿Qué ventajas ofrece PGVectorStore sobre otras bases de datos vectoriales?"
+}
+
+### Respuesta orientada a principiantes (pre-configurado en el controlador)
+POST {{baseUrl}}/api/testing/beginner-friendly
+Content-Type: {{contentType}}
+
+{
+  "query": "¿Qué es RAG y por qué es importante para los modelos de lenguaje?"
+}
+
+### Consulta compleja con filtros personalizados
+POST {{baseUrl}}/api/testing/query
+Content-Type: {{contentType}}
+
+{
+  "query": "Técnicas avanzadas para optimizar la búsqueda por similitud",
+  "options": {
+    "limit": 10,
+    "temperature": 0.3,
+    "metadataFilter": {
+      "category": "advanced",
+      "tags": { "$in": ["optimization", "performance", "tuning"] }
+    },
+    "systemPrompt": "Eres un experto en bases de datos vectoriales y optimización de búsquedas. Proporciona explicaciones técnicas detalladas y menciona explícitamente ventajas y desventajas de cada enfoque."
+  }
+}
+
+### Consulta para obtener explicaciones paso a paso
+POST {{baseUrl}}/api/testing/query
+Content-Type: {{contentType}}
+
+{
+  "query": "¿Cómo implementar un sistema RAG desde cero?",
+  "options": {
+    "temperature": 0.4,
+    "systemPrompt": "Proporciona una explicación paso a paso, como si estuvieras escribiendo un tutorial. Enumera los pasos claramente y proporciona ejemplos de código donde sea relevante."
+  }
+}
+
+### Consulta con filtrado por fecha en los metadatos
+POST {{baseUrl}}/api/testing/query
+Content-Type: {{contentType}}
+
+{
+  "query": "Novedades y tendencias recientes en vectores de embedding",
+  "options": {
+    "metadataFilter": {
+      "createdAt": { "$gt": "2023-06-01" }
+    },
+    "systemPrompt": "Resume las tendencias más recientes en formato de lista de puntos principales."
+  }
+} 

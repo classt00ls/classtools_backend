@@ -3,42 +3,78 @@ import { Document } from '@langchain/core/documents';
 import { OllamaEmbeddings } from '@langchain/ollama';
 import { DistanceStrategy, PGVectorStore } from '@langchain/community/vectorstores/pgvector';
 import { PoolConfig } from 'pg';
+import { ConfigService } from '@nestjs/config';
 
-import { Embedding, EmbeddingPrimitives } from '../Domain/Embedding';
-import { EmbeddingRepository } from '../Domain/EmbeddingRepository';
+import { Embedding, EmbeddingPrimitives } from '@Shared/Embedding/Domain/Embedding';
+import { EmbeddingRepository } from '@Shared/Embedding/Domain/EmbeddingRepository';
 
 @Injectable()
 export class PGVectorEmbeddingRepository implements EmbeddingRepository {
   private vectorStore: PGVectorStore;
   private embeddingsGenerator: OllamaEmbeddings;
   
-  constructor() {
+  constructor(private readonly configService?: ConfigService) {
+    // Configuración del generador de embeddings
+    const ollamaBaseUrl = this.getConfigOrDefault('OLLAMA_BASE_URL', 'http://localhost:11434');
+    const embedModel = this.getConfigOrDefault('OLLAMA_EMBEDDINGS_MODEL', 'nomic-embed-text');
+    
     this.embeddingsGenerator = new OllamaEmbeddings({
-      model: 'nomic-embed-text',
-      baseUrl: 'http://localhost:11434',
+      model: embedModel,
+      baseUrl: ollamaBaseUrl,
     });
     
     this.initializeVectorStore();
   }
   
+  /**
+   * Obtiene un valor de configuración del ConfigService o devuelve el valor por defecto
+   * @param key Clave de la variable de entorno
+   * @param defaultValue Valor por defecto si no existe
+   * @returns El valor de la variable de entorno o el valor por defecto
+   */
+  private getConfigOrDefault<T>(key: string, defaultValue: T): T {
+    if (!this.configService) {
+      return defaultValue;
+    }
+    
+    const value = this.configService.get<T>(key);
+    return value !== undefined ? value : defaultValue;
+  }
+  
   private async initializeVectorStore(): Promise<void> {
+    // Configuración de la conexión a la base de datos
+    const dbHost = this.getConfigOrDefault('PGVECTOR_HOST', 'localhost');
+    const dbPort = this.getConfigOrDefault('PGVECTOR_PORT', 5432);
+    const dbUser = this.getConfigOrDefault('PGVECTOR_USER', 'postgres');
+    const dbPassword = this.getConfigOrDefault('PGVECTOR_PASSWORD', 'postgres');
+    const dbName = this.getConfigOrDefault('PGVECTOR_DB', 'postgres');
+    const dbSsl = this.getConfigOrDefault('PGVECTOR_SSL', false);
+    
+    // Configuración de la tabla y columnas
+    const tableName = this.getConfigOrDefault('PGVECTOR_TABLE', 'embeddings');
+    const idColumnName = this.getConfigOrDefault('PGVECTOR_COL_ID', 'id');
+    const contentColumnName = this.getConfigOrDefault('PGVECTOR_COL_CONTENT', 'content');
+    const metadataColumnName = this.getConfigOrDefault('PGVECTOR_COL_METADATA', 'metadata');
+    const vectorColumnName = this.getConfigOrDefault('PGVECTOR_COL_VECTOR', 'embedding');
+    
     this.vectorStore = await PGVectorStore.initialize(
       this.embeddingsGenerator,
       {
         postgresConnectionOptions: {
           type: 'postgres',
-          host: 'localhost',
-          port: 5432,
-          user: 'postgres',
-          password: 'postgres',
-          database: 'postgres',
+          host: dbHost,
+          port: dbPort,
+          user: dbUser,
+          password: dbPassword,
+          database: dbName,
+          ssl: dbSsl,
         } as PoolConfig,
-        tableName: 'embeddings',
+        tableName: tableName,
         columns: {
-          idColumnName: 'id',
-          contentColumnName: 'content',
-          metadataColumnName: 'metadata',
-          vectorColumnName: 'embedding',
+          idColumnName: idColumnName,
+          contentColumnName: contentColumnName,
+          metadataColumnName: metadataColumnName,
+          vectorColumnName: vectorColumnName,
         },
         distanceStrategy: 'cosine' as DistanceStrategy,
       }
