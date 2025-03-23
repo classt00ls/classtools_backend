@@ -70,7 +70,7 @@ Cada módulo se divide en tres capas principales siguiendo DDD y arquitectura he
 
 ## Sistema de Eventos
 
-El proyecto implementa un sistema de eventos basado en el patrón outbox para garantizar la consistencia eventual y comunicación entre contextos acotados.
+El proyecto implementa un sistema de eventos basado en el patrón outbox para garantizar la consistencia eventual y comunicación entre contextos acotados. Para una documentación detallada sobre el sistema de eventos y los tipos disponibles, consulta la [guía de eventos](/src/Events/Shared/events.md).
 
 ### Funcionamiento de los eventos
 

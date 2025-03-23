@@ -11,6 +11,7 @@ import { OllamaLangchainUserToolSuggestionsRepository } from '@Web/UserToolSugge
 import { ToolWebSchema } from '@Web/Infrastructure/Persistence/typeorm/ToolWeb.schema';
 import { PostgreToolVectorRepository } from '@Web/Tool/Infrastructure/Persistence/Postgre/PostgreToolVectorRepository';
 import { ToolVectorRepository } from '@Web/Tool/Domain/tool.vector.repository';
+import { EmbeddingModule } from '@Shared/Embedding/embedding.module';
 
 @Module({
     imports: [
@@ -19,7 +20,8 @@ import { ToolVectorRepository } from '@Web/Tool/Domain/tool.vector.repository';
             ToolWebSchema,
             UserWebRepository
           ]),
-        CqrsModule
+        CqrsModule,
+        EmbeddingModule
     ],
     controllers: [
         UserToolSuggestionsController
