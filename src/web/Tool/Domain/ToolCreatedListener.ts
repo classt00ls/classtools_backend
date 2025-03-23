@@ -43,9 +43,12 @@ export class ToolCreatedListener {
             );
 
             const document = await this.createDocument(event);
+
+            // 1. Genera embeddings con API del vectorStore
+            const embeddings = await vectorStore.embeddings.embedDocuments([document.pageContent]);
             
             await vectorStore.addVectors(
-                await vectorStore.embeddings.embedDocuments([document.pageContent]),
+                embeddings,
                 [document],
                 { ids: [event.aggregate_id] }
             );

@@ -9,6 +9,7 @@
 - [Arquitectura](#arquitectura)
   - [Estructura DDD](#estructura-ddd)
   - [Módulos principales](#módulos-principales)
+- [Sistema de Eventos](#sistema-de-eventos)
 - [Instalación](#instalación)
 - [Configuración](#configuración)
 - [Ejecución](#ejecución)
@@ -67,6 +68,61 @@ Cada módulo se divide en tres capas principales siguiendo DDD y arquitectura he
 - **Web**: APIs públicas para la interfaz web.
 - **Shared**: Componentes compartidos entre todos los contextos.
 
+## Sistema de Eventos
+
+El proyecto implementa un sistema de eventos basado en el patrón outbox para garantizar la consistencia eventual y comunicación entre contextos acotados.
+
+### Funcionamiento de los eventos
+
+1. **Generación de eventos**: Las acciones en el sistema generan eventos que se almacenan en la tabla `event_outbox` de la base de datos
+2. **Estructura de los eventos**: Cada evento contiene un tipo (`event_type`), datos (`event_data`) y estado de procesamiento
+3. **Listeners de eventos**: Se implementan listeners específicos para cada tipo de evento utilizando el decorador `@EventListener('nombre.del.evento')`
+4. **Procesamiento de eventos**: Los eventos se procesan a través del controlador `ConsumeEventsController`, que permite procesar eventos de manera selectiva por tipo
+
+### Procesamiento de eventos
+
+El sistema utiliza un controlador dedicado para procesar eventos pendientes:
+
+```bash
+# Endpoint para consumir eventos
+POST /api/backoffice/events/consume
+```
+
+Parámetros:
+- `eventType`: Tipo de evento a procesar (opcional, si no se especifica se procesan todos los tipos)
+- `limit`: Número máximo de eventos a procesar (opcional, valor por defecto definido en el sistema)
+
+Ejemplo de uso con curl:
+```bash
+# Procesar hasta 10 eventos del tipo 'backoffice.tag.tool.assigned'
+curl -X POST \
+  http://localhost:3000/api/backoffice/events/consume \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "eventType": "backoffice.tag.tool.assigned",
+    "limit": 10
+  }'
+```
+
+Este controlador:
+- Consulta los eventos pendientes del tipo especificado en la tabla `event_outbox`
+- Encuentra el listener apropiado para cada evento según su tipo
+- Invoca el método `handle` del listener con el evento correspondiente
+- Marca el evento como procesado una vez completado con éxito
+
+### Listeners de eventos
+
+Los listeners de eventos son clases anotadas con el decorador `@EventListener` que implementan un método `handle(event)`. Por ejemplo:
+
+```typescript
+@EventListener('backoffice.tag.tool.assigned')
+export class ToolAssignedListener {
+    async handle(event: Event) {
+        // Lógica para manejar el evento
+    }
+}
+```
+
 ## Instalación
 
 ```bash
@@ -121,9 +177,6 @@ $ npm run create-vector-tools
 
 # Buscar vectores de herramientas
 $ npm run search-vector-tools
-
-# Procesar eventos
-$ npm run process-events
 ```
 
 ## Tests

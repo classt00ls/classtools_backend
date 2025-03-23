@@ -3,7 +3,6 @@ import { CategoryCreator } from "../Application/Create/CategoryCreator";
 import { CategoryRepository } from "../Domain/category.repository";
 import { EventListener } from "@Shared/Infrastructure/decorators/event-listener.decorator";
 import { Event } from "@Events/Event/Domain/Event";
-import { ToolRepository } from "@Backoffice/Tool/Domain/tool.repository";
 import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
 import { DataSource } from "typeorm";
 
@@ -38,7 +37,6 @@ export class ToolAssignedListener {
 
         // Obtenemos todas las herramientas asociadas a la etiqueta actual
         const tools = await repository.findByTagId(event.event_data.tagId);
-        this.logger.log(`El tag ${event.event_data.tagName} tiene ${tools.length} herramientas asociadas`);
 
         // Si la etiqueta tiene más de 10 herramientas, evaluamos si debe convertirse en categoría
         if (tools.length > 10) {
@@ -107,11 +105,11 @@ export class ToolAssignedListener {
             }
         }
         
-        this.logger.log(`La categoría con menos herramientas es ${categoryWithFewestTools.name} con ${categoryWithFewestTools.tools_num} herramientas`);
+        // this.logger.log(`La categoría con menos herramientas es ${categoryWithFewestTools.name} con ${categoryWithFewestTools.tools_num} herramientas`);
         
         // Comparamos con nuestra etiqueta actual
         if (toolsLenght > categoryWithFewestTools.tools_num) {
-            this.logger.log(`La etiqueta ${event.event_data.tagName} tiene más herramientas (${toolsLenght}) que la categoría ${categoryWithFewestTools.name} (${categoryWithFewestTools.tools_num}). Reemplazando...`);
+            // this.logger.log(`La etiqueta ${event.event_data.tagName} tiene más herramientas (${toolsLenght}) que la categoría ${categoryWithFewestTools.name} (${categoryWithFewestTools.tools_num}). Reemplazando...`);
             
             // Eliminamos la categoría con menos herramientas
             await this.categoryRepository.delete(categoryWithFewestTools.id);
@@ -125,9 +123,7 @@ export class ToolAssignedListener {
             );
             
             this.logger.log(`Se ha creado la nueva categoría ${event.event_data.tagName} con ${toolsLenght} herramientas`);
-        } else {
-            this.logger.log(`La etiqueta ${event.event_data.tagName} tiene menos o igual herramientas (${toolsLenght}) que la categoría con menos herramientas (${categoryWithFewestTools.tools_num}). No se realiza ninguna acción.`);
-        }
+        } 
     }
 
     private async updateCategoryToolsNum(event: Event, toolsLenght: number) {

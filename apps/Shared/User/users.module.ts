@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserTypeormRepository } from 'src/Infrastructure/Repository/typeorm/user.typeorm.repository';
+import { UserTypeormRepository } from '../../../src/Infrastructure/Repository/typeorm/user.typeorm.repository';
 import { UserSchema } from 'src/Shared/Infrastructure/Persistence/typeorm/user.schema';
 import { CompanySchema } from 'src/Shared/Infrastructure/Persistence/typeorm/company.schema';
 import { CompanyRepository } from 'src/Shared/Domain/Repository/company.repository';

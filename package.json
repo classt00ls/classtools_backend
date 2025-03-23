@@ -22,7 +22,7 @@
     "create-vector-tools-pgai": "ts-node ./apps/Shared/scripts/create-tools.ts",
     "search-vector-tools": "ts-node ./misc/search-tools.ts",
     "search-vector-tools-pgai": "ts-node ./apps/Shared/scripts/search-tools.ts",
-    "process-events": "ts-node src/process-events.ts"
+    "process-events": "ts-node -r tsconfig-paths/register src/process-events.ts"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.0.5",
