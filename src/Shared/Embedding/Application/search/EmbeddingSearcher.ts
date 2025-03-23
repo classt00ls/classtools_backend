@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Embedding } from '../../Domain/Embedding';
 import { EmbeddingRepository } from '../../Domain/EmbeddingRepository';
 
@@ -11,7 +11,7 @@ type EmbeddingSearchRequest = {
 @Injectable()
 export class EmbeddingSearcher {
   constructor(
-    private readonly repository: EmbeddingRepository
+    @Inject('EmbeddingRepository') private readonly repository: EmbeddingRepository
   ) {}
 
   async run(request: EmbeddingSearchRequest): Promise<Embedding[]> {

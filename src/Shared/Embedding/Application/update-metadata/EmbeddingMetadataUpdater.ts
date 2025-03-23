@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { EmbeddingRepository } from '@Shared/Embedding/Domain/EmbeddingRepository';
 import { CreateEventCommand } from '@Events/Event/Application/Create/CreateEventCommand';
@@ -11,7 +11,7 @@ type EmbeddingMetadataUpdaterRequest = {
 @Injectable()
 export class EmbeddingMetadataUpdater {
   constructor(
-    private readonly repository: EmbeddingRepository,
+    @Inject('EmbeddingRepository') private readonly repository: EmbeddingRepository,
     private readonly commandBus: CommandBus
   ) {}
 

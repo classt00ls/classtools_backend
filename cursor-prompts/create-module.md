@@ -72,7 +72,83 @@ You have to create:
                 
             * `[ServiceName]Service.ts` - Implementation of domain services
             
-    
+# Dependency Injection Pattern for Interfaces:
+
+When working with interfaces in NestJS, follow these guidelines:
+
+1. **Registering the interface implementation** in the module:
+   ```typescript
+   @Module({
+     providers: [
+       // Other providers...
+       
+       // Register an implementation for an interface using string token
+       {
+         provide: 'YourRepositoryInterface', // Use string token for the interface
+         useClass: YourRepositoryImplementation, // Concrete implementation class
+       },
+       
+       // Service that depends on the interface
+       YourService,
+     ],
+   })
+   ```
+
+2. **Injecting the interface** in services/controllers:
+   ```typescript
+   @Injectable()
+   export class YourService {
+     constructor(
+       // Use @Inject decorator with the same string token
+       @Inject('YourRepositoryInterface') private readonly repository: YourRepositoryInterface,
+       // Other dependencies...
+     ) {}
+   }
+   ```
+
+3. **Why this approach?**: 
+   - TypeScript interfaces exist only at compile time, not runtime
+   - NestJS needs a runtime identifier (token) to link dependencies
+   - String tokens provide this runtime identifier for interfaces
+
+4. **Best practices**:
+   - Use consistent naming for tokens (e.g., interface name as string)
+   - Consider creating a constants file for token names to avoid typos
+   - If you have many modules, create a Provider Factory pattern for complex registrations
+
+Example with constants file:
+```typescript
+// tokens.ts
+export const TOKENS = {
+  REPOSITORIES: {
+    EMBEDDING_REPOSITORY: 'EmbeddingRepository',
+    USER_REPOSITORY: 'UserRepository',
+  },
+  SERVICES: {
+    EMBEDDING_RESPONSE_SERVICE: 'EmbeddingResponseService',
+  }
+};
+
+// Your module
+@Module({
+  providers: [
+    {
+      provide: TOKENS.REPOSITORIES.EMBEDDING_REPOSITORY,
+      useClass: PGVectorEmbeddingRepository,
+    }
+  ]
+})
+
+// Your service
+@Injectable()
+export class SomeService {
+  constructor(
+    @Inject(TOKENS.REPOSITORIES.EMBEDDING_REPOSITORY) 
+    private readonly repository: EmbeddingRepository
+  ) {}
+}
+```
+
 # Event Handling Approach:
 
 In this project, domain events are not published directly via an EventBus. Instead:
@@ -151,6 +227,7 @@ const specificFormat = {
    - Implement services at the root level of the Infrastructure folder
    - Integrate with repositories to access domain objects
    - Use appropriate libraries and frameworks as needed
+   - Remember to inject interfaces with `@Inject()` as shown in the Dependency Injection Pattern section
 
 # Testing Approach:
 
@@ -220,3 +297,4 @@ Important observations for any implementation:
    - Services at the root level of Infrastructure
    - Controllers in the `Controllers` folder
    - Repository implementations in the `Persistence` folder, separated by technology
+7. When working with interfaces, use the string-based token pattern with `@Inject()` as described in the Dependency Injection Pattern section.

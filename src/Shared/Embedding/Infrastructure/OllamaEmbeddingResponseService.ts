@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 import { ChatOllama } from '@langchain/ollama';
@@ -68,7 +68,7 @@ export class OllamaEmbeddingResponseService implements EmbeddingResponseService 
   private readonly ollamaBaseUrl: string;
 
   constructor(
-    private readonly embeddingRepository: EmbeddingRepository,
+    @Inject('EmbeddingRepository') private readonly embeddingRepository: EmbeddingRepository, 
     private readonly configService?: ConfigService
   ) {
     // Inicialización de valores desde variables de entorno o valores predeterminados
@@ -91,7 +91,7 @@ export class OllamaEmbeddingResponseService implements EmbeddingResponseService 
     }
     
     const value = this.configService.get<T>(key);
-    return value !== undefined ? value : defaultValue;
+    return value !== undefined ? value : defaultValue; 
   }
 
   async respond(

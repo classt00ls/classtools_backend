@@ -38,6 +38,7 @@ import { EventModule } from './Shared/Infrastructure/Event/event.module';
 import { EventAutoRegister } from '@Events/Event/Infrastructure/event-auto-register';
 import { ConsumeEventsModule } from 'apps/backoffice/Controller/Event/ConsumeEventsModule';
 import { ToolAssignedListener } from '@Web/Category/Domain/ToolAssignedListener';
+import { EmbeddingModule } from '@Shared/Embedding/embedding.module';
 
 const cookieSession = require('cookie-session');
 
@@ -82,6 +83,7 @@ const databaseModules = databaseConfig.map((config) =>
 
 @Module({
   imports: [
+    EmbeddingModule,
     DiscoveryModule,
     RouterModule.register(webRoutes),
     ToolModule, 
