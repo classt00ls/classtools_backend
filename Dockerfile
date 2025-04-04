@@ -2,7 +2,7 @@
 FROM node:18
 
 # Crea y entra en el directorio de trabajo
-WORKDIR /app
+WORKDIR /
 
 # Copia package.json y package-lock.json primero para cachear dependencias
 COPY package*.json ./
@@ -15,6 +15,3 @@ COPY . .
 
 # Expone el puerto que usa tu app (cambia si es otro)
 EXPOSE 3000
-
-# Comando de arranque (ajusta si usas otro)
-CMD ["npm", "run", "start"]
