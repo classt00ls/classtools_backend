@@ -7,17 +7,20 @@ WORKDIR /app
 # Copia los archivos necesarios para instalar dependencias
 COPY package*.json ./
 
-# Instala las dependencias (menos estricto para evitar errores)
+# Instala las dependencias
 RUN npm install --legacy-peer-deps
 
-# Copia el resto del proyecto
+# Verifica que las dependencias se hayan instalado correctamente
+RUN npm list --depth=0
+
+# Copia todo el proyecto (esto incluye dist/ si se compiló)
 COPY . .
 
 # Compila la app NestJS
 RUN npm run build
 
-# Expone el puerto, OBLIGATORIO que coincida con process.env.PORT en main.ts
+# Expone el puerto
 EXPOSE 3000
 
-# Comando para iniciar la app
+# El comando que Railway usará es este:
 CMD ["npm", "run", "start:prod"]
