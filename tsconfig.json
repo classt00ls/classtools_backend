@@ -10,6 +10,7 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "outDir": "./dist",
+    "rootDir": "./src",
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
@@ -25,5 +26,6 @@
             "@Backoffice/*": ["src/Backoffice/*"],
             "@Shared/*": ["src/Shared/*"]
         }
-  }
+  },
+  "include": ["src"]
 }
