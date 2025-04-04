@@ -10,11 +10,11 @@ Content-Type: application/json
 }
 
 ### Update futurpedia items
-POST http://localhost:3000/backoffice/futurpedia/update
+POST http://localhost:3000/backoffice/futurpedia/test/update
 Content-Type: application/json
 
 {
-    "route": "https://www.futurepedia.io/ai-tools/spreadsheet-assistant"
+    "link": "https://www.futurepedia.io/tool/rapport"
 }
 
 

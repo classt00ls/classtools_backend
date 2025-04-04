@@ -20,14 +20,12 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
     async extractVideoUrl(html: string): Promise<string> {
         try {
             const SYSTEM_TEMPLATE =
-                `You are an expert web content analyst. Your task is to analyze a webpage and extract the URL of a video if it is present within a div that has the class 'player-wrapper'.
-                
-                IMPORTANT INSTRUCTIONS:
-                1. ONLY look for video URLs within divs that have the class 'player-wrapper'
-                2. Focus on finding video elements or iframes within these divs
-                3. Return the src attribute of the video/iframe if found
-                4. If no video is found within a player-wrapper div, return "No video found"
-                5. Do not look for videos in other parts of the HTML`;
+                `Eres un experto analista de contenido en codigo html que ha sido parseado.
+                Tu trabajo es extraer la url de un video relacionado con la herramienta que se analiza en ese fragmento de código html.  
+                Tu tarea es la de encontrar el video donde se explica como usarla. 
+                Con esa finalidad deberas extraer el fragmento de codigo contenido dentro del div con la clase 'player-wrapper'.
+                Devuelve el div entero junto con su contenido.
+                `;
 
             const analysisResponse = await this.model.invoke([
                 {
@@ -38,24 +36,26 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             ]);
 
             const VIDEO_CATEGORIZATION_SYSTEM_TEMPLATE =
-                `Your job is to extract the URL of a video that appears within a div with class 'player-wrapper'.
-                Only return a URL if it's found within this specific div class.`;
+                `Tu trabajo es extraer la url de un video relacionado con la herramienta que analizas. 
+                La herramienta de IA es la que se describe en el html que te adjunto. 
+                Tu tarea es la de encontrar el video donde se explica como usarla. 
+                Este video será una url de youtube a un video de youtube.
+                `;
 
             const VIDEO_CATEGORIZATION_HUMAN_TEMPLATE =
-                `The following text contains information about a video element.
-                Extract ONLY the video URL that appears within a div with class 'player-wrapper'.
+                `El siguiente fragmento de codigo html contiene informacion sobre un video.
+                Busca un elemento div con la clase: 'player-wrapper'.
+                Dentro de este div, busca un elemento video.
+                DENTRO de este elemento video, busca el atributo que contiene la url del video.
+                un ejemplo del atributo que debes buscar: blob:https://www.youtube.com/946fa1e6-2081-432f-9f68-7b9470ee00d1
+                en ese ejemplo la url del video es: https://www.youtube.com/watch?v=946fa1e6-2081-432f-9f68-7b9470ee00d1
                 
-                Rules:
-                1. The URL must come from within a player-wrapper div
-                2. Return "No video found" if no such div exists or no video URL is found within it
-                3. The URL should be a direct link to a video source
-                
-                Respond using this format:
+                respondeme en formato json:
                 {
                     "video_url": "URL_of_the_video"
                 }
 
-                Here is the text:
+                Este es el fragmento de codigo html:
 
                 <text>
                 ${analysisResponse.content}
@@ -82,6 +82,7 @@ export class HtmlToolParamsExtractor implements ToolParamsExtractor {
             });
 
             const categorizationOutput = JSON.parse(categorizationResponse.content as string);
+            console.log('El output es: ', categorizationOutput);
             return categorizationOutput.video_url || "No video found";
 
         } catch (error) {

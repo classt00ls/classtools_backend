@@ -26,46 +26,15 @@ export class UpdateToolByLinkCommandHandler implements ICommandHandler<UpdateToo
         };
     }
 
-    private getRepositoryForLanguage(lang: string): ToolRepository {
-        const cleanLang = lang.replace(/['"]/g, '').trim();
-        
-        if (!this.repositories[cleanLang]) {
-            this.repositories[cleanLang] = new ToolTypeormRepository(this.dataSource, `_${cleanLang}`);
-        }
-        return this.repositories[cleanLang];
-    }
-
-    private cleanAsterisks(text: string): string {
-        if (!text) return text;
-        // Eliminar asteriscos al principio de cada línea
-        return text.replace(/^\s*\*+\s*/gm, '')
-                  // Eliminar asteriscos sueltos en el texto
-                  .replace(/\s*\*+\s*/g, ' ')
-                  // Eliminar espacios múltiples
-                  .replace(/\s+/g, ' ')
-                  .trim();
-    }
-
-    private cleanMultiLanguageResponse<T extends { analysis: string }>(response: { es: T, en: T }): { es: T, en: T } {
-        return {
-            es: {
-                ...response.es,
-                analysis: this.cleanAsterisks(response.es.analysis)
-            },
-            en: {
-                ...response.en,
-                analysis: this.cleanAsterisks(response.en.analysis)
-            }
-        };
-    }
-
     async execute(command: UpdateToolByLinkCommand) {
         try {
             this.logger.log(`Iniciando actualización de tool con link: ${command.link}`);
 
             // Recuperar la herramienta por su link usando el idioma especificado
             const repository = this.getRepositoryForLanguage(command.lang);
+
             const tool = await repository.getOneByLinkOrFail(command.link);
+
             this.logger.log(`Tool encontrada: ${tool.name} (${tool.id})`);
             
 
@@ -97,12 +66,6 @@ export class UpdateToolByLinkCommandHandler implements ICommandHandler<UpdateToo
             const cleanFeaturesResult = this.cleanMultiLanguageResponse(featuresResult);
             const cleanHowToUseResult = this.cleanMultiLanguageResponse(howToUseResult);
 
-            // Verificar si tenemos tags antes de intentar mapearlos
-            if (!tool.tags) {
-                this.logger.warn(`La herramienta ${tool.name} no tiene tags definidos`);
-            } else {
-                this.logger.debug(`Tags encontrados: ${JSON.stringify(tool.tags)}`);
-            }
 
             const toolParams: ToolParams = {
                 // Mantenemos los campos existentes del tool
@@ -136,5 +99,40 @@ export class UpdateToolByLinkCommandHandler implements ICommandHandler<UpdateToo
             this.logger.error('Stack trace:', error.stack);
             throw error;
         }
+    }
+
+    
+
+    private getRepositoryForLanguage(lang: string): ToolRepository {
+        const cleanLang = lang.replace(/['"]/g, '').trim();
+        
+        if (!this.repositories[cleanLang]) {
+            this.repositories[cleanLang] = new ToolTypeormRepository(this.dataSource, `_${cleanLang}`);
+        }
+        return this.repositories[cleanLang];
+    }
+
+    private cleanAsterisks(text: string): string {
+        if (!text) return text;
+        // Eliminar asteriscos al principio de cada línea
+        return text.replace(/^\s*\*+\s*/gm, '')
+                  // Eliminar asteriscos sueltos en el texto
+                  .replace(/\s*\*+\s*/g, ' ')
+                  // Eliminar espacios múltiples
+                  .replace(/\s+/g, ' ')
+                  .trim();
+    }
+
+    private cleanMultiLanguageResponse<T extends { analysis: string }>(response: { es: T, en: T }): { es: T, en: T } {
+        return {
+            es: {
+                ...response.es,
+                analysis: this.cleanAsterisks(response.es.analysis)
+            },
+            en: {
+                ...response.en,
+                analysis: this.cleanAsterisks(response.en.analysis)
+            }
+        };
     }
 }
