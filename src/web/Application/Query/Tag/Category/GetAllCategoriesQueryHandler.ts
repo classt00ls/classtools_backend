@@ -1,6 +1,6 @@
 import { QueryHandler } from "@nestjs/cqrs";
 import { Injectable } from "@nestjs/common";
-import { TagRepository } from "@Backoffice/Tag/Domain/tag.repository";
+import { TagRepository } from "@backoffice/Tag/Domain/tag.repository";
 import { GetAllCategoriesQuery } from "./GetAllCategoriesQuery";
 
 

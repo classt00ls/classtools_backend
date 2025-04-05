@@ -1,10 +1,10 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { ScrapTool } from "@Backoffice/Tool/Domain/ScrapTool";
-import { ToolRepository } from "@Backoffice/Tool/Domain/tool.repository";
-import { ImportToolCommand } from "@Backoffice/Tool/Application/ImportToolCommand";
+import { ScrapTool } from "@backoffice/Tool/Domain/ScrapTool";
+import { ToolRepository } from "@backoffice/Tool/Domain/tool.repository";
+import { ImportToolCommand } from "@backoffice/Tool/Application/ImportToolCommand";
 import { ToolCreator } from "../Domain/ToolCreator";
-import { TagCreator } from "@Backoffice/Tag/Domain/TagCreator";
+import { TagCreator } from "@backoffice/Tag/Domain/TagCreator";
 import { ToolParamsExtractor } from "../Domain/ToolParamsExtractor";
 import { ToolParams } from "../Domain/ToolCreator";
 import { DataSource } from "typeorm";

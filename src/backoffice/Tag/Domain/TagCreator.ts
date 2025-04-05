@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { TagRepository } from "@Backoffice/Tag/Domain/tag.repository";
+import { TagRepository } from "@backoffice/Tag/Domain/tag.repository";
 import { v6 as uuidv6 } from 'uuid';
 import { TagModel } from "./Tag.model";
 import { EventEmitter2 } from "@nestjs/event-emitter";

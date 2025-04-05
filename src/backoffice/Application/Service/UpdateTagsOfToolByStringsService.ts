@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { TagRepository } from '@Backoffice/Tag/Domain/tag.repository';
-import { ToolRepository } from '@Backoffice/Tool/Domain/tool.repository';
+import { TagRepository } from '@backoffice/Tag/Domain/tag.repository';
+import { ToolRepository } from '@backoffice/Tool/Domain/tool.repository';
 
 @Injectable()
 export class UpdateTagsOfToolByStringsService {

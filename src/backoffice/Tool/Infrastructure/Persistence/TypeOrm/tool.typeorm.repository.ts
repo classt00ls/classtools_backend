@@ -1,9 +1,9 @@
 import { Injectable, Logger } from "@nestjs/common";
 
 import { DataSource, In, InsertResult, Like, MoreThan, Repository } from 'typeorm';
-import { ToolRepository } from "@Backoffice/Tool/Domain/tool.repository";
-import { createToolSchema } from "@Backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.schema";
-import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
+import { ToolRepository } from "@backoffice/Tool/Domain/tool.repository";
+import { createToolSchema } from "@backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.schema";
+import { ToolModel } from "@backoffice/Tool/Domain/tool.model";
 import { ToolFilter } from "@Web/Tool/Domain/tool.filter";
 import { ToolLangFilter } from "@Web/Tool/Domain/tool.lang.filter";
 

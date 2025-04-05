@@ -2,7 +2,7 @@
 // import { Inject, Injectable } from "@nestjs/common";
 // import { CreateToolsCommand } from "./CreateToolsCommand";
 
-// import { GetFuturpediaPageLinksInterface } from "@Backoffice/Tool/Domain/GetFuturpediaPageLinksInterface";
+// import { GetFuturpediaPageLinksInterface } from "@backoffice/Tool/Domain/GetFuturpediaPageLinksInterface";
 // import { ToolCreator } from "../Domain/ToolCreator";
 
 

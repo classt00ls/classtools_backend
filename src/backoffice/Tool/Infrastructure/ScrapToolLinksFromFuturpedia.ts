@@ -1,9 +1,9 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { GetToolFuturpediaTitle } from        "@Backoffice/Tool/Domain/Futurpedia/GetToolFuturpediaTitle";
-import { GetToolTags } from         "@Backoffice/Tool/Domain/GetToolTags";
-import { GetToolPricing } from      "@Backoffice/Tool/Domain/GetToolPricing";
-import { GetToolStars } from        "@Backoffice/Tool/Domain/GetToolStars";
+import { GetToolFuturpediaTitle } from        "@backoffice/Tool/Domain/Futurpedia/GetToolFuturpediaTitle";
+import { GetToolTags } from         "@backoffice/Tool/Domain/GetToolTags";
+import { GetToolPricing } from      "@backoffice/Tool/Domain/GetToolPricing";
+import { GetToolStars } from        "@backoffice/Tool/Domain/GetToolStars";
 
 import { ScrapConnectionProvider } from "@Shared/Domain/Service/Tool/ScrapConnectionProvider";
 import { ScrapToolResponse } from "../Domain/ScrapResponse";

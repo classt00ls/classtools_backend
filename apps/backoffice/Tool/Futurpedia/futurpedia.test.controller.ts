@@ -1,8 +1,8 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { UpdateToolInterface } from '@Backoffice/Tool/Domain/UpdateToolInterface';
-import { ImportToolCommand } from '@Backoffice/Tool/Application/ImportToolCommand';
-import { UpdateToolByLinkCommand } from '@Backoffice/Tool/Application/UpdateToolByLinkCommand';
+import { UpdateToolInterface } from '@backoffice/Tool/Domain/UpdateToolInterface';
+import { ImportToolCommand } from '@backoffice/Tool/Application/ImportToolCommand';
+import { UpdateToolByLinkCommand } from '@backoffice/Tool/Application/UpdateToolByLinkCommand';
 
 @Controller('backoffice/futurpedia/test')
 export class FuturpediaTestController {

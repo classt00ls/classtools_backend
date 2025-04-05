@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { UpdateToolByLinkCommand } from "./UpdateToolByLinkCommand";
-import { ToolRepository } from "@Backoffice/Tool/Domain/tool.repository";
+import { ToolRepository } from "@backoffice/Tool/Domain/tool.repository";
 import { ToolParamsExtractor } from "../Domain/ToolParamsExtractor";
 import { ToolUpdater } from "../Domain/ToolUpdater";
 import { ToolParams } from "../Domain/ToolCreator";

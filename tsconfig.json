@@ -22,7 +22,7 @@
       "@web/*": ["apps/web/*"],
       "@Events/*": ["src/Events/*"],
       "@Web/*": ["src/web/*"],
-      "@Backoffice/*": ["src/backoffice/*"],
+      "@backoffice/*": ["src/backoffice/*"],
       "@Shared/*": ["src/Shared/*"],
       "src/*": ["src/*"]
     }

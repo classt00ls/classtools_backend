@@ -1,12 +1,12 @@
 import { QueryHandler } from "@nestjs/cqrs";
 import { Injectable, Logger } from "@nestjs/common";
-import { ToolRepository } from "@Backoffice/Tool/Domain/tool.repository";
+import { ToolRepository } from "@backoffice/Tool/Domain/tool.repository";
 import { GetDetailToolQuery } from "./GetDetailToolQuery";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { ToolVisitedEvent } from "src/Shared/Application/Event/Tool/ToolVisitedEvent";
 import { DataSource } from "typeorm";
 import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
-import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
+import { ToolModel } from "@backoffice/Tool/Domain/tool.model";
 
 @QueryHandler(GetDetailToolQuery)
 @Injectable()

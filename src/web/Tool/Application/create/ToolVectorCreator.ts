@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
+import { ToolModel } from "@backoffice/Tool/Domain/tool.model";
 import { ToolVector } from "@Web/Tool/Domain/tool.vector";
 import { ToolVectorRepository } from "@Web/Tool/Domain/tool.vector.repository";
 

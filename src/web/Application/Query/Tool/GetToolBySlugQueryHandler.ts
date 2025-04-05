@@ -2,9 +2,9 @@ import { QueryHandler } from "@nestjs/cqrs";
 import { Injectable, Logger } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { ToolRepository } from "@Backoffice/Tool/Domain/tool.repository";
+import { ToolRepository } from "@backoffice/Tool/Domain/tool.repository";
 import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
-import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
+import { ToolModel } from "@backoffice/Tool/Domain/tool.model";
 import { GetToolBySlugQuery } from "./GetToolBySlugQuery";
 import { ToolVisitedEvent } from "src/Shared/Application/Event/Tool/ToolVisitedEvent";
 

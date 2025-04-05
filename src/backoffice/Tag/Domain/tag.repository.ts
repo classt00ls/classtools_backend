@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { TagModel } from "@Backoffice/Tag/Domain/Tag.model";
+import { TagModel } from "@backoffice/Tag/Domain/Tag.model";
 import { InsertResult, UpdateResult } from "typeorm";
 
 @Injectable()

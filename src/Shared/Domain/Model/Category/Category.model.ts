@@ -1,5 +1,5 @@
 import { BaseModel } from "src/Shared/Domain/Model/base.model";
-import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
+import { ToolModel } from "@backoffice/Tool/Domain/tool.model";
 
 
 export class CategoryModel extends BaseModel {

@@ -1,13 +1,13 @@
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { ToolCreatedEvent } from "@Backoffice/Tool/Domain/ToolCreatedEvent";
+import { ToolCreatedEvent } from "@backoffice/Tool/Domain/ToolCreatedEvent";
 import { ScrapToolResponse } from "./ScrapResponse";
 import { ToolRepository } from "./tool.repository";
 import { v6 as uuidv6 } from 'uuid';
-import { TagModel } from "@Backoffice/Tag/Domain/Tag.model";
+import { TagModel } from "@backoffice/Tag/Domain/Tag.model";
 import { Injectable, Logger } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
-import { ToolAssignedEvent } from "@Backoffice/Tag/Domain/ToolAssignedEvent";
+import { ToolAssignedEvent } from "@backoffice/Tag/Domain/ToolAssignedEvent";
 import { CommandBus } from "@nestjs/cqrs";
 import { CreateEventCommand } from "@Events/Event/Application/Create/CreateEventCommand";
 

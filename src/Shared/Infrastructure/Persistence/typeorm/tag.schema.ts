@@ -1,6 +1,6 @@
 import { EntitySchema } from "typeorm";
 import { sharedFields } from "src/Infrastructure/Shared/typeorm/shared-fields.schema";
-import { TagModel } from "@Backoffice/Tag/Domain/Tag.model";
+import { TagModel } from "@backoffice/Tag/Domain/Tag.model";
 
 export const TagSchema = new EntitySchema<TagModel>({
   name: 'Tag',

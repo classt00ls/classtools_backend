@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { createToolSchema } from '@Backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.schema';
-import { ToolRepository } from '@Backoffice/Tool/Domain/tool.repository';
+import { createToolSchema } from '@backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.schema';
+import { ToolRepository } from '@backoffice/Tool/Domain/tool.repository';
 import { ToolTypeormRepository } from './tool.typeorm.repository';
 
 export const TOOL_TABLE_SUFFIX = 'TOOL_TABLE_SUFFIX';

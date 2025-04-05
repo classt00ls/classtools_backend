@@ -1,10 +1,10 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { GetFilteredToolsByLangQuery } from "./GetFilteredToolsByLangQuery";
-import { ToolRepository } from "@Backoffice/Tool/Domain/tool.repository";
+import { ToolRepository } from "@backoffice/Tool/Domain/tool.repository";
 import { Injectable, Logger } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
-import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
+import { ToolModel } from "@backoffice/Tool/Domain/tool.model";
 import { ToolLangFilter } from "@Web/Tool/Domain/tool.lang.filter";
 import { ToolVectorSearcher } from "./ToolVectorSearcher";
 
