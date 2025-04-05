@@ -10,7 +10,6 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "outDir": "./dist",
-    "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -18,12 +17,13 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "baseUrl": "./",  // Esto es para usar la raíz del proyecto
     "paths": {
-            "@web/*": ["apps/web/*"],
-            "@Events/*": ["src/Events/*"],
-            "@Web/*": ["src/web/*"],
-            "@Backoffice/*": ["src/Backoffice/*"],
-            "@Shared/*": ["src/Shared/*"]
-        }
+      "@web/*": ["apps/web/*"],
+      "@Events/*": ["src/Events/*"],
+      "@Web/*": ["src/web/*"],
+      "@Backoffice/*": ["src/backoffice/*"],
+      "@Shared/*": ["src/Shared/*"]
+    }
   }
 }
