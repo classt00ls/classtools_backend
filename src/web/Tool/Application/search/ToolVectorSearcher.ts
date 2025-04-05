@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
+import { ToolRepository } from "@Backoffice/Tool/Domain/tool.repository";
 import { DataSource } from "typeorm";
 import { ToolTypeormRepository } from "src/backoffice/Tool/Infrastructure/Persistence/TypeOrm/tool.typeorm.repository";
 import { EmbeddingRepository } from "@Shared/Embedding/Domain/EmbeddingRepository";

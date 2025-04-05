@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { CommandBus, IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
 import { GetSuggestedToolsByUserDescriptionQuery } from "./GetSuggestedToolsByUserDescriptionQuery";
-import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
+import { ToolRepository } from "@Backoffice/Tool/Domain/tool.repository";
 import { SuggestionsGenerator } from "src/discover/Domain/Tool/SuggestionsGenerator";
 
 

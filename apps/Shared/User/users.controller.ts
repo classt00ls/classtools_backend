@@ -2,7 +2,7 @@ import { BadRequestException, Body, Controller, Get, Post, Session, UseGuards } 
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import { CreateUserDto } from "src/Shared/Application/Dto/create-user.dto";
-import { CannotCreateUserException } from "src/Shared/Domain/Exception/user/CannotCreateUserException";
+import { CannotCreateUserException } from "@Shared/Domain/Exception/user/CannotCreateUserException";
 import { ERROR_CODES } from "src/Shared/Domain/language/error.codes";
 import { Serialize } from "src/web/Infrastructure/interceptors/serialize.interceptor";
 import { ConfirmUserDto } from "./confirm-user.dto";

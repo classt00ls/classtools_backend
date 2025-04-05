@@ -1,6 +1,6 @@
 import { CommandHandler, QueryHandler } from "@nestjs/cqrs";
 import { Injectable } from "@nestjs/common";
-import { ToolRepository } from "@Backoffice//Tool/Domain/tool.repository";
+import { ToolRepository } from "@Backoffice/Tool/Domain/tool.repository";
 import { ToolExportCommand } from "./ToolExportCommand";
 
 

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { ConfirmUserCommand } from "./ConfirmUserCommand";
 import { RESPONSE_CODES } from "src/Shared/Domain/language/response.codes";
-import { CannotCreateUserException } from "src/Shared/Domain/Exception/user/CannotCreateUserException";
+import { CannotCreateUserException } from "@Shared/Domain/Exception/user/CannotCreateUserException";
 import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
 
 @Injectable()

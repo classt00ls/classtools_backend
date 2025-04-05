@@ -3,7 +3,7 @@ import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { JwtService } from "@nestjs/jwt";
 
 import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
-import { CannotLoginUserException } from "src/Shared/Domain/Exception/user/CannotLoginUserException";
+import { CannotLoginUserException } from "@Shared/Domain/Exception/user/CannotLoginUserException";
 import { GetAuthTokenFromEmailQuery } from "@Web/Application/Query/Auth/GetAuthTokenFromEmailQuery";
 
 @Injectable()

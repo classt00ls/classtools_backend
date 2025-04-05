@@ -1,4 +1,4 @@
-import { ToolModel } from "@Backoffice//Tool/Domain/tool.model";
+import { ToolModel } from "@Backoffice/Tool/Domain/tool.model";
 import { EntitySchema } from "typeorm";
 
 export const createToolSchema = (suffix: string = '') => new EntitySchema<ToolModel>({

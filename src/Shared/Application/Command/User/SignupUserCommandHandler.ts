@@ -8,7 +8,7 @@ import { EventEmitter2, EventEmitterReadinessWatcher } from "@nestjs/event-emitt
 
 import { RESPONSE_CODES } from "src/Shared/Domain/language/response.codes";
 // import { MailService } from "src/Shared/Service/MailService";
-import { CannotCreateUserException } from "src/Shared/Domain/Exception/user/CannotCreateUserException";
+import { CannotCreateUserException } from "@Shared/Domain/Exception/user/CannotCreateUserException";
 import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
 import { InfrastructureException } from "src/Shared/Infrastructure/Exception/InfrastructureException";
 

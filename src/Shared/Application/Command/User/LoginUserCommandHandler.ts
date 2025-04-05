@@ -4,7 +4,7 @@ import { scrypt  as _script} from "crypto";
 import { promisify } from "util";
 
 import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
-import { CannotLoginUserException } from "src/Shared/Domain/Exception/user/CannotLoginUserException";
+import { CannotLoginUserException } from "@Shared/Domain/Exception/user/CannotLoginUserException";
 import { LoginUserCommand } from "./LoginUserCommand";
 import { JwtService } from "@nestjs/jwt";
 
