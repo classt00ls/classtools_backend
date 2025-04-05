@@ -23,7 +23,8 @@
       "@Events/*": ["src/Events/*"],
       "@Web/*": ["src/web/*"],
       "@Backoffice/*": ["src/backoffice/*"],
-      "@Shared/*": ["src/Shared/*"]
+      "@Shared/*": ["src/Shared/*"],
+      "src/*": ["src/*"]
     }
   }
 }
