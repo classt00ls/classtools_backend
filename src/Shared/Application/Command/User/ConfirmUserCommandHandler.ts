@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { ConfirmUserCommand } from "./ConfirmUserCommand";
 import { RESPONSE_CODES } from "src/Shared/Domain/language/response.codes";
-import { CannotCreateUserException } from "@Shared/Domain/Exception/user/CannotCreateUserException";
 import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
 
 @Injectable()
@@ -23,10 +22,10 @@ export class ConfirmUserCommandHandler implements ICommandHandler<ConfirmUserCom
 		)
         
 		if(!existingUser) {
-			throw CannotCreateUserException.becauseEmailIsAlreadyInUse();
+			throw new Error('No se pudo confirmar el usuario');
 		}
 		if(existingUser.confirmed) {
-			throw CannotCreateUserException.becauseEmailIsAlreadyInUse();
+			throw new Error('No se pudo confirmar el usuario');
 		}	
 		
 		existingUser.confirmed = true;

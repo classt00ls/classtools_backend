@@ -2,13 +2,11 @@ import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Post,
 import { CommandBus, QueryBus } from 		'@nestjs/cqrs';
 
 import { ERROR_CODES } from 				"@Shared/Domain/language/error.codes";
-import { CannotLoginUserException } from 	"@Shared/Domain/Exception/user/CannotLoginUserException";
 import { GetAuthTokenFromEmailQuery } from 	"@Web/Application/Query/Auth/GetAuthTokenFromEmailQuery";
 import { LoginUserCommand } from 			"@Shared/Application/Command/User/LoginUserCommand";
 import { SignupUserCommand } from 			"@Shared/Application/Command/User/SignupUserCommand";
 import { CreateUserDto } from 				"@Shared/Application/Dto/create-user.dto";
 import { TokenAuthGuard } from				"@Web/Infrastructure/guard/token.auth.guard";
-import { CannotCreateUserException } from 	"@Shared/Domain/Exception/user/CannotCreateUserException";
 
 import { UserWebId } from 					"@Web/UserWeb/Domain/UserWebId";
 
@@ -49,8 +47,7 @@ export class WebAuthController {
 			return acces_token;
 
 		} catch (error) {
-			if(error instanceof CannotLoginUserException) throw error;
-			else throw new BadRequestException(ERROR_CODES.COMMON.USER.ERROR_LOGIN);
+			throw new Error('No se pudo iniciar sesión');
 		}
 	}
 
@@ -92,10 +89,7 @@ export class WebAuthController {
 			);
 			
 		} catch(error){
-			if(error instanceof CannotCreateUserException) throw error;
-			else {
-				throw new BadRequestException(ERROR_CODES.COMMON.USER.ERROR_CREATING_USER);
-			}
+			throw new Error('No se pudo crear el usuario');
 		}
 		return {code: true};
 	}

@@ -4,7 +4,6 @@ import { scrypt  as _script} from "crypto";
 import { promisify } from "util";
 
 import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
-import { CannotLoginUserException } from "@Shared/Domain/Exception/user/CannotLoginUserException";
 import { LoginUserCommand } from "./LoginUserCommand";
 import { JwtService } from "@nestjs/jwt";
 
@@ -22,15 +21,15 @@ export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand
 		
         const user = await this.userRepository.findOneByEmail(query.email);
 		if(!user) {
-			throw CannotLoginUserException.becauseUserNotExist();
+			throw new Error('No se pudo iniciar sesión');
 		}
 
 		if(!user.confirmed && user.role != 'admin') {
-			throw CannotLoginUserException.becauseUserNotConfirmed();
+			throw new Error('No se pudo iniciar sesión');
 		}
 		
 		if(user.deleted) {
-			throw CannotLoginUserException.becauseUserCancelled();
+			throw new Error('No se pudo iniciar sesión');
 		}
 
 		const [salt, storedHash] = user.password.split('.');
@@ -40,7 +39,7 @@ export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand
 		if(storedHash === hash.toString('hex')) {
 			return;
 		} else {
-			throw CannotLoginUserException.becausePasswordIncorrect();
+			throw new Error('No se pudo iniciar sesión');
 		}
     }
 }

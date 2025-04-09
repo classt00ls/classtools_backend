@@ -3,14 +3,14 @@ import "reflect-metadata";
 
 import { PostgresConnection } from "./PostgresConnection";
 
-// import tools from "./tools.json";
-import * as tools from './../../../misc/tools.json';
+// Eliminamos la importación de tools.json
 
 async function main(
-	pgConnection: PostgresConnection
+	pgConnection: PostgresConnection,
+	toolsData: any[]
 ): Promise<void> {
 	await Promise.all(
-		tools.map(async (jsonTool) => {
+		toolsData.map(async (jsonTool) => {
 
 			await pgConnection.sql`
 				INSERT INTO classtools.tools (id, name, excerpt, description)
@@ -32,15 +32,28 @@ const pgConnection = new PostgresConnection(
 	"classtools",
 );
 
+async function run() {
+	// En lugar de usar tools importados, creamos un array con datos de ejemplo
+	const toolsData = [
+		{
+			id: "example-id",
+			name: "Example Tool",
+			excerpt: "This is an example tool",
+			description: "This is a detailed description of an example tool"
+		}
+	];
 
-main(pgConnection)
-	.catch((error) => {
-		console.error(error);
-		process.exit(1);
-	})
-	.finally(async () => {
-		await pgConnection.end();
-		console.log("Done!");
+	main(pgConnection, toolsData)
+		.catch((error) => {
+			console.error(error);
+			process.exit(1);
+		})
+		.finally(async () => {
+			await pgConnection.end();
+			console.log("Done!");
 
-		process.exit(0);
-	});
+			process.exit(0);
+		});
+}
+
+run();

@@ -8,7 +8,6 @@ import { EventEmitter2, EventEmitterReadinessWatcher } from "@nestjs/event-emitt
 
 import { RESPONSE_CODES } from "src/Shared/Domain/language/response.codes";
 // import { MailService } from "src/Shared/Service/MailService";
-import { CannotCreateUserException } from "@Shared/Domain/Exception/user/CannotCreateUserException";
 import { UserRepository } from "src/Shared/Domain/Repository/user.repository";
 import { InfrastructureException } from "src/Shared/Infrastructure/Exception/InfrastructureException";
 
@@ -44,7 +43,7 @@ export class SignupUserCommandHandler implements ICommandHandler<SignupUserComma
 		try {
 			await this.userRepository.findOneByEmailAndFail(command.email);
 		} catch (error) {
-			throw CannotCreateUserException.becauseEmailIsAlreadyInUse();
+			throw new Error('No se pudo crear el usuario');
 		}
 
 		
@@ -83,7 +82,7 @@ export class SignupUserCommandHandler implements ICommandHandler<SignupUserComma
 
 		} catch (error) {
 			if(error instanceof InfrastructureException) {
-				throw CannotCreateUserException.becauseInfrastructureProblem();
+				throw new Error('No se pudo crear el usuario');
 			}
 		}
 		

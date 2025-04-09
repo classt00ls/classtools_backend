@@ -6,11 +6,8 @@ import { PuppeterScrapping } from "../../../Shared/Infrastructure/Import/puppete
 import { GetToolDescription } from "@backoffice/Tool/Domain/GetToolDescription";
 import { GetToolFeatures } from "@backoffice/Tool/Domain/Futurpedia/GetToolFeatures";
 import { GetToolStars } from "@backoffice/Tool/Domain/GetToolStars";
-import { CannotUpdateToolException } from "@Shared/Domain/Exception/Tool/CannotUpdateToolException";
-
 
 @Injectable()
-
 export class UpdateFuturpediaTool extends PuppeterScrapping {
 
     constructor(
@@ -24,12 +21,10 @@ export class UpdateFuturpediaTool extends PuppeterScrapping {
         try {
             tool = await this.toolRepository.getOneByLinkOrFail(link);
         } catch (error) {
-            
             console.log('Eps !  aquest no el tenim: ' + link);
             return;
         }
         
-
         let page = await this.getPage(link);
         console.log('Si !  aquest el fem: ' + link);
         try {
@@ -42,9 +37,6 @@ export class UpdateFuturpediaTool extends PuppeterScrapping {
             tool.features = features;
             tool.pricing = pricing;
             tool.stars = stars;
-
-            //const pageUrl = await page.$eval('div.mt-4.flex.flex-wrap.gap-4 > a', reference => reference.href);
-            //const excerpt = await page.$eval('p.my-2', desc => desc.innerText);
 
             await this.toolRepository.save(tool);
             
@@ -64,5 +56,4 @@ export class UpdateFuturpediaTool extends PuppeterScrapping {
         }
         await this.browser.close();
     }
-
 }
