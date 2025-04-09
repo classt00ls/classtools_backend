@@ -4,11 +4,12 @@ export class PostgresConnection {
 	public readonly sql: postgres.Sql;
 
 	constructor(
-		host: string,
-		port: number,
-		user: string,
-		password: string,
-		database: string,
+		host: string = process.env.DB_HOST,
+		port: number = parseInt(process.env.DB_PORT || '5432', 10),
+		user: string = process.env.DB_USER,
+		password: string = process.env.DB_PASSWORD,
+		database: string = process.env.DB_NAME,
+		ssl: boolean = process.env.DB_SSL === 'true',
 	) {
 		this.sql = postgres({
 			host,
@@ -16,6 +17,7 @@ export class PostgresConnection {
 			user,
 			password,
 			database,
+			ssl: ssl ? { rejectUnauthorized: false } : false,
 			onnotice: () => {},
 		});
 	}

@@ -8,13 +8,7 @@ export abstract class PostgresRepository {
 	protected readonly connection: any;
 
 	constructor() {
-		this.connection = new PostgresConnection(
-			"localhost",
-			5431,
-			"classtools",
-			"classtools",
-			"classtools",
-		);
+		this.connection = new PostgresConnection();
 	}
 
 	protected abstract toAggregate(row: Row): any;
