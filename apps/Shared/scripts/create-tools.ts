@@ -24,13 +24,7 @@ async function main(
 	);
 }
 
-const pgConnection = new PostgresConnection(
-	"localhost",
-	5431,
-	"classtools",
-	"classtools",
-	"classtools",
-);
+const pgConnection = new PostgresConnection();
 
 async function run() {
 	// En lugar de usar tools importados, creamos un array con datos de ejemplo

@@ -7,11 +7,12 @@ class PostgresConnection {
 	private client: any;
 
 	constructor(
-		private host: string,
-		private port: number,
-		private database: string,
-		private user: string,
-		private password: string
+		private host: string = process.env.DB_HOST || 'localhost',
+		private port: number = parseInt(process.env.DB_PORT || '5432', 10),
+		private database: string = process.env.DB_NAME || 'classtools',
+		private user: string = process.env.DB_USER || 'classtools',
+		private password: string = process.env.DB_PASSWORD || 'classtools',
+		private ssl: boolean = process.env.DB_SSL === 'true'
 	) {
 		// Constructor vacío, la conexión se inicializa en el método connect
 	}
@@ -46,13 +47,7 @@ async function main() {
 		}
 	];
 
-	const pgConnection = new PostgresConnection(
-		"localhost",
-		5432,
-		"classtools",
-		"classtools",
-		"classtools"
-	);
+	const pgConnection = new PostgresConnection();
 
 	await pgConnection.connect();
 

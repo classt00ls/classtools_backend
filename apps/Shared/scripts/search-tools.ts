@@ -22,13 +22,7 @@ async function main(
 console.log(`For the query "${query}" the results are:`, results);
 }
 
-const pgConnection = new PostgresConnection(
-	"localhost",
-	5431,
-	"classtools",
-	"classtools",
-	"classtools",
-);
+const pgConnection = new PostgresConnection();
 
 main(process.argv[2], pgConnection)
 .catch(console.error)

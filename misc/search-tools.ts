@@ -24,13 +24,7 @@ async function main(
 	console.log(`For the query "${query}" the results are:`, results);
 }
 
-const pgConnection = new PostgresConnection(
-	"localhost",
-	5431,
-	"classtools",
-	"classtools",
-	"classtools",
-);
+const pgConnection = new PostgresConnection();
 const embeddingsGenerator = new OllamaEmbeddings({
 	model: "nomic-embed-text",
 	baseUrl: "http://localhost:11434",
