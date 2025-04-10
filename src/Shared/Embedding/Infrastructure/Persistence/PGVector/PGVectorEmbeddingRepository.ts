@@ -47,6 +47,7 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
     const dbUser = this.getConfigOrDefault('PGVECTOR_USER', 'postgres');
     const dbPassword = this.getConfigOrDefault('PGVECTOR_PASSWORD', 'postgres');
     const dbName = this.getConfigOrDefault('PGVECTOR_DB', 'postgres');
+    const useSSL = this.getConfigOrDefault<string>('PGVECTOR_SSL', 'false') === 'true';
   
     const tableName = this.getConfigOrDefault('PGVECTOR_TABLE', 'embeddings');
     const idColumnName = this.getConfigOrDefault('PGVECTOR_COL_ID', 'id');
@@ -60,7 +61,7 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
       user: dbUser,
       password: dbPassword,
       database: dbName,
-      ssl: true,
+      ssl: useSSL,
     });
   
     this.vectorStore = await PGVectorStore.initialize(
@@ -73,7 +74,7 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
           user: dbUser,
           password: dbPassword,
           database: dbName,
-          ssl: { rejectUnauthorized: false },
+          ssl: useSSL ? { rejectUnauthorized: false } : false,
         } as PoolConfig,
         tableName: tableName,
         columns: {
