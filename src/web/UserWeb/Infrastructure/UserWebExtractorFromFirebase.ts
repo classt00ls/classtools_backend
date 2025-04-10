@@ -16,11 +16,11 @@ export class UserWebExtractorFromFirebase {
 		private eventEmitterReadinessWatcher: EventEmitterReadinessWatcher
     ) {
 
+      const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+
         if (!admin.apps.length) {
           admin.initializeApp({
-            credential: admin.credential.cert(
-              path.resolve(__dirname, '../../../../../misc/firebase.json') // Ruta a tu archivo JSON
-            ),
+            credential: admin.credential.cert( serviceAccount ),
           });
         }
       }
