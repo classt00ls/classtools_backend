@@ -67,7 +67,9 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
           user: dbUser,
           password: dbPassword,
           database: dbName,
-          ssl: false,
+          ssl: {
+            rejectUnauthorized: false,
+          },
         } as PoolConfig,
         tableName: tableName,
         columns: {
