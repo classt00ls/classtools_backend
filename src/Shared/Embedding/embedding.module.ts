@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 // Domain
 // (Los imports de dominio son interfaces, no necesitan ser registrados)
@@ -22,6 +22,8 @@ import { EmbeddingBatchProcessor } from './Application/batch/EmbeddingBatchProce
 import { EmbeddingQueryController } from '@Shared/Embedding/Infrastructure/Controllers/EmbeddingQueryController';
 import { PGVectorEmbeddingRepository } from './Infrastructure/Persistence/PGVector/PGVectorEmbeddingRepository';
 import { OllamaEmbeddingResponseService } from './Infrastructure/OllamaEmbeddingResponseService';
+import { MockPGVectorEmbeddingRepository } from './Infrastructure/Persistence/Mock/MockPGVectorEmbeddingRepository';
+import { EmbeddingRepository } from './Domain/EmbeddingRepository';
 
 const CommandHandlers = [
   CreateEmbeddingCommandHandler,
@@ -62,7 +64,49 @@ const Controllers = [
     // Repositories
     {
       provide: 'EmbeddingRepository',
-      useClass: PGVectorEmbeddingRepository,
+      useFactory: (configService: ConfigService) => {
+        console.log('🔍 FACTORY: Inicializando EmbeddingRepository...');
+        
+        try {
+          // Leer variables de entorno con logs detallados
+          const envVars = {
+            USE_MOCK_EMBEDDINGS: configService.get<string>('USE_MOCK_EMBEDDINGS'),
+            NODE_ENV: configService.get<string>('NODE_ENV'),
+            PGVECTOR_HOST: configService.get<string>('PGVECTOR_HOST'),
+            PGVECTOR_PORT: configService.get<string>('PGVECTOR_PORT'),
+            PGVECTOR_USER: configService.get<string>('PGVECTOR_USER'),
+            PGVECTOR_DB: configService.get<string>('PGVECTOR_DB'),
+            PGVECTOR_SSL: configService.get<string>('PGVECTOR_SSL'),
+          };
+          
+          console.log('🔍 FACTORY: Variables de entorno leídas:', JSON.stringify(envVars, null, 2));
+          
+          // Decidir qué implementación usar
+          const useMock = configService.get<string>('USE_MOCK_EMBEDDINGS') === 'true';
+          
+          if (useMock) {
+            console.log('⚠️ FACTORY: Usando implementación MOCK de EmbeddingRepository');
+            console.log('⚠️ FACTORY: La funcionalidad de embeddings está DESACTIVADA');
+            return new MockPGVectorEmbeddingRepository();
+          } else {
+            console.log('✅ FACTORY: Usando implementación REAL de EmbeddingRepository');
+            console.log('✅ FACTORY: La funcionalidad de embeddings está ACTIVADA');
+            
+            try {
+              return new PGVectorEmbeddingRepository(configService);
+            } catch (error) {
+              console.error('❌ FACTORY: Error al crear PGVectorEmbeddingRepository:', error);
+              console.log('⚠️ FACTORY: Fallback a implementación MOCK por error');
+              return new MockPGVectorEmbeddingRepository();
+            }
+          }
+        } catch (error) {
+          console.error('❌ FACTORY: Error en factory de EmbeddingRepository:', error);
+          console.log('⚠️ FACTORY: Fallback a implementación MOCK por error');
+          return new MockPGVectorEmbeddingRepository();
+        }
+      },
+      inject: [ConfigService],
     },
     
     // Domain Services
