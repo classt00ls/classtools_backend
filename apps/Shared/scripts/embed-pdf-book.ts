@@ -44,7 +44,7 @@ const vectorStorePromise = PGVectorStore.initialize(
         postgresConnectionOptions: {
             type: "postgres",
             host: "localhost",
-            port: 5431,
+            port: 5432,
             user: "classtools",
             password: "classtools",
             database: "classtools",
