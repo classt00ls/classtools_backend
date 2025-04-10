@@ -57,6 +57,14 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
     const metadataColumnName = this.getConfigOrDefault('PGVECTOR_COL_METADATA', 'metadata');
     const vectorColumnName = this.getConfigOrDefault('PGVECTOR_COL_VECTOR', 'embedding');
     
+    console.log('📦 DB CONNECTION CONFIG:', {
+      host: dbHost,
+      port: dbPort,
+      user: dbUser,
+      password: dbPassword,
+      database: dbName,
+    });
+    
     this.vectorStore = await PGVectorStore.initialize(
       this.embeddingsGenerator,
       {
