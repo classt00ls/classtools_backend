@@ -13,10 +13,6 @@ export class MockPGVectorEmbeddingRepository implements EmbeddingRepository {
   
   constructor() {
     console.log('🚨 MOCK: Inicializando MockPGVectorEmbeddingRepository');
-    console.log('🚨 MOCK: Variables de entorno relevantes:');
-    console.log('🚨 MOCK: USE_MOCK_EMBEDDINGS =', process.env.USE_MOCK_EMBEDDINGS);
-    console.log('🚨 MOCK: PGVECTOR_HOST =', process.env.PGVECTOR_HOST);
-    console.log('🚨 MOCK: PGVECTOR_PORT =', process.env.PGVECTOR_PORT);
     
     // Crear objetos mock en lugar de conexiones reales
     this.vectorStore = {
@@ -34,38 +30,33 @@ export class MockPGVectorEmbeddingRepository implements EmbeddingRepository {
       embedDocuments: async () => [new Array(1536).fill(0)],
       embedQuery: async () => new Array(1536).fill(0),
     };
-    
-    console.log('🚨 MOCK: MockPGVectorEmbeddingRepository inicializado con éxito');
   }
 
   async save(): Promise<void> {
-    console.log('📝 MOCK: Operación save ignorada');
+    // Mock
   }
   
   async saveMany(): Promise<void> {
-    console.log('📝 MOCK: Operación saveMany ignorada');
+    // Mock
   }
   
   async findById(): Promise<Embedding | null> {
-    console.log('📝 MOCK: Operación findById ignorada');
     return null;
   }
   
   async search(): Promise<Embedding[]> {
-    console.log('📝 MOCK: Operación search ignorada');
     return [];
   }
   
   async searchSimilar(): Promise<Embedding[]> {
-    console.log('📝 MOCK: Operación searchSimilar ignorada');
     return [];
   }
   
   async delete(): Promise<void> {
-    console.log('📝 MOCK: Operación delete ignorada');
+    // Mock
   }
   
   async deleteMany(): Promise<void> {
-    console.log('📝 MOCK: Operación deleteMany ignorada');
+    // Mock
   }
 } 

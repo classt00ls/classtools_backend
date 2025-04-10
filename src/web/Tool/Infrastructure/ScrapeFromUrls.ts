@@ -30,7 +30,7 @@ export class ScrapeFromUrls {
 			(this.configService && this.configService.get<string>('USE_MOCK_EMBEDDINGS') === 'true');
 
 		if (useMock) {
-			console.log('🚨 ScrapeFromUrls: Usando modo MOCK (sin conexión a base de datos)');
+			console.log('🚨 ScrapeFromUrls: Usando modo MOCK');
 			this.vectorStore = {
 				client: { sql: async () => [] },
 				addDocuments: async () => {},
@@ -48,8 +48,6 @@ export class ScrapeFromUrls {
 		}
 
 		try {
-			console.log('🔄 ScrapeFromUrls: Inicializando conexión real a PGVector');
-			
 			// Obtener configuración de variables de entorno
 			const dbHost = this.getConfigValue('PGVECTOR_HOST', 'localhost');
 			const dbPort = parseInt(this.getConfigValue('PGVECTOR_PORT', '5432'));
@@ -59,14 +57,6 @@ export class ScrapeFromUrls {
 			const useSSL = this.getConfigValue('PGVECTOR_SSL', 'false') === 'true';
 			
 			const ollamaBaseUrl = this.getConfigValue('OLLAMA_BASE_URL', 'http://localhost:11434');
-			
-			console.log('📦 ScrapeFromUrls DB CONFIG:', {
-				host: dbHost,
-				port: dbPort,
-				user: dbUser,
-				database: dbName,
-				ssl: useSSL,
-			});
 
 			this.embeddingsGenerator = new OllamaEmbeddings({
 				model: "nomic-embed-text",
@@ -96,8 +86,7 @@ export class ScrapeFromUrls {
 				},
 			);
 		} catch (error) {
-			console.error('❌ ScrapeFromUrls ERROR inicializando PGVectorStore:', error);
-			console.log('⚠️ ScrapeFromUrls: Fallback a modo MOCK por error');
+			console.error('❌ Error inicializando PGVectorStore, usando mock:', error.message);
 			
 			// Crear mock en caso de error
 			this.vectorStore = {

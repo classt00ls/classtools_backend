@@ -65,44 +65,29 @@ const Controllers = [
     {
       provide: 'EmbeddingRepository',
       useFactory: (configService: ConfigService) => {
-        console.log('🔍 FACTORY: Inicializando EmbeddingRepository...');
+        console.log('🔍 Inicializando EmbeddingRepository...');
         
         try {
-          // Leer variables de entorno con logs detallados
-          const envVars = {
-            USE_MOCK_EMBEDDINGS: configService.get<string>('USE_MOCK_EMBEDDINGS'),
-            NODE_ENV: configService.get<string>('NODE_ENV'),
-            PGVECTOR_HOST: configService.get<string>('PGVECTOR_HOST'),
-            PGVECTOR_PORT: configService.get<string>('PGVECTOR_PORT'),
-            PGVECTOR_USER: configService.get<string>('PGVECTOR_USER'),
-            PGVECTOR_DB: configService.get<string>('PGVECTOR_DB'),
-            PGVECTOR_SSL: configService.get<string>('PGVECTOR_SSL'),
-          };
-          
-          console.log('🔍 FACTORY: Variables de entorno leídas:', JSON.stringify(envVars, null, 2));
-          
           // Decidir qué implementación usar
           const useMock = configService.get<string>('USE_MOCK_EMBEDDINGS') === 'true';
           
           if (useMock) {
-            console.log('⚠️ FACTORY: Usando implementación MOCK de EmbeddingRepository');
-            console.log('⚠️ FACTORY: La funcionalidad de embeddings está DESACTIVADA');
+            console.log('⚠️ Usando implementación MOCK de EmbeddingRepository');
             return new MockPGVectorEmbeddingRepository();
           } else {
-            console.log('✅ FACTORY: Usando implementación REAL de EmbeddingRepository');
-            console.log('✅ FACTORY: La funcionalidad de embeddings está ACTIVADA');
+            console.log('✅ Usando implementación REAL de EmbeddingRepository');
             
             try {
               return new PGVectorEmbeddingRepository(configService);
             } catch (error) {
-              console.error('❌ FACTORY: Error al crear PGVectorEmbeddingRepository:', error);
-              console.log('⚠️ FACTORY: Fallback a implementación MOCK por error');
+              console.error('❌ Error al crear PGVectorEmbeddingRepository:', error);
+              console.log('⚠️ Fallback a implementación MOCK por error');
               return new MockPGVectorEmbeddingRepository();
             }
           }
         } catch (error) {
-          console.error('❌ FACTORY: Error en factory de EmbeddingRepository:', error);
-          console.log('⚠️ FACTORY: Fallback a implementación MOCK por error');
+          console.error('❌ Error en factory de EmbeddingRepository:', error);
+          console.log('⚠️ Fallback a implementación MOCK por error');
           return new MockPGVectorEmbeddingRepository();
         }
       },

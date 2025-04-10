@@ -44,41 +44,24 @@ import { DatabaseTestModule } from 'apps/Shared/database-test/database-test.modu
 
 const cookieSession = require('cookie-session');
 
-let databaseConfig: Partial<TypeOrmModuleOptions>[]; 
+// Usar la URL de conexión desde las variables de entorno
+const DATABASE_URL = process.env.DATABASE_URL;
 
-switch (process.env.NODE_ENV) {
-  case 'dev':
-  case 'test':
-  case 'development':
-    databaseConfig = [{
-      type        : 'postgres', 
-      host        : process.env.DB_HOST,
-      port        : parseInt(process.env.DB_PORT),
-      username: process.env.DB_USER, 
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      synchronize : true,
-      autoLoadEntities: true
-    }
-  ];
-  break;
-  default:
-    databaseConfig = [{
-      type        : 'postgres', 
-      host        : process.env.DB_HOST,
-      port        : parseInt(process.env.DB_PORT),
-      username: process.env.DB_USER, 
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      synchronize : true,
-      autoLoadEntities: true
-    }]
-  break;
-}
+const databaseConfig: Partial<TypeOrmModuleOptions>[] = [{
+  type: 'postgres',
+  url: DATABASE_URL,
+  synchronize: true,
+  autoLoadEntities: true,
+  ssl: { rejectUnauthorized: false },
+}];
+
 
 const databaseModules = databaseConfig.map((config) =>
   TypeOrmModule.forRootAsync({
-    useFactory: () => {return {...config}},
+    useFactory: () => {
+      console.log('⏳ Inicializando conexión TypeORM a la base de datos con URL directa...');
+      return {...config};
+    },
   })
 );
 
