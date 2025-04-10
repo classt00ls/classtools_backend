@@ -42,29 +42,27 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
   }
   
   private async initializeVectorStore(): Promise<void> {
-    // Configuración de la conexión a la base de datos
     const dbHost = this.getConfigOrDefault('PGVECTOR_HOST', 'localhost');
-    const dbPort = this.getConfigOrDefault('PGVECTOR_PORT', 5432);
+    const dbPort = parseInt(this.getConfigOrDefault('PGVECTOR_PORT', '5432'));
     const dbUser = this.getConfigOrDefault('PGVECTOR_USER', 'postgres');
     const dbPassword = this.getConfigOrDefault('PGVECTOR_PASSWORD', 'postgres');
     const dbName = this.getConfigOrDefault('PGVECTOR_DB', 'postgres');
-    const dbSsl = this.getConfigOrDefault('PGVECTOR_SSL', false);
-    
-    // Configuración de la tabla y columnas
+  
     const tableName = this.getConfigOrDefault('PGVECTOR_TABLE', 'embeddings');
     const idColumnName = this.getConfigOrDefault('PGVECTOR_COL_ID', 'id');
     const contentColumnName = this.getConfigOrDefault('PGVECTOR_COL_CONTENT', 'content');
     const metadataColumnName = this.getConfigOrDefault('PGVECTOR_COL_METADATA', 'metadata');
     const vectorColumnName = this.getConfigOrDefault('PGVECTOR_COL_VECTOR', 'embedding');
-    
+  
     console.log('📦 DB CONNECTION CONFIG:', {
       host: dbHost,
       port: dbPort,
       user: dbUser,
       password: dbPassword,
       database: dbName,
+      ssl: true,
     });
-    
+  
     this.vectorStore = await PGVectorStore.initialize(
       this.embeddingsGenerator,
       {
@@ -75,9 +73,7 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
           user: dbUser,
           password: dbPassword,
           database: dbName,
-          ssl: {
-            rejectUnauthorized: false,
-          },
+          ssl: { rejectUnauthorized: false },
         } as PoolConfig,
         tableName: tableName,
         columns: {
@@ -89,6 +85,8 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
         distanceStrategy: 'cosine' as DistanceStrategy,
       }
     );
+
+    console.log('📦 Vector Store initialized successfully');
   }
 
   async save(embedding: Embedding): Promise<void> {
