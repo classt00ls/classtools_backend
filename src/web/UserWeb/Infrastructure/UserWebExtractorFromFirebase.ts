@@ -16,14 +16,36 @@ export class UserWebExtractorFromFirebase {
 		private eventEmitterReadinessWatcher: EventEmitterReadinessWatcher
     ) {
 
-      const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
-
+      try {
+        // Obtener la cadena JSON
+        const accountJsonString = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+        
+        if (!accountJsonString) {
+          throw new Error('La variable FIREBASE_SERVICE_ACCOUNT_JSON no está definida');
+        }
+        
+        // Preprocesamiento seguro
+        let jsonToProcess = accountJsonString;
+        
+        // Quitar comillas extras si existen
+        if (jsonToProcess.startsWith('"') && jsonToProcess.endsWith('"')) {
+          jsonToProcess = jsonToProcess.substring(1, jsonToProcess.length - 1);
+        }
+        
+        // Analizar JSON (sin logging de contenido sensible)
+        const serviceAccount = JSON.parse(jsonToProcess);
+        
+        // Inicializar Firebase Admin si no está ya inicializado
         if (!admin.apps.length) {
           admin.initializeApp({
-            credential: admin.credential.cert( serviceAccount ),
+            credential: admin.credential.cert(serviceAccount),
           });
         }
+      } catch (error) {
+        console.error('Error al configurar Firebase:', error.message);
+        throw new Error('Error en la configuración de Firebase. Verifique el formato del JSON en las variables de entorno.');
       }
+    }
 
     public async execute(token: string): Promise<UserWeb> {
 
