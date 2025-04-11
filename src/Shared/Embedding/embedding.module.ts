@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DataSource } from 'typeorm';
 
 // Domain
 // (Los imports de dominio son interfaces, no necesitan ser registrados)
@@ -64,7 +65,7 @@ const Controllers = [
     // Repositories
     {
       provide: 'EmbeddingRepository',
-      useFactory: (configService: ConfigService) => {
+      useFactory: (configService: ConfigService, dataSource: DataSource) => {
         console.log('🔍 Inicializando EmbeddingRepository...');
         
         try {
@@ -75,10 +76,10 @@ const Controllers = [
             console.log('⚠️ Usando implementación MOCK de EmbeddingRepository');
             return new MockPGVectorEmbeddingRepository();
           } else {
-            console.log('✅ Usando implementación REAL de EmbeddingRepository');
+            console.log('✅ Usando implementación REAL de EmbeddingRepository con la conexión principal');
             
             try {
-              return new PGVectorEmbeddingRepository(configService);
+              return new PGVectorEmbeddingRepository(configService, dataSource);
             } catch (error) {
               console.error('❌ Error al crear PGVectorEmbeddingRepository:', error);
               console.log('⚠️ Fallback a implementación MOCK por error');
@@ -91,7 +92,7 @@ const Controllers = [
           return new MockPGVectorEmbeddingRepository();
         }
       },
-      inject: [ConfigService],
+      inject: [ConfigService, DataSource],
     },
     
     // Domain Services

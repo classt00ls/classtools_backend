@@ -1,33 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { Document } from '@langchain/core/documents';
-import { OllamaEmbeddings } from '@langchain/ollama';
+import { Embeddings } from '@langchain/core/embeddings';
 import { DistanceStrategy, PGVectorStore } from '@langchain/community/vectorstores/pgvector';
 import { PoolConfig } from 'pg';
 import { ConfigService } from '@nestjs/config';
+import { DataSource } from 'typeorm';
 
 import { Embedding, EmbeddingPrimitives } from '@Shared/Embedding/Domain/Embedding';
 import { EmbeddingRepository } from '@Shared/Embedding/Domain/EmbeddingRepository';
+import { EmbeddingsProviderFactory } from '../../EmbeddingsProviderFactory';
 
 @Injectable()
 export class PGVectorEmbeddingRepository implements EmbeddingRepository {
   private vectorStore: PGVectorStore;
-  private embeddingsGenerator: OllamaEmbeddings;
+  private embeddingsGenerator: Embeddings;
   
-  constructor(private readonly configService?: ConfigService) {
+  constructor(
+    private readonly configService?: ConfigService,
+    private readonly existingDataSource?: DataSource
+  ) {
     console.log('🔄 PGVectorEmbeddingRepository: Constructor iniciado');
     
-    // Configuración del generador de embeddings
-    const ollamaBaseUrl = this.getConfigOrDefault('OLLAMA_BASE_URL', 'http://localhost:11434');
-    const embedModel = this.getConfigOrDefault('OLLAMA_EMBEDDINGS_MODEL', 'nomic-embed-text');
+    // Usar el factory para crear el proveedor de embeddings según la configuración
+    this.embeddingsGenerator = EmbeddingsProviderFactory.create(this.configService);
     
-    this.embeddingsGenerator = new OllamaEmbeddings({
-      model: embedModel,
-      baseUrl: ollamaBaseUrl,
-    });
-    
-    // No inicializar el vectorStore en el constructor, ya que puede fallar.
-    // Se hará bajo demanda (lazy initialization) cuando se necesite.
-    console.log('🔄 PGVectorEmbeddingRepository: Constructor completado - Vector Store se inicializará bajo demanda');
+    // Si se proporciona una fuente de datos existente, úsala
+    if (this.existingDataSource) {
+      this.initializeFromExistingConnection();
+    } else {
+      // No inicializar el vectorStore en el constructor, ya que puede fallar.
+      // Se hará bajo demanda (lazy initialization) cuando se necesite.
+      console.log('🔄 PGVectorEmbeddingRepository: Constructor completado - Vector Store se inicializará bajo demanda');
+    }
   }
   
   /**
@@ -45,6 +49,59 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
     return value !== undefined ? value : defaultValue;
   }
   
+  /**
+   * Inicializa el Vector Store usando una conexión existente
+   * Esto permite reutilizar la conexión principal de la aplicación
+   */
+  private async initializeFromExistingConnection() {
+    try {
+      console.log('🔄 Inicializando PGVectorStore desde conexión existente');
+      
+      // Obtener configuración para la tabla y columnas
+      const tableName = this.getConfigOrDefault('PGVECTOR_TABLE', 'embeddings');
+      const idColumnName = this.getConfigOrDefault('PGVECTOR_COL_ID', 'id');
+      const contentColumnName = this.getConfigOrDefault('PGVECTOR_COL_CONTENT', 'content');
+      const metadataColumnName = this.getConfigOrDefault('PGVECTOR_COL_METADATA', 'metadata');
+      const vectorColumnName = this.getConfigOrDefault('PGVECTOR_COL_VECTOR', 'embedding');
+      
+      // Crear el PGVectorStore usando la conexión existente
+      const dbConfig = this.existingDataSource.options as any;
+      
+      this.vectorStore = await PGVectorStore.initialize(
+        this.embeddingsGenerator,
+        {
+          postgresConnectionOptions: {
+            type: 'postgres',
+            host: dbConfig.host,
+            port: dbConfig.port,
+            user: dbConfig.username,
+            password: dbConfig.password,
+            database: dbConfig.database,
+            ssl: dbConfig.ssl || false,
+          } as PoolConfig,
+          tableName: tableName,
+          columns: {
+            idColumnName: idColumnName,
+            contentColumnName: contentColumnName,
+            metadataColumnName: metadataColumnName,
+            vectorColumnName: vectorColumnName,
+          },
+          distanceStrategy: 'cosine' as DistanceStrategy,
+        }
+      );
+      
+      console.log('✅ PGVectorStore inicializado con conexión existente');
+    } catch (error) {
+      console.error('❌ Error inicializando PGVectorStore desde conexión existente:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Inicializa el Vector Store usando la configuración del entorno
+   * @returns Promise<void>
+   * @throws Error si hay problemas inicializando el Vector Store
+   */
   private async initializeVectorStore(): Promise<void> {
     try {
       console.log('🔄 PGVectorEmbeddingRepository: Inicializando Vector Store...');
@@ -119,7 +176,15 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
   private async getVectorStore(): Promise<PGVectorStore> {
     if (!this.vectorStore) {
       console.log('🔄 Inicializando Vector Store bajo demanda');
-      await this.initializeVectorStore();
+      
+      // Priorizar la conexión existente si está disponible
+      if (this.existingDataSource) {
+        console.log('🔄 Usando conexión existente para Vector Store');
+        await this.initializeFromExistingConnection();
+      } else {
+        console.log('🔄 Creando nueva conexión para Vector Store');
+        await this.initializeVectorStore();
+      }
     }
     return this.vectorStore;
   }
