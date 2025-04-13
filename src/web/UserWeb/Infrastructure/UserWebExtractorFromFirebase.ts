@@ -32,6 +32,15 @@ export class UserWebExtractorFromFirebase {
           jsonToProcess = jsonToProcess.substring(1, jsonToProcess.length - 1);
         }
         
+        // Limpieza de caracteres de control (excepto secuencias escapadas válidas como \n)
+        jsonToProcess = jsonToProcess
+          // Reemplazar saltos de línea reales con espacios
+          .replace(/[\r\n]+/g, ' ')
+          // Eliminar otros caracteres de control excepto \n y \t escapados
+          .replace(/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/g, '');
+          
+        console.log('Firebase: Preparando configuración...');
+        
         // Analizar JSON (sin logging de contenido sensible)
         const serviceAccount = JSON.parse(jsonToProcess);
         
@@ -40,6 +49,7 @@ export class UserWebExtractorFromFirebase {
           admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
           });
+          console.log('Firebase: Inicializado correctamente');
         }
       } catch (error) {
         console.error('Error al configurar Firebase:', error.message);

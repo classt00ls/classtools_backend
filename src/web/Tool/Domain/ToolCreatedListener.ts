@@ -15,11 +15,14 @@ export class ToolCreatedListener {
     
     async handle(event: Event) {
         this.logger.log(`Processing tool created event for: ${event.event_data.name} (${event.id})`);
+        this.logger.log(`Using aggregate_id as embedding ID: ${event.aggregate_id}`);
 
         try {
             // Crear el embedding usando el módulo de Embeddings
             const content = this.createContent(event);
             const metadata = this.createMetadata(event);
+
+            this.logger.log(`Creating embedding with ID: ${event.aggregate_id}`);
 
             // Crear una instancia de Embedding usando el método estático
             const embedding = Embedding.create(
@@ -28,10 +31,13 @@ export class ToolCreatedListener {
                 metadata
             );
 
+            this.logger.log(`Saving embedding to database with ID: ${embedding.id}`);
+            
             // Guardar el embedding usando el repositorio
             await this.embeddingRepository.save(embedding);
             
-            this.logger.log(`Successfully processed tool: ${event.event_data.name}`);
+            this.logger.log(`Successfully processed tool and saved embedding with ID: ${embedding.id}`);
+            this.logger.log(`Associated tool name: ${event.event_data.name}, Tool ID: ${event.aggregate_id}`);
         } catch (error) {
             this.logger.error(`Error processing tool ${event.event_data.name}: ${error.message}`);
             throw new Error(`Error inserting: ${error.message}`);

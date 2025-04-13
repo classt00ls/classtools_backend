@@ -311,24 +311,33 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
     return this.vectorStore;
   }
 
-  async save(embedding: Embedding): Promise<void> {
+  async save(embedding: Embedding): Promise<void> { 
     try {
+      console.log(`⏳ PGVectorEmbeddingRepository: Iniciando guardado de embedding con ID: ${embedding.id}`);
+      
       const vectorStore = await this.getVectorStore();
+      console.log(`✅ PGVectorEmbeddingRepository: VectorStore obtenido correctamente para guardar embedding: ${embedding.id}`);
 
       // Convertir el embedding a un documento de langchain
       const document = this.toDocument(embedding);
+      console.log(`🔍 PGVectorEmbeddingRepository: Documento creado para embedding: ${embedding.id}`);
+      console.log(`🔍 PGVectorEmbeddingRepository: Metadata del documento:`, document.metadata);
       
       // Enfoque intermedio: Más control sobre IDs
+      console.log(`⏳ PGVectorEmbeddingRepository: Generando vector para embedding: ${embedding.id}`);
       const embeddings = await this.embeddingsGenerator.embedDocuments([document.pageContent]);
+      console.log(`✅ PGVectorEmbeddingRepository: Vector generado correctamente para: ${embedding.id}`);
       
+      console.log(`⏳ PGVectorEmbeddingRepository: Guardando vector en base de datos con ID: ${embedding.id}`);
       await vectorStore.addVectors(
         embeddings,
         [document],
         { ids: [embedding.id] }
       );
+      console.log(`✅ PGVectorEmbeddingRepository: Embedding guardado exitosamente con ID: ${embedding.id}`);
       
     } catch (error) {
-      console.error('❌ Error en save:', error);
+      console.error(`❌ Error guardando embedding ${embedding.id}:`, error);
       throw new Error(`Error guardando embedding: ${error.message}`);
     }
   }
