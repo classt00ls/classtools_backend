@@ -32,6 +32,7 @@ import { UserToolSuggestionsRepository } from '@Web/Domain/Repository/UserToolSu
 import { OllamaLangchainUserToolSuggestionsRepository } from '@Web/UserToolSuggestions/Infrastructure/OllamaLangchainUserToolSuggestionsRepository';
 import { ScrapeFromUrls } from '@Web/Tool/Infrastructure/ScrapeFromUrls';
 import { UserWebRepository } from '@Web/UserWeb/Domain/UserWebRepository';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
     imports: [
@@ -52,7 +53,13 @@ import { UserWebRepository } from '@Web/UserWeb/Domain/UserWebRepository';
         GetFilteredToolsQueryHandler,
         GetFilteredToolsByLangQueryHandler,
         CountToolsByLangQueryHandler,
-        ScrapeFromUrls,
+        {
+            provide: ScrapeFromUrls,
+            useFactory: (configService: ConfigService, dataSource: DataSource) => {
+                return new ScrapeFromUrls(configService, dataSource);
+            },
+            inject: [ConfigService, DataSource]
+        },
         UserToolSuggestionsSearcher,
         GenerateUserToolSuggestionsOnToolGetDetail,
         UserWebExtractorFromFirebase,
