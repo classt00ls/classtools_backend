@@ -1,8 +1,11 @@
 
 import { PromptTemplate, SystemMessagePromptTemplate } from "@langchain/core/prompts";
 import { RunnableSequence } from "@langchain/core/runnables";
+
 import { Ollama } from "@langchain/ollama";
+
 import { ConfigService } from "@nestjs/config";
+
 import { UserToolSuggestions } from "@Web/Domain/Model/UserToolSuggestions/UserToolSuggestions";
 import { UserWebId } from "@Web/UserWeb/Domain/UserWebId";
 
@@ -33,7 +36,7 @@ export class OllamaGemmaUserToolSuggestionsGenerator {
 			),
 			new Ollama({
 				model: "gemma:2b",
-				baseUrl: this.configService.getOrThrow('OLLAMA_ROUTE') + ":" + this.configService.getOrThrow('OLLAMA_PORT'), // Default value
+				baseUrl: this.configService.getOrThrow('OLLAMA_BASE_URL'), // Default value
 			}),
 		]);
 

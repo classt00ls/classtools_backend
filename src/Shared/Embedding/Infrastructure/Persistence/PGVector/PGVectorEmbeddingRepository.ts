@@ -20,6 +20,23 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
     private readonly existingDataSource?: DataSource
   ) {
     console.log('🔄 PGVectorEmbeddingRepository: Constructor iniciado');
+    console.log('🔍 PGVectorEmbeddingRepository: existingDataSource existe:', !!this.existingDataSource);
+    
+    if (this.existingDataSource) {
+      console.log('🔍 PGVectorEmbeddingRepository: Tipo de existingDataSource:', typeof this.existingDataSource);
+      
+      // Examinar la configuración de conexión
+      const dbConfig = this.existingDataSource.options as any;
+      console.log('🔍 PGVectorEmbeddingRepository: Opciones de conexión:', {
+        hasOptions: !!dbConfig,
+        hasUrl: !!dbConfig?.url,
+        urlType: dbConfig?.url ? typeof dbConfig.url : 'undefined',
+        hasHost: !!dbConfig?.host,
+        hasUsername: !!dbConfig?.username,
+        hasPassword: !!dbConfig?.password,
+        passwordType: dbConfig?.password ? typeof dbConfig.password : 'undefined'
+      });
+    }
     
     // Usar el factory para crear el proveedor de embeddings según la configuración
     this.embeddingsGenerator = EmbeddingsProviderFactory.create(this.configService);
@@ -64,20 +81,88 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
       const metadataColumnName = this.getConfigOrDefault('PGVECTOR_COL_METADATA', 'metadata');
       const vectorColumnName = this.getConfigOrDefault('PGVECTOR_COL_VECTOR', 'embedding');
       
-      // Crear el PGVectorStore usando la conexión existente
+      // Crear el PGVectorStore usando la conexión principal
       const dbConfig = this.existingDataSource.options as any;
+      
+      console.log('🔄 Preparando conexión para PGVector');
+      
+      // Extraer los detalles de conexión del DataSource
+      let connectionOptions: any;
+      
+      if (dbConfig.url) {
+        // Tenemos una URL, dividirla manualmente para evitar problemas de parseo automático
+        const url = dbConfig.url as string;
+        console.log('🔍 URL detectada:', url.replace(/:[^:]*@/, ':****@'));
+        
+        try {
+          // Supabase URLs tienen formato postgresql://user:password@host:port/database
+          const urlParts = url.match(/^postgresql:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)$/);
+          
+          if (!urlParts) {
+            throw new Error('Formato de URL no reconocido');
+          }
+          
+          const [_, username, password, host, port, database] = urlParts;
+          
+          console.log('🔍 Detalles extraídos de URL:', {
+            username,
+            password: '****', // No mostrar contraseña
+            host,
+            port,
+            database
+          });
+          
+          // Crear configuración de conexión directa
+          connectionOptions = {
+            user: username,
+            password: password,
+            host: host,
+            port: parseInt(port),
+            database: database,
+            ssl: dbConfig.ssl || false,
+          };
+          
+          console.log('✅ Opciones de conexión construidas manualmente desde URL');
+        } catch (parseError) {
+          console.error('❌ Error al analizar URL:', parseError);
+          throw parseError;
+        }
+      } else if (dbConfig.host && dbConfig.username) {
+        // Usar configuración con host/username/password
+        connectionOptions = {
+          user: dbConfig.username,
+          password: dbConfig.password,
+          host: dbConfig.host,
+          port: dbConfig.port,
+          database: dbConfig.database,
+          ssl: dbConfig.ssl || false,
+        };
+        console.log('✅ Opciones de conexión desde host/username/password');
+      } else {
+        throw new Error('No se encontró configuración de conexión válida');
+      }
+      
+      // Comprobar que la contraseña es un string
+      if (typeof connectionOptions.password !== 'string') {
+        console.error('⚠️ ERROR CRÍTICO: La contraseña no es un string:', typeof connectionOptions.password);
+        throw new Error('La contraseña debe ser un string');
+      }
+      
+      console.log('🔍 Opciones de conexión finales (tipos):', {
+        user: typeof connectionOptions.user,
+        password: typeof connectionOptions.password,
+        host: typeof connectionOptions.host,
+        port: typeof connectionOptions.port,
+        database: typeof connectionOptions.database,
+        ssl: typeof connectionOptions.ssl
+      });
       
       this.vectorStore = await PGVectorStore.initialize(
         this.embeddingsGenerator,
         {
           postgresConnectionOptions: {
             type: 'postgres',
-            host: dbConfig.host,
-            port: dbConfig.port,
-            user: dbConfig.username,
-            password: dbConfig.password,
-            database: dbConfig.database,
-            ssl: dbConfig.ssl || false,
+            ...connectionOptions
           } as PoolConfig,
           tableName: tableName,
           columns: {
@@ -90,9 +175,11 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
         }
       );
       
-      console.log('✅ PGVectorStore inicializado con conexión existente');
+      console.log('✅ PGVectorStore inicializado correctamente');
     } catch (error) {
       console.error('❌ Error inicializando PGVectorStore desde conexión existente:', error);
+      console.error('❌ Mensaje de error:', error.message);
+      console.error('❌ Stack:', error.stack);
       throw error;
     }
   }
@@ -106,30 +193,70 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
     try {
       console.log('🔄 PGVectorEmbeddingRepository: Inicializando Vector Store...');
       
-      const dbHost = this.getConfigOrDefault('PGVECTOR_HOST', 'localhost');
-      const dbPort = parseInt(this.getConfigOrDefault('PGVECTOR_PORT', '5432'));
-      const dbUser = this.getConfigOrDefault('PGVECTOR_USER', 'postgres');
-      const dbPassword = this.getConfigOrDefault('PGVECTOR_PASSWORD', 'postgres');
-      const dbName = this.getConfigOrDefault('PGVECTOR_DB', 'postgres');
-      const useSSL = this.getConfigOrDefault<string>('PGVECTOR_SSL', 'false') === 'true';
-    
+      // Usar directamente la URL de conexión desde variables de entorno
+      const connectionUrl = this.getConfigOrDefault<string>('DATABASE_URL', '');
+      if (!connectionUrl) {
+        throw new Error('DATABASE_URL no configurada o vacía');
+      }
+      
       const tableName = this.getConfigOrDefault('PGVECTOR_TABLE', 'embeddings');
       const idColumnName = this.getConfigOrDefault('PGVECTOR_COL_ID', 'id');
       const contentColumnName = this.getConfigOrDefault('PGVECTOR_COL_CONTENT', 'content');
       const metadataColumnName = this.getConfigOrDefault('PGVECTOR_COL_METADATA', 'metadata');
       const vectorColumnName = this.getConfigOrDefault('PGVECTOR_COL_VECTOR', 'embedding');
+      const useSSL = this.getConfigOrDefault<string>('PGVECTOR_SSL', 'false') === 'true';
     
-      console.log('📦 DB CONNECTION CONFIG (PGVectorEmbeddingRepository):', {
-        host: dbHost,
-        port: dbPort,
-        user: dbUser,
-        database: dbName,
-        ssl: useSSL,
-        tableName,
-        idColumnName,
-        contentColumnName,
-        metadataColumnName,
-        vectorColumnName
+      console.log('🔄 Parseando la URL de conexión:', connectionUrl.replace(/:[^:]*@/, ':****@'));
+      
+      let connectionOptions: any;
+      
+      try {
+        // Supabase URLs tienen formato postgresql://user:password@host:port/database
+        const urlParts = connectionUrl.match(/^postgresql:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)$/);
+        
+        if (!urlParts) {
+          throw new Error('Formato de URL no reconocido');
+        }
+        
+        const [_, username, password, host, port, database] = urlParts;
+        
+        console.log('🔍 Detalles extraídos de URL:', {
+          username,
+          password: '****', // No mostrar contraseña
+          host,
+          port,
+          database
+        });
+        
+        // Crear configuración de conexión directa
+        connectionOptions = {
+          user: username,
+          password: password,
+          host: host,
+          port: parseInt(port),
+          database: database,
+          ssl: useSSL ? { rejectUnauthorized: false } : false,
+        };
+        
+        console.log('✅ Opciones de conexión construidas manualmente desde URL de entorno');
+      } catch (parseError) {
+        console.error('❌ Error al analizar URL:', parseError);
+        throw parseError;
+      }
+    
+      // Comprobar que la contraseña es un string
+      if (typeof connectionOptions.password !== 'string') {
+        console.error('⚠️ ERROR CRÍTICO: La contraseña no es un string:', typeof connectionOptions.password);
+        throw new Error('La contraseña debe ser un string');
+      }
+      
+      console.log('🔍 Opciones de conexión finales (tipos):', {
+        user: typeof connectionOptions.user,
+        password: typeof connectionOptions.password,
+        host: typeof connectionOptions.host,
+        port: typeof connectionOptions.port,
+        database: typeof connectionOptions.database,
+        ssl: typeof connectionOptions.ssl
       });
     
       console.log('⏳ Inicializando conexión a PGVectorStore...');
@@ -140,12 +267,7 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
           {
             postgresConnectionOptions: {
               type: 'postgres',
-              host: dbHost,
-              port: dbPort,
-              user: dbUser,
-              password: dbPassword,
-              database: dbName,
-              ssl: useSSL ? { rejectUnauthorized: false } : false,
+              ...connectionOptions
             } as PoolConfig,
             tableName: tableName,
             columns: {
@@ -157,7 +279,7 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
             distanceStrategy: 'cosine' as DistanceStrategy,
           }
         );
-        console.log('✅ Vector Store initialized successfully');
+        console.log('✅ Vector Store inicializado correctamente');
       } catch (connectionError) {
         console.error('❌ ERROR en conexión a PGVectorStore:', connectionError);
         throw new Error(`Error conectando a PGVectorStore: ${connectionError.message}`);
@@ -192,6 +314,8 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
   async save(embedding: Embedding): Promise<void> {
     try {
       const vectorStore = await this.getVectorStore();
+
+      // Convertir el embedding a un documento de langchain
       const document = this.toDocument(embedding);
       
       // Enfoque intermedio: Más control sobre IDs
@@ -202,6 +326,7 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
         [document],
         { ids: [embedding.id] }
       );
+      
     } catch (error) {
       console.error('❌ Error en save:', error);
       throw new Error(`Error guardando embedding: ${error.message}`);
