@@ -315,6 +315,13 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
     try {
       console.log(`⏳ PGVectorEmbeddingRepository: Iniciando guardado de embedding con ID: ${embedding.id}`);
       
+      // Verificar si ya existe un embedding con este ID
+      const existingEmbedding = await this.findById(embedding.id);
+      if (existingEmbedding) {
+        console.log(`⚠️ PGVectorEmbeddingRepository: El embedding con ID ${embedding.id} ya existe. Continuando sin error.`);
+        return; // Salir sin error
+      }
+      
       const vectorStore = await this.getVectorStore();
       console.log(`✅ PGVectorEmbeddingRepository: VectorStore obtenido correctamente para guardar embedding: ${embedding.id}`);
 
@@ -328,37 +335,98 @@ export class PGVectorEmbeddingRepository implements EmbeddingRepository {
       const embeddings = await this.embeddingsGenerator.embedDocuments([document.pageContent]);
       console.log(`✅ PGVectorEmbeddingRepository: Vector generado correctamente para: ${embedding.id}`);
       
-      console.log(`⏳ PGVectorEmbeddingRepository: Guardando vector en base de datos con ID: ${embedding.id}`);
-      await vectorStore.addVectors(
-        embeddings,
-        [document],
-        { ids: [embedding.id] }
-      );
-      console.log(`✅ PGVectorEmbeddingRepository: Embedding guardado exitosamente con ID: ${embedding.id}`);
+      try {
+        console.log(`⏳ PGVectorEmbeddingRepository: Guardando vector en base de datos con ID: ${embedding.id}`);
+        await vectorStore.addVectors(
+          embeddings,
+          [document],
+          { ids: [embedding.id] }
+        );
+        console.log(`✅ PGVectorEmbeddingRepository: Embedding guardado exitosamente con ID: ${embedding.id}`);
+      } catch (insertError) {
+        // Verificar si es un error de duplicado
+        if (insertError.message && (
+            insertError.message.includes('duplicate key') || 
+            insertError.message.includes('already exists') ||
+            insertError.message.includes('violates unique constraint')
+        )) {
+          console.log(`⚠️ PGVectorEmbeddingRepository: El embedding con ID ${embedding.id} ya existe. Continuando sin error.`);
+          return; // Continuar sin propagar el error
+        }
+        // Si es otro tipo de error, lanzarlo
+        throw insertError;
+      }
       
     } catch (error) {
       console.error(`❌ Error guardando embedding ${embedding.id}:`, error);
-      throw new Error(`Error guardando embedding: ${error.message}`);
+      // No lanzamos el error para que el proceso pueda continuar
+      console.log(`⚠️ PGVectorEmbeddingRepository: Continuando a pesar del error en embedding ${embedding.id}`);
     }
   }
   
   async saveMany(embeddings: Embedding[]): Promise<void> {
+    console.log(`⏳ PGVectorEmbeddingRepository: Guardando ${embeddings.length} embeddings`);
+    
+    // Filtrar embeddings que ya existen
+    const idsToCheck = embeddings.map(e => e.id);
+    const existingIds = new Set<string>();
+    
     try {
+      // Verificar cuáles ya existen usando una consulta SQL
       const vectorStore = await this.getVectorStore();
-      const documents = embeddings.map(embedding => this.toDocument(embedding));
+      const result = await vectorStore.client.sql`
+        SELECT id FROM embeddings 
+        WHERE id = ANY(${idsToCheck}::text[]);
+      `;
+      
+      result.forEach(row => existingIds.add(row.id));
+      
+      if (existingIds.size > 0) {
+        console.log(`⚠️ PGVectorEmbeddingRepository: ${existingIds.size} embeddings ya existen y serán omitidos`);
+      }
+      
+      // Filtrar solo los que no existen
+      const newEmbeddings = embeddings.filter(e => !existingIds.has(e.id));
+      
+      if (newEmbeddings.length === 0) {
+        console.log('✅ PGVectorEmbeddingRepository: No hay nuevos embeddings para guardar');
+        return;
+      }
+      
+      console.log(`⏳ PGVectorEmbeddingRepository: Guardando ${newEmbeddings.length} nuevos embeddings`);
+      
+      const documents = newEmbeddings.map(embedding => this.toDocument(embedding));
       const contents = documents.map(doc => doc.pageContent);
       
       // Enfoque intermedio en batch
       const vectorEmbeddings = await this.embeddingsGenerator.embedDocuments(contents);
       
-      await vectorStore.addVectors(
-        vectorEmbeddings,
-        documents,
-        { ids: embeddings.map(e => e.id) }
-      );
+      try {
+        await vectorStore.addVectors(
+          vectorEmbeddings,
+          documents,
+          { ids: newEmbeddings.map(e => e.id) }
+        );
+        console.log(`✅ PGVectorEmbeddingRepository: ${newEmbeddings.length} embeddings guardados correctamente`);
+      } catch (insertError) {
+        console.error('⚠️ Error al insertar embeddings:', insertError.message);
+        console.log('⚠️ Continuando con el siguiente lote...');
+        
+        // Si falla la inserción en batch, intentar uno por uno
+        console.log('⏳ Intentando guardar embeddings uno por uno...');
+        for (const embedding of newEmbeddings) {
+          try {
+            await this.save(embedding);
+          } catch (individualError) {
+            console.error(`⚠️ No se pudo guardar embedding ${embedding.id}: ${individualError.message}`);
+            // Continuar con el siguiente
+          }
+        }
+      }
     } catch (error) {
       console.error('❌ Error en saveMany:', error);
-      throw new Error(`Error guardando múltiples embeddings: ${error.message}`);
+      // No lanzamos el error para que el proceso pueda continuar
+      console.log('⚠️ PGVectorEmbeddingRepository: Continuando a pesar del error en saveMany');
     }
   }
   

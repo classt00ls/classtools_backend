@@ -206,4 +206,13 @@ export class ToolTypeormRepository extends ToolRepository {
       .where('tag.id = :tagId', { tagId })
       .getMany();
   }
+
+  async getByIds(ids: string[]): Promise<ToolModel[]> {
+    return this.repository.find({
+      where: {
+        id: In(ids)
+      },
+      relations: ['tags']
+    });
+  }
 }

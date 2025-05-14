@@ -1,2 +1,0 @@
-la logica de esta funcion quiero que sea un poco distinta
-quiero que si hay menos de 10 categorias haga la logica como hasta ahora, pero si hay 10 categorias o mas, vaya a buscar cual de las categorias es la que tiene menos tools, y si el resultado del findbytag para el evento que estamos tratando tiene mas tags que la categoria con menos tags, se añada la categoria nueva y se borre la que tiene menos tags
