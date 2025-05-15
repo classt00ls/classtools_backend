@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probador de Embeddings</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .form-container {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .response-container {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 100px;
+            font-family: inherit;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .option-group {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .metadata-filter {
+            margin-top: 10px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow: auto;
+            white-space: pre-wrap;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .loading::after {
+            content: "⏳";
+            animation: loading 1.5s infinite;
+            font-size: 20px;
+        }
+        @keyframes loading {
+            0% { content: "⏳"; }
+            33% { content: "⌛"; }
+            66% { content: "⏳"; }
+        }
+        .examples {
+            margin-top: 30px;
+        }
+        .example-button {
+            background-color: #2ecc71;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .example-button:hover {
+            background-color: #27ae60;
+        }
+        .error {
+            background-color: #ffecec;
+            color: #e74c3c;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Probador de Embeddings</h1>
+    <p>Utiliza este formulario para probar el endpoint de consulta RAG (Retrieval Augmented Generation) con embeddings.</p>
+    
+    <div class="container">
+        <div class="form-container">
+            <h2>Formulario de Consulta</h2>
+            
+            <form id="embeddingForm">
+                <div>
+                    <label for="query">Consulta:</label>
+                    <textarea id="query" name="query" required placeholder="Escribe tu pregunta aquí..."></textarea>
+                </div>
+                
+                <details>
+                    <summary>Opciones avanzadas</summary>
+                    <div class="option-group">
+                        <div>
+                            <label for="limit">Límite de resultados:</label>
+                            <input type="number" id="limit" name="limit" value="5" min="1" max="20">
+                        </div>
+                        
+                        <div>
+                            <label for="temperature">Temperatura:</label>
+                            <input type="range" id="temperature" name="temperature" min="0" max="1" step="0.1" value="0.7">
+                            <span id="temperatureValue">0.7</span>
+                        </div>
+                        
+                        <div>
+                            <label for="systemPrompt">Prompt del sistema:</label>
+                            <textarea id="systemPrompt" name="systemPrompt" placeholder="Instrucciones para el modelo, p.ej.: 'Eres un experto en bases de datos...'"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label for="llmQuery">Consulta específica para LLM (opcional):</label>
+                            <textarea id="llmQuery" name="llmQuery" placeholder="Consulta específica para el LLM, diferente de la consulta de búsqueda..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <label for="metadataFilter">Filtro de metadatos (JSON):</label>
+                            <textarea id="metadataFilter" name="metadataFilter" placeholder='{"category": "documentation", "tags": {"$in": ["embeddings", "vector-db"]}}'></textarea>
+                        </div>
+                    </div>
+                </details>
+                
+                <button type="submit">Enviar consulta</button>
+            </form>
+            
+            <div class="examples">
+                <h3>Ejemplos predefinidos:</h3>
+                <button class="example-button" data-example="basic">Consulta básica</button>
+                <button class="example-button" data-example="technical">Respuesta técnica</button>
+                <button class="example-button" data-example="simple">Respuesta sencilla</button>
+                <button class="example-button" data-example="filtered">Con filtros</button>
+            </div>
+        </div>
+        
+        <div class="response-container">
+            <h2>Respuesta</h2>
+            <div id="loading" class="loading"></div>
+            <div id="error" class="error" style="display: none;"></div>
+            <pre id="response">Aquí aparecerá la respuesta...</pre>
+        </div>
+    </div>
+    
+    <script>
+        // Ejemplos predefinidos
+        const examples = {
+            basic: {
+                query: "¿Qué son los embeddings vectoriales?",
+                options: {}
+            },
+            technical: {
+                query: "¿Cómo optimizar la búsqueda por similitud?",
+                options: {
+                    temperature: 0.3,
+                    systemPrompt: "Eres un experto técnico en bases de datos vectoriales. Proporciona respuestas detalladas con ejemplos de código y técnicas específicas."
+                }
+            },
+            simple: {
+                query: "¿Qué es RAG?",
+                options: {
+                    temperature: 0.7,
+                    systemPrompt: "Eres un tutor que explica conceptos complejos de manera sencilla. Utiliza analogías y evita la jerga técnica innecesaria."
+                }
+            },
+            filtered: {
+                query: "Mejores prácticas para embeddings",
+                options: {
+                    limit: 10,
+                    temperature: 0.5,
+                    metadataFilter: { 
+                        category: "best-practices",
+                        tags: { "$in": ["embeddings", "optimization"] }
+                    }
+                }
+            }
+        };
+        
+        // Actualizar el valor mostrado del control deslizante de temperatura
+        document.getElementById('temperature').addEventListener('input', function() {
+            document.getElementById('temperatureValue').textContent = this.value;
+        });
+        
+        // Cargar ejemplos
+        document.querySelectorAll('.example-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const example = examples[this.dataset.example];
+                document.getElementById('query').value = example.query;
+                
+                if (example.options.limit) {
+                    document.getElementById('limit').value = example.options.limit;
+                }
+                
+                if (example.options.temperature) {
+                    document.getElementById('temperature').value = example.options.temperature;
+                    document.getElementById('temperatureValue').textContent = example.options.temperature;
+                }
+                
+                if (example.options.systemPrompt) {
+                    document.getElementById('systemPrompt').value = example.options.systemPrompt;
+                }
+                
+                if (example.options.llmQuery) {
+                    document.getElementById('llmQuery').value = example.options.llmQuery;
+                }
+                
+                if (example.options.metadataFilter) {
+                    document.getElementById('metadataFilter').value = JSON.stringify(example.options.metadataFilter, null, 2);
+                }
+            });
+        });
+        
+        // Manejar el envío del formulario
+        document.getElementById('embeddingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const queryText = document.getElementById('query').value.trim();
+            if (!queryText) {
+                showError("La consulta no puede estar vacía");
+                return;
+            }
+            
+            // Construir el objeto de opciones
+            const options = {};
+            
+            const limit = parseInt(document.getElementById('limit').value);
+            if (!isNaN(limit)) {
+                options.limit = limit;
+            }
+            
+            const temperature = parseFloat(document.getElementById('temperature').value);
+            if (!isNaN(temperature)) {
+                options.temperature = temperature;
+            }
+            
+            const systemPrompt = document.getElementById('systemPrompt').value.trim();
+            if (systemPrompt) {
+                options.systemPrompt = systemPrompt;
+            }
+            
+            const llmQuery = document.getElementById('llmQuery').value.trim();
+            if (llmQuery) {
+                options.llmQuery = llmQuery;
+            }
+            
+            const metadataFilterText = document.getElementById('metadataFilter').value.trim();
+            if (metadataFilterText) {
+                try {
+                    options.metadataFilter = JSON.parse(metadataFilterText);
+                } catch (error) {
+                    showError("Error en el formato JSON del filtro de metadatos: " + error.message);
+                    return;
+                }
+            }
+            
+            // Preparar la solicitud
+            const payload = {
+                query: queryText
+            };
+            
+            if (Object.keys(options).length > 0) {
+                payload.options = options;
+            }
+            
+            // Mostrar indicador de carga
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('response').textContent = "Procesando consulta...";
+            
+            try {
+                const response = await fetch('/api/embeddings/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                showError("Error al procesar la consulta: " + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+        
+        function showError(message) {
+            const errorElement = document.getElementById('error');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            document.getElementById('response').textContent = "Error en la consulta.";
+        }
+    </script>
+</body>
+</html> 
