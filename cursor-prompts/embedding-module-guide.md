@@ -597,8 +597,7 @@ export class ToolVectorSearcher {
 @Injectable()
 export class ToolRAGService {
     constructor(
-        @Inject('EmbeddingResponseService') 
-        private readonly embeddingResponseService: EmbeddingResponseService
+        @Inject('EmbeddingResponseService') private readonly embeddingResponseService: EmbeddingResponseService
     ) {}
     
     async getToolRecommendations(userQuery: string): Promise<EmbeddingResponse> {

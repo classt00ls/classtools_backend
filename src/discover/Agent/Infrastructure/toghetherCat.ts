@@ -39,7 +39,7 @@ const StateAnnotation = Annotation.Root({
 // const model = new ChatOllama({
 //     model: "meta-llama-3.1-8b-instruct",
 //     temperature: 0.2,
-//     baseUrl: "http://mi-servidor:puerto", // Cambia esto si Ollama no está en localhost
+//     baseUrl: "http://mi-servidor:puerto", // Cambia esto si Ollama no está en localghost
 //   });
 
 const model = new ChatTogetherAI({

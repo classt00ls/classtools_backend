@@ -93,8 +93,8 @@ export class EmbeddingsProviderFactory {
     return new OllamaEmbeddings({
       // Modelo por defecto: nomic-embed-text, que es bueno para embeddings
       model: configService.get<string>('OLLAMA_EMBEDDINGS_MODEL', 'nomic-embed-text'),
-      // URL por defecto: localhost:11434, que es donde Ollama corre por defecto
-      baseUrl: configService.get<string>('OLLAMA_BASE_URL', 'http://localhost:11434'),
+      // URL por defecto: localghost:11434, que es donde Ollama corre por defecto
+      baseUrl: configService.get<string>('OLLAMA_BASE_URL', 'http://localghost:11434'),
     });
   }
   

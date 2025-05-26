@@ -46,14 +46,14 @@ export class ScrapeFromUrls {
 			
 			this.embeddingsGenerator = new OllamaEmbeddings({
 				model: "nomic-embed-text",
-				baseUrl: "http://localhost:11434",
+				baseUrl: "http://localghost:11434",
 			});
 			return;
 		}
 
 		try {
 			// Configuración para el generador de embeddings
-			const ollamaBaseUrl = this.getConfigValue('OLLAMA_BASE_URL', 'http://localhost:11434');
+			const ollamaBaseUrl = this.getConfigValue('OLLAMA_BASE_URL', 'http://localghost:11434');
 			const ollamaModel = this.getConfigValue('OLLAMA_EMBEDDINGS_MODEL', 'nomic-embed-text');
 
 			this.embeddingsGenerator = new OllamaEmbeddings({

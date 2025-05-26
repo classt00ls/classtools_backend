@@ -27,7 +27,7 @@ async function main(
 const pgConnection = new PostgresConnection();
 const embeddingsGenerator = new OllamaEmbeddings({
 	model: "nomic-embed-text",
-	baseUrl: "http://localhost:11434",
+	baseUrl: "http://localghost:11434",
 });
 
 

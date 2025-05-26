@@ -71,7 +71,7 @@ export class DatabaseTestController {
     try {
       // Obtener los parámetros de conexión desde variables de entorno
       const model = this.configService.get<string>('OLLAMA_MODEL', 'embeddings');
-      const baseUrl = this.configService.get<string>('OLLAMA_BASE_URL', 'http://localhost:11434');
+      const baseUrl = this.configService.get<string>('OLLAMA_BASE_URL', 'http://localghost:11434');
       
       // Crear una instancia de OllamaEmbeddings con parámetros de env
       const ollamaEmbeddings = new OllamaEmbeddings({

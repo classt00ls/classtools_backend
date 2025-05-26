@@ -4,7 +4,7 @@ export class PostgresConnection {
 	public readonly sql: postgres.Sql;
 
 	constructor(
-		host: string = process.env.DB_HOST || 'localhost',
+		host: string = process.env.DB_HOST || 'localghost',
 		port: number = parseInt(process.env.DB_PORT || '5432', 10),
 		user: string = process.env.DB_USER || 'classtools',
 		password: string = process.env.DB_PASSWORD || 'classtools',

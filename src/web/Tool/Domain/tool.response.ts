@@ -32,8 +32,8 @@ export class ToolResponse {
 	@Expose()
 	excerpt: string
 
-	@Expose()
-	description: string
+	// @Expose()
+	// description: string
 
 	@Expose()
 	link: boolean

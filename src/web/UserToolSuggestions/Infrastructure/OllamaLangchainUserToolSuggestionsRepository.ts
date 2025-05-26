@@ -11,8 +11,7 @@ import { EmbeddingRepository } from "@Shared/Embedding/Domain/EmbeddingRepositor
 import { EmbeddingResponseService } from "@Shared/Embedding/Domain/EmbeddingResponseService";
 
 @Injectable()
-export class OllamaLangchainUserToolSuggestionsRepository
-	implements UserToolSuggestionsRepository
+export class OllamaLangchainUserToolSuggestionsRepository implements UserToolSuggestionsRepository
 {
 	// Demo para fase beta
 	private readonly existingTools = [

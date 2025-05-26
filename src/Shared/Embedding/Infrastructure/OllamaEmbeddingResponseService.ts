@@ -76,7 +76,7 @@ export class OllamaEmbeddingResponseService implements EmbeddingResponseService 
     this.defaultPromptName = this.getConfigOrDefault('OLLAMA_PROMPT_NAME', 'rlm/rag-prompt');
     this.defaultTemperature = this.getConfigOrDefault('OLLAMA_DEFAULT_TEMPERATURE', 0.7);
     this.defaultLimit = this.getConfigOrDefault('OLLAMA_DEFAULT_LIMIT', 5);
-    this.ollamaBaseUrl = this.getConfigOrDefault('OLLAMA_BASE_URL', 'http://localhost:11434');
+    this.ollamaBaseUrl = this.getConfigOrDefault('OLLAMA_BASE_URL', 'http://localghost:11434');
   }
 
   /**

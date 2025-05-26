@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // const whitelist = ['http://localhost:3001', 'https://leads.adspotmedia.com', 'https://leads.adspotmedia.com/node'];
+  // const whitelist = ['http://localghost:3001', 'https://leads.adspotmedia.com', 'https://leads.adspotmedia.com/node'];
 
   const options = {
     origin: function (origin, callback) {

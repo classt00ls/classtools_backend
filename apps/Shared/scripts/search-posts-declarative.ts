@@ -42,12 +42,12 @@ async function main(
 const vectorStore = PGVectorStore.initialize(
 	new OllamaEmbeddings({
 		model: "nomic-embed-text",
-		baseUrl: "http://localhost:11434",
+		baseUrl: "http://localghost:11434",
 	}),
 	{
 		postgresConnectionOptions: {
 			type: "postgres",
-			host: "localhost",
+			host: "localghost",
 			port: 5432,
 			user: "codely",
 			password: "c0d3ly7v",

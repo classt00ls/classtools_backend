@@ -1,9 +1,20 @@
-import { Controller, Post, Body, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Get, HttpCode, HttpStatus, Inject } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { GetEmbeddingResponseCommand } from '../../../src/Shared/Embedding/Application/respond/GetEmbeddingResponseCommand';
 import { EmbeddingResponse } from '../../../src/Shared/Embedding/Domain/EmbeddingResponseService';
 import { EmbeddingResponseOptions } from '../../../src/Shared/Embedding/Domain/EmbeddingResponseOptions';
 import { ApiOperation, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { MessagesAnnotation, Annotation } from "@langchain/langgraph";
+import { HumanMessage } from "@langchain/core/messages";
+import { ToolsSearchResponse } from './dtos/tools-search.response';
+import { Serialize } from 'src/web/Infrastructure/interceptors/serialize.interceptor';
+import { ToolRepository } from 'src/backoffice/Tool/Domain/tool.repository';
+
+// Definimos el tipo de estado que usa nuestro agente
+const StateAnnotation = Annotation.Root({
+  ...MessagesAnnotation.spec,
+  searchType: Annotation<'id_search' | 'semantic_search'>,
+});
 
 /**
  * DTO para realizar consultas a embeddings
@@ -18,7 +29,11 @@ class TestingQueryDto {
 
 @Controller('api/testing')
 export class TestingController {
-  constructor(private readonly commandBus: CommandBus) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    @Inject('TOOL_RECOMMENDER') private readonly app: any,
+    private readonly toolRepository: ToolRepository
+  ) {}
 
   /**
    * Endpoint para probar la funcionalidad RAG con embeddings
@@ -150,5 +165,42 @@ export class TestingController {
         systemPrompt: "Eres un tutor paciente especializado en explicar conceptos complejos de manera sencilla. Utiliza analogías y ejemplos cotidianos para explicar conceptos técnicos."
       })
     );
+  }
+
+  /**
+   * Endpoint para probar el agente recomendador de herramientas
+   * Devuelve un array de herramientas con sus detalles
+   */
+  @Post('tool-recommender')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Prueba el agente recomendador de herramientas' })
+  @ApiBody({ type: TestingQueryDto })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Array de herramientas recomendadas con sus detalles',
+    type: ToolsSearchResponse
+  })
+  @Serialize(ToolsSearchResponse)
+  async recommendTools(@Body() body: TestingQueryDto): Promise<ToolsSearchResponse> {
+    const { query } = body;
+    
+    // Invocamos el grafo con el mensaje del usuario
+    const state = await this.app.invoke({
+      messages: [new HumanMessage(query)]
+    });
+
+    // Obtenemos el contenido del último mensaje (que será el array de IDs)
+    const lastMessage = state.messages[state.messages.length - 1];
+    const toolIds = JSON.parse(lastMessage.content);
+
+    // Recuperamos los detalles de cada herramienta
+    const tools = await Promise.all(
+      toolIds.map(async (id: string) => {
+        const tool = await this.toolRepository.getOne(id);
+        return tool;
+      })
+    );
+
+    return { tools };
   }
 } 

@@ -53,12 +53,19 @@ export class ToolTypeormRepository extends ToolRepository {
   async getOne(
     id: string
   ): Promise<ToolModel> {
-    return this.repository.findOne({
+    
+    
+    const query = this.repository.createQueryBuilder('tool')
+      .where('tool.id = :id', { id })
+      .getSql();
+    
+    const result = await this.repository.findOne({
       relations: ['tags'],
       where: {
         id: id
       }
     });
+    return result;
   }
 
   async create(

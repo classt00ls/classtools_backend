@@ -13,7 +13,7 @@ async function testConnection() {
       PGVECTOR_PASSWORD: 'tz1D6kj9CNHwHGJA',
       PGVECTOR_DB: 'classtools',
       PGVECTOR_SSL: 'false',
-      OLLAMA_BASE_URL: 'http://localhost:11434',
+      OLLAMA_BASE_URL: 'http://localghost:11434',
       OLLAMA_EMBEDDINGS_MODEL: 'nomic-embed-text',
       PGVECTOR_TABLE: 'embeddings',
       PGVECTOR_COL_ID: 'id',

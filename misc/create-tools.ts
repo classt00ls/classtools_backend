@@ -7,7 +7,7 @@ class PostgresConnection {
 	private client: any;
 
 	constructor(
-		private host: string = process.env.DB_HOST || 'localhost',
+		private host: string = process.env.DB_HOST || 'localghost',
 		private port: number = parseInt(process.env.DB_PORT || '5432', 10),
 		private database: string = process.env.DB_NAME || 'classtools',
 		private user: string = process.env.DB_USER || 'classtools',
@@ -53,7 +53,7 @@ async function main() {
 
 	const embeddingsGenerator = new OllamaEmbeddings({
 		model: "embeddings",
-		baseUrl: "http://localhost:11434"
+		baseUrl: "http://localghost:11434"
 	});
 
 	// Usar toolsExample en lugar de tools

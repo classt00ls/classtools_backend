@@ -24,7 +24,7 @@ export class PostgreToolVectorRepository extends PostgresRepository implements T
 		this.embeddingsGenerator = new OllamaEmbeddings({
 			model: "nomic-embed-text",
 			// @TODO env
-			baseUrl: "http://localhost:11434",
+			baseUrl: "http://localghost:11434",
 		});
 	}
 

@@ -20,7 +20,7 @@ import { chromium } from "playwright"; // Navegador para web scraping
 // import { compile } from "html-to-text";
 //
 // async function main(): Promise<void> {
-// 	const url = "http://localhost:3012";
+// 	const url = "http://localghost:3012";
 // 	const compiledConvert = compile({ wordwrap: 130 });
 //
 // 	const loader = new RecursiveUrlLoader(url, {
@@ -121,15 +121,15 @@ async function main(
 
 // Lista de URLs de cursos a procesar
 const courseUrls = [
-	"http://localhost:3012/anade-inteligencia-artificial-siguiendo-buenas-practicas.html",
-	"http://localhost:3012/asincronia-en-javascript.html",
-	"http://localhost:3012/auditoria-holaluz.html",
-	"http://localhost:3012/ddd-microservicios-e-infra-en-audiense-genially-y-codely.html",
-	"http://localhost:3012/diseno-de-infraestructura-aws-sqs-como-cola-de-mensajeria.html",
-	"http://localhost:3012/diseno-de-infraestructura-rabbitmq-como-cola-de-mensajeria.html",
-	"http://localhost:3012/modelado-del-dominio-value-objects.html",
-	"http://localhost:3012/patrones-de-diseno-criteria.html",
-	"http://localhost:3012/tratamiento-de-datos-en-bash-gestiona-archivos-json-xml-yaml.html",
+	"http://localghost:3012/anade-inteligencia-artificial-siguiendo-buenas-practicas.html",
+	"http://localghost:3012/asincronia-en-javascript.html",
+	"http://localghost:3012/auditoria-holaluz.html",
+	"http://localghost:3012/ddd-microservicios-e-infra-en-audiense-genially-y-codely.html",
+	"http://localghost:3012/diseno-de-infraestructura-aws-sqs-como-cola-de-mensajeria.html",
+	"http://localghost:3012/diseno-de-infraestructura-rabbitmq-como-cola-de-mensajeria.html",
+	"http://localghost:3012/modelado-del-dominio-value-objects.html",
+	"http://localghost:3012/patrones-de-diseno-criteria.html",
+	"http://localghost:3012/tratamiento-de-datos-en-bash-gestiona-archivos-json-xml-yaml.html",
 ];
 
 // ===== CONFIGURACIÓN DEL VECTOR STORE =====
@@ -161,13 +161,13 @@ const vectorStore = PGVectorStore.initialize(
 	// CONFIGURACIÓN DE EMBEDDINGS
 	new OllamaEmbeddings({
 		model: "nomic-embed-text", // Modelo específico para embeddings de texto
-		baseUrl: "http://localhost:11434", // Ollama ejecutándose localmente
+		baseUrl: "http://localghost:11434", // Ollama ejecutándose localmente
 	}),
 	{
 		// CONFIGURACIÓN DE CONEXIÓN A POSTGRESQL
 		postgresConnectionOptions: {
 			type: "postgres", // Tipo de base de datos
-			host: "localhost", // Host local para desarrollo
+			host: "localghost", // Host local para desarrollo
 			port: 5432, // Puerto estándar de PostgreSQL
 			user: "codely", // Usuario específico para el proyecto
 			password: "c0d3ly7v", // Contraseña del usuario
